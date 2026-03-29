@@ -9,6 +9,7 @@ import {
 import { AllNavigation } from "./all-navigation"
 import { HeaderContent } from "./header-content"
 import { ProjectSwitcher } from "./project-switcher"
+import { ThemeToggleWrapper } from "./theme-toggle-wrapper"
 import { TimezoneViewer } from "./timezone-viewer"
 import { UserProfile } from "./user-profile"
 
@@ -28,6 +29,11 @@ export const AppSidebar = () => {
         </SidebarGroup>
 
         <AllNavigation />
+        <SidebarGroup className="mt-auto">
+          <SidebarMenu>
+            <ThemeToggleWrapper />
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
