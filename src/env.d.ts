@@ -1,23 +1,26 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_BACKEND_URL: string;
-  readonly VITE_APP_NAME: string;
+  // Client-side environment variables (prefixed with VITE_)
+  readonly VITE_APP_NAME: string
+  readonly VITE_BACKEND_URL: string
+  readonly VITE_SELINE_URL?: string
 }
 
 interface ImportMeta {
-  readonly env: ImportMetaEnv;
+  readonly env: ImportMetaEnv
 }
 
+// Server-side environment variables
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      readonly DATABASE_URL: string;
-      readonly OPEN_AI_API_KEY: string;
-      readonly SELINE_TOKEN: string;
-      readonly NODE_ENV: 'development' | 'production' | 'test';
+      readonly DATABASE_URL: string
+      readonly OPEN_AI_API_KEY: string
+      readonly SELINE_TOKEN: string
+      readonly NODE_ENV: 'development' | 'production' | 'test'
     }
   }
 }
 
-export {};
+export {}
