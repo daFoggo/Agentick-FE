@@ -13,9 +13,11 @@ import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardTeamIndexRouteImport } from './routes/dashboard/team/index'
+import { Route as DashboardProjectsIndexRouteImport } from './routes/dashboard/projects/index'
 import { Route as DashboardOverviewIndexRouteImport } from './routes/dashboard/overview/index'
 import { Route as DashboardMyTasksIndexRouteImport } from './routes/dashboard/my-tasks/index'
 import { Route as DashboardInboxIndexRouteImport } from './routes/dashboard/inbox/index'
+import { Route as DashboardProjectsProjectIdRouteImport } from './routes/dashboard/projects/$projectId'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -37,6 +39,11 @@ const DashboardTeamIndexRoute = DashboardTeamIndexRouteImport.update({
   path: '/team/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardProjectsIndexRoute = DashboardProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const DashboardOverviewIndexRoute = DashboardOverviewIndexRouteImport.update({
   id: '/overview/',
   path: '/overview/',
@@ -52,22 +59,32 @@ const DashboardInboxIndexRoute = DashboardInboxIndexRouteImport.update({
   path: '/inbox/',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+const DashboardProjectsProjectIdRoute =
+  DashboardProjectsProjectIdRouteImport.update({
+    id: '/projects/$projectId',
+    path: '/projects/$projectId',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/inbox/': typeof DashboardInboxIndexRoute
   '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
   '/dashboard/overview/': typeof DashboardOverviewIndexRoute
+  '/dashboard/projects/': typeof DashboardProjectsIndexRoute
   '/dashboard/team/': typeof DashboardTeamIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/inbox': typeof DashboardInboxIndexRoute
   '/dashboard/my-tasks': typeof DashboardMyTasksIndexRoute
   '/dashboard/overview': typeof DashboardOverviewIndexRoute
+  '/dashboard/projects': typeof DashboardProjectsIndexRoute
   '/dashboard/team': typeof DashboardTeamIndexRoute
 }
 export interface FileRoutesById {
@@ -75,9 +92,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/inbox/': typeof DashboardInboxIndexRoute
   '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
   '/dashboard/overview/': typeof DashboardOverviewIndexRoute
+  '/dashboard/projects/': typeof DashboardProjectsIndexRoute
   '/dashboard/team/': typeof DashboardTeamIndexRoute
 }
 export interface FileRouteTypes {
@@ -86,26 +105,32 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/dashboard/'
+    | '/dashboard/projects/$projectId'
     | '/dashboard/inbox/'
     | '/dashboard/my-tasks/'
     | '/dashboard/overview/'
+    | '/dashboard/projects/'
     | '/dashboard/team/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
+    | '/dashboard/projects/$projectId'
     | '/dashboard/inbox'
     | '/dashboard/my-tasks'
     | '/dashboard/overview'
+    | '/dashboard/projects'
     | '/dashboard/team'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/dashboard/'
+    | '/dashboard/projects/$projectId'
     | '/dashboard/inbox/'
     | '/dashboard/my-tasks/'
     | '/dashboard/overview/'
+    | '/dashboard/projects/'
     | '/dashboard/team/'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTeamIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/projects/': {
+      id: '/dashboard/projects/'
+      path: '/projects'
+      fullPath: '/dashboard/projects/'
+      preLoaderRoute: typeof DashboardProjectsIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/dashboard/overview/': {
       id: '/dashboard/overview/'
       path: '/overview'
@@ -165,22 +197,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInboxIndexRouteImport
       parentRoute: typeof DashboardRouteRoute
     }
+    '/dashboard/projects/$projectId': {
+      id: '/dashboard/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/dashboard/projects/$projectId'
+      preLoaderRoute: typeof DashboardProjectsProjectIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
   }
 }
 
 interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardProjectsProjectIdRoute: typeof DashboardProjectsProjectIdRoute
   DashboardInboxIndexRoute: typeof DashboardInboxIndexRoute
   DashboardMyTasksIndexRoute: typeof DashboardMyTasksIndexRoute
   DashboardOverviewIndexRoute: typeof DashboardOverviewIndexRoute
+  DashboardProjectsIndexRoute: typeof DashboardProjectsIndexRoute
   DashboardTeamIndexRoute: typeof DashboardTeamIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardProjectsProjectIdRoute: DashboardProjectsProjectIdRoute,
   DashboardInboxIndexRoute: DashboardInboxIndexRoute,
   DashboardMyTasksIndexRoute: DashboardMyTasksIndexRoute,
   DashboardOverviewIndexRoute: DashboardOverviewIndexRoute,
+  DashboardProjectsIndexRoute: DashboardProjectsIndexRoute,
   DashboardTeamIndexRoute: DashboardTeamIndexRoute,
 }
 

@@ -6,12 +6,13 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from "@/components/ui/sidebar"
-import { AllNavigation } from "./all-navigation"
+import { SidebarGroupSection } from "./sidebar-navigation"
 import { HeaderContent } from "./header-content"
-import { ProjectSwitcher } from "./project-switcher"
+import { SidebarProjectList } from "@/features/projects"
 import { ThemeToggleWrapper } from "./theme-toggle-wrapper"
 import { TimezoneViewer } from "./timezone-viewer"
 import { UserProfile } from "./user-profile"
+import { SIDEBAR_PERSONAL, SIDEBAR_TEAM } from "@/constants/sidebar-navigation"
 
 export const AppSidebar = () => {
   return (
@@ -20,17 +21,15 @@ export const AppSidebar = () => {
         <HeaderContent />
       </SidebarHeader>
       <SidebarContent>
-        {/* Utility Menu */}
-        <SidebarGroup>
-          <SidebarMenu>
-            <ProjectSwitcher />
-            <TimezoneViewer />
-          </SidebarMenu>
-        </SidebarGroup>
+        <SidebarGroupSection group={SIDEBAR_PERSONAL} />
 
-        <AllNavigation />
+        <SidebarProjectList />
+
+        <SidebarGroupSection group={SIDEBAR_TEAM} />
+
         <SidebarGroup className="mt-auto">
           <SidebarMenu>
+            <TimezoneViewer />
             <ThemeToggleWrapper />
           </SidebarMenu>
         </SidebarGroup>
