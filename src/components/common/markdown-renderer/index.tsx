@@ -47,7 +47,7 @@ export function MarkdownRenderer({ content, className }: MarkdownProps) {
             <img
               {...domNode.attribs}
               loading="lazy"
-              className="rounded-lg shadow-md"
+              className="shadow-md rounded-lg"
             />
           )
         }

@@ -1,6 +1,6 @@
-import { AppSidebar } from "@/components/layout/app/sidebar"
 import { PageHeader } from "@/components/layout/app/page-header"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/layout/app/sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { createFileRoute, Outlet } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/dashboard")({
@@ -14,10 +14,12 @@ function DashboardLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="flex flex-1 flex-col gap-4 p-6">
-        <PageHeader />
-        <Outlet />
-      </main>
+      <SidebarInset>
+        <main className="flex flex-col flex-1 gap-4 p-4">
+          <PageHeader />
+          <Outlet />
+        </main>
+      </SidebarInset>
     </SidebarProvider>
   )
 }

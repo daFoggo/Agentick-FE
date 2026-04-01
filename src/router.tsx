@@ -1,9 +1,20 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
+import type { ReactNode } from "react"
+import type { QueryClient } from "@tanstack/react-query"
+import type { IViewModeDefinition } from "@/stores/use-view-mode-list-store"
+import { queryClient } from "@/lib/query-client"
 import { routeTree } from "./routeTree.gen"
+
+export interface IRouterContext {
+  queryClient: QueryClient
+}
 
 export function getRouter() {
   const router = createTanStackRouter({
     routeTree,
+    context: {
+      queryClient,
+    },
 
     scrollRestoration: true,
     defaultPreload: "intent",
@@ -13,6 +24,12 @@ export function getRouter() {
   return router
 }
 
+export interface IRouteHeaderConfig {
+  hide?: boolean
+  title?: string | (() => string)
+  render?: () => ReactNode
+}
+
 declare module "@tanstack/react-router" {
   interface Register {
     router: ReturnType<typeof getRouter>
@@ -20,5 +37,11 @@ declare module "@tanstack/react-router" {
 
   interface StaticDataRouteOption {
     getTitle?: () => string
+    hideHeader?: boolean
+    header?: IRouteHeaderConfig
+    viewModes?: IViewModeDefinition[]
+    viewModeScope?: string
+    hideViewModes?: boolean
+    allowViewModeCustomization?: boolean
   }
 }

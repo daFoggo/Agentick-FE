@@ -1,15 +1,17 @@
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
+import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 
 import appCss from "../styles.css?url"
 import { ToasterProvider } from "@/components/common/toaster-provider"
 import { ThemeProvider } from "@/components/common/theme-provider"
+import { QueryProvider } from "@/components/common/query-provider"
 import { getThemeServerFn } from "@/lib/theme"
 import { SITE_CONFIG } from "@/configs/site"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import type { IRouterContext } from "@/router"
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<IRouterContext>()({
   head: () => ({
     meta: [
       {
@@ -46,10 +48,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider theme={theme}>
-          <TooltipProvider>{children}</TooltipProvider>
-          <ToasterProvider />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider theme={theme}>
+            <TooltipProvider>{children}</TooltipProvider>
+            <ToasterProvider />
+          </ThemeProvider>
+        </QueryProvider>
         <TanStackDevtools
           config={{
             position: "bottom-right",
