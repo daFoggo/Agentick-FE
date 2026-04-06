@@ -33,7 +33,7 @@ export function TaskTableGroupRow({ row, totalCols }: ITaskTableGroupRowProps) {
     >
       <TableCell
         colSpan={totalCols}
-        className="h-10 overflow-visible p-0 align-middle whitespace-nowrap transition-colors hover:bg-muted/60"
+        className="h-10 overflow-visible p-0 align-middle whitespace-nowrap transition-colors group-hover/row:bg-muted/60"
       >
         {/* 
           Sticky container: ensures the label stays visible on the left 

@@ -16,7 +16,7 @@ export function DataTableRow<TData>({
   return (
     <TableRow
       data-state={row.getIsSelected() ? "selected" : undefined}
-      className={cn("hover:bg-transparent", className)}
+      className={cn("group/row transition-colors", className)}
     >
       {row.getVisibleCells().map((cell) => (
         <DataTableCell key={cell.id} cell={cell} />
@@ -50,8 +50,8 @@ export function DataTableCell<TData>({ cell }: IDataTableCellProps<TData>) {
       }}
       className={cn(
         "bg-background transition-colors",
-        // Individual Cell Highlight
-        "hover:bg-muted/50 data-[state=selected]:bg-muted",
+        // Row-Level Highlight (syncs across opaque pinned cells)
+        "group-hover/row:bg-muted/50 group-data-[state=selected]/row:bg-muted",
         isPinned === "left" && isLastLeft && "border-r border-border/50",
         isPinned === "right" && isFirstRight && "border-l border-border/50",
         column.columnDef.meta?.cellClassName
