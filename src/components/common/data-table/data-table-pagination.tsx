@@ -36,18 +36,20 @@ export function DataTablePagination<TData>({
   const pageIndex = pagination?.pageIndex ?? 0
   const pageSize = pagination?.pageSize ?? 0
   const pageCount = enablePagination ? table.getPageCount() : 0
-  
+
   // Requirement: Only count actual leaf records, not group headers or sub-tasks.
   // We use the filtered row model to respect search/filter state.
-  const rowCount = table.getFilteredRowModel().flatRows.filter(r => !r.getIsGrouped()).length
+  const rowCount = table
+    .getFilteredRowModel()
+    .flatRows.filter((r) => !r.getIsGrouped()).length
   const selectedCount = table.getFilteredSelectedRowModel().rows.length
 
   return (
-    <div className="flex items-center justify-between gap-4 px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">
+    <div className="flex items-center justify-between gap-4 px-3 py-2 text-sm whitespace-nowrap text-muted-foreground">
       {/* Left: row count + selection */}
       <div className="flex items-center gap-3">
-        {(showSelectedCount && selectedCount > 0) && (
-          <span className="font-medium text-foreground">
+        {showSelectedCount && selectedCount > 0 && (
+          <span className="text-xs font-medium text-foreground">
             {selectedCount} selected
           </span>
         )}
@@ -59,7 +61,7 @@ export function DataTablePagination<TData>({
       {/* Right: rows-per-page + navigation */}
       <div className="flex items-center gap-4">
         {/* Rows per page — Dropdown Menu */}
-        {(enablePagination && showRowsPerPage) && (
+        {enablePagination && showRowsPerPage && (
           <div className="flex items-center gap-2">
             <span className="text-xs">Rows per page</span>
             <DropdownMenu>
@@ -67,7 +69,7 @@ export function DataTablePagination<TData>({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-7 w-[70px] text-xs font-normal flex justify-between px-2"
+                  className="flex h-7 w-[70px] justify-between px-2 text-xs font-normal"
                 >
                   <span>{pageSize}</span>
                   <ChevronDown className="size-3 text-muted-foreground/70" />
