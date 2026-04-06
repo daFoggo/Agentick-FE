@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button"
 import type { IProjectMember } from "@/features/project-members"
 import { projectQueryOptions } from "@/features/projects/queries"
+import { SAMPLE_TASKS, TaskTable } from "@/features/tasks"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { FolderOpen, Share2 } from "lucide-react"
@@ -87,8 +88,12 @@ function ProjectDashboardView() {
 }
 
 function ProjectListView() {
-  const { projectId } = Route.useParams()
-  return <div>Project list: {projectId}</div>
+  return (
+    <TaskTable
+      data={SAMPLE_TASKS}
+      groupBy="status"
+    />
+  )
 }
 
 function ProjectBoardView() {

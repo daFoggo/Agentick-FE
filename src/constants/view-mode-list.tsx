@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react"
+import type { IViewModeCatalogItem } from "@/types/view-mode-list"
 import {
   Archive,
   Bookmark,
@@ -9,22 +9,6 @@ import {
   ListTree,
 } from "lucide-react"
 import type { ReactNode } from "react"
-
-export interface IViewModeCatalogItem {
-  value: string
-  label: string
-  icon: LucideIcon
-  isDefault?: boolean
-  isVisibleByDefault?: boolean
-  badge?: string | number | ReactNode
-  badgeVariant?:
-    | "default"
-    | "secondary"
-    | "destructive"
-    | "outline"
-    | "ghost"
-    | "link"
-}
 
 export const PROJECT_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [
   {

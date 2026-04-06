@@ -1,36 +1,14 @@
 import type { IProjectMember } from "../project-members"
+import type { TTaskPriority, TTaskStatus, TTaskType } from "./constants"
 
 export type TDataScope = "system" | "team" | "project"
 
-export interface ITask {
+export interface ITag {
   id: string
-  projectId: string
-  parentTaskId?: string
-  subTasks?: ITask[]
-
-  title: string
-  description?: string
-
-  type: ITaskType
-  status: ITaskStatus
-  priority: ITaskPriority
-  tags?: ITag[]
-
-  phaseId?: string
-  phase?: IPhase
-
-  assigneeId?: string
-  assignee?: IProjectMember
-
-  startDate?: Date
-  dueDate?: Date
-  estimatedHours?: number
-  actualHours?: number
-
-  timeLogs?: ITimeLog[]
-
+  name: string
+  color: string
+  teamId: string
   createdAt: Date
-  updatedAt: Date
 }
 
 export interface IPhase {
@@ -43,74 +21,25 @@ export interface IPhase {
   createdAt: Date
 }
 
-export interface ITimeLog {
+export interface ITask {
   id: string
-  taskId: string
-  userId: string
-  member?: IProjectMember
-
-  startTime: Date
-  endTime?: Date
-  durationMinutes: number
-  note?: string
-
+  projectId: string
+  parentTaskId?: string
+  subTasks?: ITask[]
+  title: string
+  description?: string
+  type: TTaskType
+  status: TTaskStatus
+  priority: TTaskPriority
+  tags?: ITag[]
+  phaseId?: string
+  phase?: IPhase
+  assigneeId?: string
+  assignee?: IProjectMember
+  startDate?: Date
+  dueDate?: Date
+  estimatedHours?: number
+  actualHours?: number
   createdAt: Date
-}
-
-export interface ITaskType {
-  id: string
-  name: string
-  color: string
-  icon?: string
-
-  scope: TDataScope
-  teamId?: string
-  projectId?: string
-
-  isMilestone: boolean
-  isApproval: boolean
-  isDefault: boolean
-
-  createdAt: Date
-}
-
-export interface ITaskStatus {
-  id: string
-  name: string
-  color: string
-  icon?: string
-
-  scope: TDataScope
-  teamId?: string
-  projectId?: string
-
-  isDefault: boolean
-  isCompleted: boolean
-  order: number
-
-  createdAt: Date
-}
-
-export interface ITaskPriority {
-  id: string
-  name: string
-  color: string
-  icon?: string
-  level: number
-
-  scope: TDataScope
-  teamId?: string
-  projectId?: string
-
-  isDefault: boolean
-
-  createdAt: Date
-}
-
-export interface ITag {
-  id: string
-  name: string
-  color: string
-  teamId: string
-  createdAt: Date
+  updatedAt: Date
 }

@@ -1,0 +1,135 @@
+export const TASK_TYPE_CATALOG = [
+  {
+    value: "task",
+    label: "Task",
+    color: "#64748b",
+    icon: "lucide:list-checks",
+    isDefault: true,
+  },
+  {
+    value: "feature",
+    label: "Feature",
+    color: "#3b82f6",
+    icon: "lucide:sparkles",
+    isDefault: false,
+  },
+  {
+    value: "bug",
+    label: "Bug",
+    color: "#ef4444",
+    icon: "lucide:bug",
+    isDefault: false,
+  },
+  {
+    value: "epic",
+    label: "Epic",
+    color: "#8b5cf6",
+    icon: "lucide:layers-3",
+    isDefault: false,
+  },
+  {
+    value: "sub-task",
+    label: "Sub-task",
+    color: "#10b981",
+    icon: "lucide:subtitles",
+    isDefault: false,
+  },
+] as const
+
+export type TTaskTypeOption = (typeof TASK_TYPE_CATALOG)[number]
+export type TTaskType = TTaskTypeOption["value"]
+
+export const TASK_STATUS_CATALOG = [
+  {
+    value: "backlog",
+    label: "Backlog",
+    color: "#94a3b8",
+    isDefault: false,
+    isCompleted: false,
+    order: 1,
+  },
+  {
+    value: "todo",
+    label: "To Do",
+    color: "#64748b",
+    isDefault: true,
+    isCompleted: false,
+    order: 2,
+  },
+  {
+    value: "in-progress",
+    label: "In Progress",
+    color: "#0ea5e9",
+    isDefault: false,
+    isCompleted: false,
+    order: 3,
+  },
+  {
+    value: "in-review",
+    label: "In Review",
+    color: "#f59e0b",
+    isDefault: false,
+    isCompleted: false,
+    order: 4,
+  },
+  {
+    value: "blocked",
+    label: "Blocked",
+    color: "#ef4444",
+    isDefault: false,
+    isCompleted: false,
+    order: 5,
+  },
+  {
+    value: "done",
+    label: "Done",
+    color: "#22c55e",
+    isDefault: false,
+    isCompleted: true,
+    order: 6,
+  },
+] as const
+
+export type TTaskStatusOption = (typeof TASK_STATUS_CATALOG)[number]
+export type TTaskStatus = TTaskStatusOption["value"]
+
+export const TASK_PRIORITY_CATALOG = [
+  {
+    value: "lowest",
+    label: "Lowest",
+    color: "#cbd5e1",
+    level: 1,
+    isDefault: false,
+  },
+  {
+    value: "low",
+    label: "Low",
+    color: "#94a3b8",
+    level: 2,
+    isDefault: false,
+  },
+  {
+    value: "medium",
+    label: "Medium",
+    color: "#3b82f6",
+    level: 3,
+    isDefault: true,
+  },
+  {
+    value: "high",
+    label: "High",
+    color: "#f97316",
+    level: 4,
+    isDefault: false,
+  },
+  {
+    value: "highest",
+    label: "Highest",
+    color: "#ef4444",
+    level: 5,
+    isDefault: false,
+  },
+] as const
+
+export type TTaskPriorityOption = (typeof TASK_PRIORITY_CATALOG)[number]
+export type TTaskPriority = TTaskPriorityOption["value"]

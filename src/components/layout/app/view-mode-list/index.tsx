@@ -34,17 +34,24 @@ export const ViewModeList = ({
   const matches = useMatches()
   const currentMatch = matches.at(-1)
   const currentStaticData = currentMatch?.staticData
+
+  // Ưu tiên danh sách từ route, nhưng vẫn cho phép truyền vào trực tiếp.
   const viewModeDefinitions = definitions ?? currentStaticData?.viewModes ?? []
 
+  // Scope quyết định dữ liệu nào sẽ được đọc và cập nhật.
+  // Route có thể đổi scope để dùng lại component ở nhiều màn hình.
   const viewModeScope =
     scope ??
     currentStaticData?.viewModeScope ??
     currentMatch?.routeId ??
     "global"
+  // Mặc định cho phép chỉnh sửa, trừ khi route chủ động tắt.
   const allowViewModeCustomization =
     allowCustomization ?? currentStaticData?.allowViewModeCustomization ?? true
   const hasHydrated = useViewModeListHydrated()
 
+  // Chỉ lấy phần của mục hiện tại để màn hình này không bị ảnh hưởng
+  // khi mục khác thay đổi.
   const scopeState = useViewModeListStore(
     (state) => state.modesByScope[viewModeScope]
   )
@@ -61,10 +68,12 @@ export const ViewModeList = ({
     return null
   }
 
+  // Chờ dữ liệu tải xong rồi mới hiển thị để tránh lệch giao diện.
   if (!hasHydrated) {
     return <ViewModeListSkeleton />
   }
 
+  // Gộp danh sách gốc với lựa chọn đã lưu trước khi hiển thị.
   const { modes, activeValue } = resolveViewModes(
     viewModeDefinitions,
     scopeState

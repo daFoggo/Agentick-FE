@@ -1,7 +1,7 @@
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
 import type { LucideIcon } from "lucide-react"
 import type { ReactNode } from "react"
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 export interface IViewModeDefinition {
   value: string
@@ -11,7 +11,13 @@ export interface IViewModeDefinition {
   isDefault?: boolean
   isVisibleByDefault?: boolean
   badge?: string | number | ReactNode
-  badgeVariant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link"
+  badgeVariant?:
+    | "default"
+    | "secondary"
+    | "destructive"
+    | "outline"
+    | "ghost"
+    | "link"
 }
 
 export interface IViewModeState {
@@ -26,7 +32,13 @@ export interface IResolvedViewMode extends IViewModeState {
   icon: LucideIcon
   render: () => ReactNode
   badge?: string | number | ReactNode
-  badgeVariant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link"
+  badgeVariant?:
+    | "default"
+    | "secondary"
+    | "destructive"
+    | "outline"
+    | "ghost"
+    | "link"
 }
 
 interface IViewModeListStore {
@@ -34,7 +46,11 @@ interface IViewModeListStore {
   hasHydrated: boolean
   setHasHydrated: (value: boolean) => void
   setModes: (scope: string, modes: IViewModeState[]) => void
-  toggleModeVisibility: (scope: string, value: string, definitions: IViewModeDefinition[]) => void
+  toggleModeVisibility: (
+    scope: string,
+    value: string,
+    definitions: IViewModeDefinition[]
+  ) => void
   reorderModes: (
     scope: string,
     sourceIndex: number,
@@ -47,7 +63,11 @@ interface IViewModeListStore {
     updates: Partial<IViewModeState>,
     definitions: IViewModeDefinition[]
   ) => void
-  updateModeMetadata: (scope: string, value: string, metadata: Record<string, unknown>) => void
+  updateModeMetadata: (
+    scope: string,
+    value: string,
+    metadata: Record<string, unknown>
+  ) => void
   setActiveMode: (scope: string, value: string) => void
   resetToDefault: (scope: string) => void
 }
@@ -55,83 +75,6 @@ interface IViewModeListStore {
 export interface IViewModeScopeState {
   modes: IViewModeState[]
   activeValue?: string
-}
-
-const buildDefaultModeStates = (definitions: IViewModeDefinition[]): IViewModeState[] =>
-  definitions.map((item, index) => ({
-    value: item.value,
-    label: item.label,
-    isDefault: item.isDefault ?? index === 0,
-    isVisible: item.isVisibleByDefault ?? true,
-  }))
-
-export const resolveViewModes = (
-  definitions: IViewModeDefinition[],
-  scopeState?: IViewModeScopeState
-): { modes: IResolvedViewMode[]; activeValue?: string } => {
-  if (definitions.length === 0) {
-    return { modes: [] }
-  }
-
-  const defaultModes = buildDefaultModeStates(definitions)
-  const mergedModes: IResolvedViewMode[] = (scopeState?.modes ?? defaultModes)
-    .map((savedMode) => {
-      const definition = definitions.find((item) => item.value === savedMode.value)
-      if (!definition) return null
-
-      return {
-        value: savedMode.value,
-        label: savedMode.label ?? definition.label,
-        isDefault: savedMode.isDefault,
-        isVisible: savedMode.isVisible,
-        metadata: savedMode.metadata,
-        icon: definition.icon,
-        render: definition.render,
-        badge: definition.badge,
-        badgeVariant: definition.badgeVariant,
-      } as IResolvedViewMode
-    })
-    .filter((mode): mode is IResolvedViewMode => mode !== null)
-
-  const seenValues = new Set(mergedModes.map((mode) => mode.value))
-  const missingModes = definitions
-    .filter((definition) => !seenValues.has(definition.value))
-    .map((definition, index) => ({
-      value: definition.value,
-      label: definition.label,
-      icon: definition.icon,
-      render: definition.render,
-      isDefault: definition.isDefault ?? (mergedModes.length === 0 && index === 0),
-      isVisible: definition.isVisibleByDefault ?? true,
-      badge: definition.badge,
-      badgeVariant: definition.badgeVariant,
-    }))
-
-  const modes = [...mergedModes, ...missingModes]
-  const visibleModes = modes.filter((mode) => mode.isVisible)
-  const activeValueIsVisible = visibleModes.some((mode) => mode.value === scopeState?.activeValue)
-  const activeValue = activeValueIsVisible
-    ? scopeState?.activeValue
-    : visibleModes.find((mode) => mode.isDefault)?.value ?? visibleModes[0]?.value
-
-  return {
-    modes,
-    activeValue,
-  }
-}
-
-
-
-const getScopeState = (
-  scope: string,
-  definitions: IViewModeDefinition[],
-  modesByScope: Record<string, IViewModeScopeState>
-) => {
-  const resolved = resolveViewModes(definitions, modesByScope[scope])
-  return {
-    modes: resolved.modes.map(({ icon, render, ...rest }) => rest),
-    activeValue: resolved.activeValue,
-  }
 }
 
 export const useViewModeListStore = create<IViewModeListStore>()(
@@ -158,7 +101,11 @@ export const useViewModeListStore = create<IViewModeListStore>()(
 
       toggleModeVisibility: (scope, value, definitions) =>
         set((state) => {
-          const scopeState = getScopeState(scope, definitions, state.modesByScope)
+          const scopeState = getScopeState(
+            scope,
+            definitions,
+            state.modesByScope
+          )
           const modes = scopeState.modes.map((mode) => {
             if (mode.value !== value) {
               return mode
@@ -166,7 +113,9 @@ export const useViewModeListStore = create<IViewModeListStore>()(
 
             const nextVisibility = !mode.isVisible
             if (!nextVisibility) {
-              const visibleCount = scopeState.modes.filter((item) => item.isVisible).length
+              const visibleCount = scopeState.modes.filter(
+                (item) => item.isVisible
+              ).length
               if (visibleCount <= 1) {
                 return mode
               }
@@ -188,7 +137,11 @@ export const useViewModeListStore = create<IViewModeListStore>()(
 
       reorderModes: (scope, sourceIndex, targetIndex, definitions) =>
         set((state) => {
-          const scopeState = getScopeState(scope, definitions, state.modesByScope)
+          const scopeState = getScopeState(
+            scope,
+            definitions,
+            state.modesByScope
+          )
           const modes = [...scopeState.modes]
           const [removed] = modes.splice(sourceIndex, 1)
           modes.splice(targetIndex, 0, removed)
@@ -206,7 +159,11 @@ export const useViewModeListStore = create<IViewModeListStore>()(
 
       updateMode: (scope, value, updates, definitions) =>
         set((state) => {
-          const scopeState = getScopeState(scope, definitions, state.modesByScope)
+          const scopeState = getScopeState(
+            scope,
+            definitions,
+            state.modesByScope
+          )
           const modes = scopeState.modes.map((mode) =>
             mode.value === value ? { ...mode, ...updates } : mode
           )
@@ -228,7 +185,9 @@ export const useViewModeListStore = create<IViewModeListStore>()(
           if (!scopeState) return state
 
           const modes = scopeState.modes.map((mode) =>
-            mode.value === value ? { ...mode, metadata: { ...mode.metadata, ...metadata } } : mode
+            mode.value === value
+              ? { ...mode, metadata: { ...mode.metadata, ...metadata } }
+              : mode
           )
 
           return {
@@ -266,6 +225,7 @@ export const useViewModeListStore = create<IViewModeListStore>()(
     {
       name: "view-mode-list-storage",
       version: 1,
+      // Chỉ lưu phần user đã chỉnh. Phần còn lại sẽ được tạo lại khi mở app.
       partialize: (state) => ({
         modesByScope: state.modesByScope,
       }),
@@ -278,3 +238,93 @@ export const useViewModeListStore = create<IViewModeListStore>()(
 
 export const useViewModeListHydrated = () =>
   useViewModeListStore((state) => state.hasHydrated)
+
+// Tạo dữ liệu ban đầu từ danh sách có sẵn.
+// Nhờ vậy mọi scope đều có cùng thứ tự và trạng thái mặc định.
+const buildDefaultModeStates = (
+  definitions: IViewModeDefinition[]
+): IViewModeState[] =>
+  definitions.map((item, index) => ({
+    value: item.value,
+    label: item.label,
+    isDefault: item.isDefault ?? index === 0,
+    isVisible: item.isVisibleByDefault ?? true,
+  }))
+
+// Gộp dữ liệu đã lưu với danh sách hiện tại.
+// Cách này giữ lựa chọn của user và bỏ qua mode đã không còn dùng.
+export const resolveViewModes = (
+  definitions: IViewModeDefinition[],
+  scopeState?: IViewModeScopeState
+): { modes: IResolvedViewMode[]; activeValue?: string } => {
+  if (definitions.length === 0) {
+    return { modes: [] }
+  }
+
+  const defaultModes = buildDefaultModeStates(definitions)
+  const mergedModes: IResolvedViewMode[] = (scopeState?.modes ?? defaultModes)
+    .map((savedMode) => {
+      const definition = definitions.find(
+        (item) => item.value === savedMode.value
+      )
+      if (!definition) return null
+
+      return {
+        value: savedMode.value,
+        label: savedMode.label ?? definition.label,
+        isDefault: savedMode.isDefault,
+        isVisible: savedMode.isVisible,
+        metadata: savedMode.metadata,
+        icon: definition.icon,
+        render: definition.render,
+        badge: definition.badge,
+        badgeVariant: definition.badgeVariant,
+      } as IResolvedViewMode
+    })
+    .filter((mode): mode is IResolvedViewMode => mode !== null)
+
+  const seenValues = new Set(mergedModes.map((mode) => mode.value))
+  const missingModes = definitions
+    .filter((definition) => !seenValues.has(definition.value))
+    .map((definition, index) => ({
+      value: definition.value,
+      label: definition.label,
+      icon: definition.icon,
+      render: definition.render,
+      isDefault:
+        definition.isDefault ?? (mergedModes.length === 0 && index === 0),
+      isVisible: definition.isVisibleByDefault ?? true,
+      badge: definition.badge,
+      badgeVariant: definition.badgeVariant,
+    }))
+
+  const modes = [...mergedModes, ...missingModes]
+  const visibleModes = modes.filter((mode) => mode.isVisible)
+  const activeValueIsVisible = visibleModes.some(
+    (mode) => mode.value === scopeState?.activeValue
+  )
+  // Nếu mode đang chọn bị ẩn hoặc bị xoá, chọn lại một mode đang hiện.
+  const activeValue = activeValueIsVisible
+    ? scopeState?.activeValue
+    : (visibleModes.find((mode) => mode.isDefault)?.value ??
+      visibleModes[0]?.value)
+
+  return {
+    modes,
+    activeValue,
+  }
+}
+
+// Lấy dữ liệu của scope và chỉ giữ phần user cần.
+// Phần phục vụ giao diện sẽ được tạo lại sau.
+const getScopeState = (
+  scope: string,
+  definitions: IViewModeDefinition[],
+  modesByScope: Record<string, IViewModeScopeState>
+) => {
+  const resolved = resolveViewModes(definitions, modesByScope[scope])
+  return {
+    modes: resolved.modes.map(({ icon, render, ...rest }) => rest),
+    activeValue: resolved.activeValue,
+  }
+}
