@@ -24,8 +24,6 @@ export interface IPhase {
 export interface ITask {
   id: string
   projectId: string
-  parentTaskId?: string
-  subTasks?: ITask[]
   title: string
   description?: string
   type: TTaskType

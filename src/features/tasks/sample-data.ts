@@ -16,7 +16,8 @@ export const SAMPLE_TASKS: ITask[] = [
     id: "task-1",
     projectId: SAMPLE_PROJECTS[0].id,
     title: "Implement Login Flow",
-    description: "Design and implement the user authentication system using Auth.js.",
+    description:
+      "Design and implement the user authentication system using Auth.js.",
     type: "feature",
     status: "in-progress",
     priority: "high",
@@ -33,7 +34,8 @@ export const SAMPLE_TASKS: ITask[] = [
     id: "task-2",
     projectId: SAMPLE_PROJECTS[0].id,
     title: "Setup Project Infrastructure",
-    description: "Initialize the repository, configure linting, and setup CI/CD.",
+    description:
+      "Initialize the repository, configure linting, and setup CI/CD.",
     type: "task",
     status: "done",
     priority: "medium",
@@ -65,7 +67,8 @@ export const SAMPLE_TASKS: ITask[] = [
     id: "task-4",
     projectId: SAMPLE_PROJECTS[0].id,
     title: "Draft Project Documentation",
-    description: "Create a comprehensive README.md and contributing guidelines.",
+    description:
+      "Create a comprehensive README.md and contributing guidelines.",
     type: "epic",
     status: "in-review",
     priority: "low",
@@ -82,7 +85,8 @@ export const SAMPLE_TASKS: ITask[] = [
     id: "task-5",
     projectId: SAMPLE_PROJECTS[0].id,
     title: "Design Dashboard Mockups",
-    description: "Create high-fidelity wireframes for the main project dashboard.",
+    description:
+      "Create high-fidelity wireframes for the main project dashboard.",
     type: "feature",
     status: "in-progress",
     priority: "medium",
@@ -166,7 +170,8 @@ export const SAMPLE_TASKS: ITask[] = [
     id: "task-11",
     projectId: SAMPLE_PROJECTS[0].id,
     title: "Dark Mode Support",
-    description: "Implement a customizable theme provider with dark mode options.",
+    description:
+      "Implement a customizable theme provider with dark mode options.",
     type: "feature",
     status: "done",
     priority: "low",
@@ -180,7 +185,8 @@ export const SAMPLE_TASKS: ITask[] = [
     id: "task-12",
     projectId: SAMPLE_PROJECTS[0].id,
     title: "Mobile Layout Refinement",
-    description: "Adjust padding and font sizes for better mobile accessibility.",
+    description:
+      "Adjust padding and font sizes for better mobile accessibility.",
     type: "bug",
     status: "in-progress",
     priority: "medium",
@@ -292,7 +298,8 @@ export const SAMPLE_TASKS: ITask[] = [
     id: "task-20",
     projectId: SAMPLE_PROJECTS[0].id,
     title: "Performance Monitoring Setup",
-    description: "Integrate Sentry or New Relic for error tracking and latency metrics.",
+    description:
+      "Integrate Sentry or New Relic for error tracking and latency metrics.",
     type: "task",
     status: "backlog",
     priority: "low",
@@ -301,5 +308,5 @@ export const SAMPLE_TASKS: ITask[] = [
     estimatedHours: 6,
     createdAt: new Date("2026-04-03T13:00:00.0Z"),
     updatedAt: new Date("2026-04-03T13:00:00.0Z"),
-  }
+  },
 ]

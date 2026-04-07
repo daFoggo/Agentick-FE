@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Table, TableBody, TableHeader, TableRow } from "@/components/ui/table"
 import {
   getCoreRowModel,
@@ -16,10 +17,11 @@ import {
 } from "@tanstack/react-table"
 import { DragDropManager } from "@dnd-kit/dom"
 import { isSortable, SortableDraggable } from "@dnd-kit/dom/sortable"
-import { useEffect, useMemo, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 import { DataTableHeaderCell } from "./data-table-header-cell"
 import { DataTableRow } from "./data-table-row"
 import { DataTablePagination } from "./data-table-pagination"
+import { DataTableGroupRow } from "./data-table-group-row"
 import "./data-table"
 
 export interface IDataTableProps<TData> {
@@ -40,12 +42,13 @@ export interface IDataTableProps<TData> {
   showRowCount?: boolean
   showRowsPerPage?: boolean
   showSelectedCount?: boolean
+  enableRowSelection?: boolean
   className?: string
   wrapperClassName?: string
   getRowId?: (row: TData) => string
 }
 
-export function DataTable<TData>({
+const DataTableInner = <TData,>({
   data,
   columns,
   getSubRows,
@@ -59,10 +62,11 @@ export function DataTable<TData>({
   showRowCount = true,
   showRowsPerPage = true,
   showSelectedCount = true,
+  enableRowSelection = false,
   className,
   wrapperClassName,
   getRowId,
-}: IDataTableProps<TData>) {
+}: IDataTableProps<TData>) => {
   // ── State ────────────────────────────────────────────────────────────────
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [columnPinning, setColumnPinning] =
@@ -81,10 +85,56 @@ export function DataTable<TData>({
   // ── DragDropManager (Vanilla) ───────────────────────────────────────────
   const manager = useMemo(() => new DragDropManager(), [])
 
+  // ── Columns Mapping ───────────────────────────────────────────────────────
+  const finalColumns = useMemo(() => {
+    const hasCustomSelect = columns.some(
+      (c) => (c.meta as any)?.isSelectColumn || c.id === "select"
+    )
+
+    if (!enableRowSelection || hasCustomSelect) return columns
+
+    return [
+      {
+        id: "select",
+        size: 40,
+        meta: {
+          enablePinning: false,
+          enableReorder: false,
+          isSelectColumn: true,
+        },
+        header: ({ table }) => (
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected()
+                ? true
+                : table.getIsSomePageRowsSelected()
+                  ? "indeterminate"
+                  : false
+            }
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
+            aria-label="Select all"
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            disabled={!row.getCanSelect()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Select row"
+          />
+        ),
+      } as ColumnDef<TData, any>,
+      ...columns,
+    ]
+  }, [columns, enableRowSelection])
+
   // ── Table instance ────────────────────────────────────────────────────────
   const table = useReactTable({
     data,
-    columns,
+    columns: finalColumns,
     getRowId,
     getSubRows,
 
@@ -115,7 +165,7 @@ export function DataTable<TData>({
     autoResetExpanded: false,
 
     groupedColumnMode: false,
-    enableRowSelection: true,
+    enableRowSelection,
     enableMultiRowSelection: true,
     enableSubRowSelection: true,
   })
@@ -219,14 +269,7 @@ export function DataTable<TData>({
                     return renderGroupRow(row, totalCols, table)
                   }
                   return (
-                    <tr key={row.id}>
-                      <td
-                        colSpan={totalCols}
-                        className="bg-muted/40 px-3 py-2 text-sm font-medium"
-                      >
-                        {String(row.groupingValue)} ({row.subRows.length})
-                      </td>
-                    </tr>
+                    <DataTableGroupRow key={row.id} row={row} totalCols={totalCols} />
                   )
                 }
                 return <DataTableRow key={row.id} row={row} />
@@ -251,3 +294,5 @@ export function DataTable<TData>({
     </div>
   )
 }
+
+export const DataTable = memo(DataTableInner) as typeof DataTableInner

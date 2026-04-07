@@ -9,14 +9,14 @@ interface IDataTableRowProps<TData> {
   className?: string
 }
 
-export function DataTableRow<TData>({
+export const DataTableRow = <TData,>({
   row,
   className,
-}: IDataTableRowProps<TData>) {
+}: IDataTableRowProps<TData>) => {
   return (
     <TableRow
       data-state={row.getIsSelected() ? "selected" : undefined}
-      className={cn("group/row transition-colors", className)}
+      className={cn("group/row transition-colors duration-300 ease-in-out", className)}
     >
       {row.getVisibleCells().map((cell) => (
         <DataTableCell key={cell.id} cell={cell} />
@@ -29,7 +29,9 @@ interface IDataTableCellProps<TData> {
   cell: Cell<TData, unknown>
 }
 
-export function DataTableCell<TData>({ cell }: IDataTableCellProps<TData>) {
+export const DataTableCell = <TData,>({
+  cell,
+}: IDataTableCellProps<TData>) => {
   const column = cell.column
   const isPinned = column.getIsPinned()
   const isFirstRight = column.getIsFirstColumn("right")
@@ -49,7 +51,7 @@ export function DataTableCell<TData>({ cell }: IDataTableCellProps<TData>) {
         minWidth: column.columnDef.minSize,
       }}
       className={cn(
-        "bg-background transition-colors",
+        "bg-background transition-colors duration-300 ease-in-out",
         // Row-Level Highlight (syncs across opaque pinned cells)
         "group-hover/row:bg-muted/50 group-data-[state=selected]/row:bg-muted",
         isPinned === "left" && isLastLeft && "border-r border-border/50",

@@ -49,13 +49,13 @@ function ProjectHeader() {
   const { data: project } = useSuspenseQuery(projectQueryOptions(projectId))
 
   return (
-    <div className="flex justify-between items-center gap-4 w-full">
+    <div className="flex w-full items-center justify-between gap-4">
       <div className="flex items-center gap-2">
-        <div className="bg-muted p-2 border rounded-md">
+        <div className="rounded-md border bg-muted p-2">
           <FolderOpen className="size-4" />
         </div>
 
-        <p className="font-semibold text-foreground text-xl">
+        <p className="text-xl font-semibold text-foreground">
           {project?.name ?? "Unknown project"}
         </p>
       </div>
@@ -88,12 +88,7 @@ function ProjectDashboardView() {
 }
 
 function ProjectListView() {
-  return (
-    <TaskTable
-      data={SAMPLE_TASKS}
-      groupBy="status"
-    />
-  )
+  return <TaskTable data={SAMPLE_TASKS} groupBy="status" />
 }
 
 function ProjectBoardView() {

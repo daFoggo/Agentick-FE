@@ -16,7 +16,37 @@ export function getPinnedCellStyle(
   }
 }
 
-/** Whether a row is a TanStack grouped/aggregator row (not a real data row) */
 export function isGroupRow<TData>(row: Row<TData>): boolean {
   return row.getIsGrouped()
+}
+
+import type { ColumnDef } from "@tanstack/react-table"
+import type { IDataTableColumnDef } from "@/types/data-table"
+
+/**
+ * generateColumns abstracts away the repetitive boilerplate of defining
+ * TanStack Table columns, consolidating id, header, and meta configuration.
+ */
+export function generateColumns<TData>(
+  definitions: IDataTableColumnDef<TData>[]
+): ColumnDef<TData, any>[] {
+  return definitions.map((def) => {
+    return {
+      id: def.id ?? def.accessorKey,
+      accessorKey: def.accessorKey,
+      header: def.header ?? def.label,
+      size: def.size,
+      cell: def.cell,
+      meta: {
+        label: def.label,
+        enablePinning: def.enablePinning,
+        enableReorder: def.enableReorder,
+        renderGroupValue: def.renderGroupValue,
+        headerClassName: def.headerClassName,
+        cellClassName: def.cellClassName,
+        isSelectColumn: def.isSelectColumn,
+        isActionColumn: def.isActionColumn,
+      },
+    } as ColumnDef<TData, any>
+  })
 }

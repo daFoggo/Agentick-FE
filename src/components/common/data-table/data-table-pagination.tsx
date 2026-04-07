@@ -24,14 +24,14 @@ interface IDataTablePaginationProps<TData> {
   enablePagination?: boolean
 }
 
-export function DataTablePagination<TData>({
+export const DataTablePagination = <TData,>({
   table,
   pageSizeOptions = [10, 20, 50, 100],
   showRowCount = true,
   showRowsPerPage = true,
   showSelectedCount = true,
   enablePagination = true,
-}: IDataTablePaginationProps<TData>) {
+}: IDataTablePaginationProps<TData>) => {
   const pagination = table.getState().pagination
   const pageIndex = pagination?.pageIndex ?? 0
   const pageSize = pagination?.pageSize ?? 0

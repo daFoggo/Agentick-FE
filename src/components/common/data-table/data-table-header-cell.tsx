@@ -19,18 +19,17 @@ interface IDataTableHeaderCellProps<TData> {
   manager: DragDropManager | null
 }
 
-export function DataTableHeaderCell<TData>({
+export const DataTableHeaderCell = <TData,>({
   header,
   index,
   table,
   manager,
-}: IDataTableHeaderCellProps<TData>) {
+}: IDataTableHeaderCellProps<TData>) => {
   const column = header.column
   const isPinned = column.getIsPinned()
   const isLastLeft = column.getIsLastColumn("left")
   const isFirstRight = column.getIsFirstColumn("right")
 
-  // Jira-style pinning rules:
   // - select / actions: enablePinning: false → no pin button (display columns)
   // - Only 1 user-managed column can be pinned left (first unpinned → left)
   // - Right pinning only allowed if there is NO actions column in the table
@@ -40,13 +39,15 @@ export function DataTableHeaderCell<TData>({
   const isFirstUnpinned = unpinnedLeaf[0]?.id === column.id
   const isLastUnpinned = unpinnedLeaf[unpinnedLeaf.length - 1]?.id === column.id
 
-  // Count user-pinned left columns (anything pinned left that isn't "select")
+  // Count user-pinned left columns (anything pinned left that isn't a selection column)
   const userLeftPinnedCount = table
     .getLeftLeafColumns()
-    .filter((c) => c.id !== "select").length
+    .filter((c) => !c.columnDef.meta?.isSelectColumn).length
 
-  // Right-pinning allowed only when this table has no "actions" column
-  const hasActionsColumn = !!table.getColumn("actions")
+  // Right-pinning allowed only when this table has no "actions" column flag
+  const hasActionsColumn = table
+    .getAllColumns()
+    .some((c) => c.columnDef.meta?.isActionColumn)
 
   const canPinToLeft = isFirstUnpinned && userLeftPinnedCount === 0
   const canPinToRight = isLastUnpinned && !hasActionsColumn
@@ -114,19 +115,19 @@ export function DataTableHeaderCell<TData>({
       colSpan={header.colSpan}
       style={{ ...pinnedStyle, width: header.getSize() }}
       className={cn(
-        "group/head transition-colors select-none",
+        "group/head transition-colors duration-300 ease-in-out select-none",
         "bg-background hover:bg-muted/30",
-        isDragSource && "opacity-50 bg-accent ring-2 ring-primary ring-inset",
+        isDragSource && "bg-accent opacity-50 ring-2 ring-primary ring-inset",
         isPinned === "left" && isLastLeft && "border-r border-border/50",
         isPinned === "right" && isFirstRight && "border-l border-border/50"
       )}
     >
       <div className="flex items-center gap-1">
         {canReorder && (
-          <GripVertical className="size-3.5 shrink-0 cursor-grab text-muted-foreground opacity-0 transition-opacity group-hover/head:opacity-50" />
+          <GripVertical className="size-3.5 shrink-0 cursor-grab text-muted-foreground opacity-0 transition-opacity duration-300 ease-in-out group-hover/head:opacity-50" />
         )}
 
-        <span className="flex-1 truncate text-xs font-medium tracking-wide text-muted-foreground uppercase">
+        <span className="flex-1 truncate font-semibold text-foreground">
           {header.isPlaceholder
             ? null
             : flexRender(column.columnDef.header, header.getContext())}
@@ -137,7 +138,7 @@ export function DataTableHeaderCell<TData>({
             variant="ghost"
             size="icon"
             className={cn(
-              "size-5 transition-opacity",
+              "size-5 transition-opacity duration-300 ease-in-out",
               isPinned
                 ? "opacity-70 hover:opacity-100"
                 : "opacity-0 group-hover/head:opacity-50 hover:opacity-100!"

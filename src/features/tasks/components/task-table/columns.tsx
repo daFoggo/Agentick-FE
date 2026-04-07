@@ -1,7 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,17 +14,8 @@ import {
   TASK_TYPE_CATALOG,
 } from "@/features/tasks/constants"
 import type { ITask } from "@/features/tasks/types"
-import type { ColumnDef } from "@tanstack/react-table"
-import { createColumnHelper } from "@tanstack/react-table"
-import {
-  ChevronDown,
-  ChevronRight,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-} from "lucide-react"
-
-const helper = createColumnHelper<ITask>()
+import { ChevronDown, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { generateColumns } from "@/lib/data-table"
 
 function formatDate(date?: Date) {
   if (!date) return "—"
@@ -48,110 +38,30 @@ function getTypeOption(value: string) {
 }
 
 // ── Column definitions ─────────────────────────────────────────────────────
-export const taskColumns: ColumnDef<ITask, any>[] = [
-  // 1. Select
-  helper.display({
-    id: "select",
-    size: 40,
-    meta: {
-      label: "Select",
-      enablePinning: false,
-      enableReorder: false,
-    },
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected()
-            ? true
-            : table.getIsSomePageRowsSelected()
-              ? "indeterminate"
-              : false
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        disabled={!row.getCanSelect()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        onClick={(e) => e.stopPropagation()}
-        aria-label="Select row"
-      />
-    ),
-  }),
 
-  // 2. Title (with expand for sub-tasks)
-  helper.accessor("title", {
-    id: "title",
-    header: "Title",
+export const taskColumns = generateColumns<ITask>([
+  // 1. Title (with expand for sub-tasks)
+  {
+    accessorKey: "title",
+    label: "Title",
     size: 250,
-    meta: {
-      label: "Title",
-      enablePinning: true,
-    },
-    cell: ({ row, getValue }) => {
-      const canExpand = row.getCanExpand()
-      const depth = row.depth
-
+    enablePinning: true,
+    cell: ({ getValue }) => {
       return (
-        <div
-          className="flex min-w-0 items-center gap-1.5"
-          style={{ paddingLeft: depth > 0 ? `${depth * 24}px` : undefined }}
-        >
-          {/* Expand / collapse sub-tasks */}
-          {canExpand ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-5 shrink-0"
-              onClick={(e) => {
-                e.stopPropagation()
-                row.getToggleExpandedHandler()()
-              }}
-              title={
-                row.getIsExpanded() ? "Collapse sub-tasks" : "Expand sub-tasks"
-              }
-            >
-              {row.getIsExpanded() ? (
-                <ChevronDown className="size-3.5" />
-              ) : (
-                <ChevronRight className="size-3.5" />
-              )}
-            </Button>
-          ) : depth > 0 ? (
-            // Alignment spacer for sub-tasks without children
-            <span className="size-5 shrink-0" />
-          ) : null}
-
-          <span className="truncate text-sm font-medium text-foreground">
-            {getValue()}
-          </span>
-
-          {/* Sub-task count badge */}
-          {canExpand &&
-            row.original.subTasks &&
-            row.original.subTasks.length > 0 && (
-              <Badge variant="secondary" className="ml-1 shrink-0 text-xs">
-                {row.original.subTasks.length}
-              </Badge>
-            )}
-        </div>
+        <span className="truncate text-sm font-medium text-foreground">
+          {getValue() as string}
+        </span>
       )
     },
-  }),
+  },
 
-  // 3. Type icon
-  helper.accessor("type", {
-    id: "type",
-    header: "Type",
+  // 2. Type icon
+  {
+    accessorKey: "type",
+    label: "Type",
     size: 100,
-    meta: {
-      label: "Type",
-    },
     cell: ({ getValue }) => {
-      const type = getTypeOption(getValue())
+      const type = getTypeOption(getValue() as string)
       if (!type) return null
       return (
         <span
@@ -163,16 +73,31 @@ export const taskColumns: ColumnDef<ITask, any>[] = [
         </span>
       )
     },
-  }),
+  },
 
-  // 4. Status
-  helper.accessor("status", {
-    id: "status",
-    header: "Status",
+  // 3. Status
+  {
+    accessorKey: "status",
+    label: "Status",
     size: 130,
-    meta: { label: "Status" },
+    renderGroupValue: (value: string) => {
+      const option = getStatusOption(value)
+      return (
+        <>
+          {option && (
+            <span
+              className="size-2 shrink-0 rounded-full"
+              style={{ backgroundColor: option.color }}
+            />
+          )}
+          <span className="text-xs font-semibold tracking-wider text-foreground/80 uppercase">
+            {option?.label ?? value}
+          </span>
+        </>
+      )
+    },
     cell: ({ getValue, row }) => {
-      const status = getStatusOption(getValue())
+      const status = getStatusOption(getValue() as string)
       if (!status) return null
 
       return (
@@ -180,7 +105,7 @@ export const taskColumns: ColumnDef<ITask, any>[] = [
           <DropdownMenuTrigger asChild>
             <Badge
               variant="outline"
-              className="cursor-pointer gap-1.5 font-normal transition-colors hover:bg-muted/50"
+              className="cursor-pointer gap-1.5 font-normal transition-colors duration-300 ease-in-out hover:bg-muted/50"
               style={{ borderColor: status.color, color: status.color }}
             >
               <span
@@ -197,7 +122,6 @@ export const taskColumns: ColumnDef<ITask, any>[] = [
                 key={opt.value}
                 className="gap-2"
                 onClick={() => {
-                  // In a real app, we would call an update function here
                   console.log(
                     "Update status to",
                     opt.value,
@@ -217,16 +141,31 @@ export const taskColumns: ColumnDef<ITask, any>[] = [
         </DropdownMenu>
       )
     },
-  }),
+  },
 
-  // 5. Priority
-  helper.accessor("priority", {
-    id: "priority",
-    header: "Priority",
+  // 4. Priority
+  {
+    accessorKey: "priority",
+    label: "Priority",
     size: 120,
-    meta: { label: "Priority" },
+    renderGroupValue: (value: string) => {
+      const option = getPriorityOption(value)
+      return (
+        <>
+          {option && (
+            <span
+              className="size-2 shrink-0 rounded-full"
+              style={{ backgroundColor: option.color }}
+            />
+          )}
+          <span className="text-xs font-semibold tracking-wider text-foreground/80 uppercase">
+            {option?.label ?? value}
+          </span>
+        </>
+      )
+    },
     cell: ({ getValue, row }) => {
-      const priority = getPriorityOption(getValue())
+      const priority = getPriorityOption(getValue() as string)
       if (!priority) return null
 
       return (
@@ -234,7 +173,7 @@ export const taskColumns: ColumnDef<ITask, any>[] = [
           <DropdownMenuTrigger asChild>
             <Badge
               variant="secondary"
-              className="cursor-pointer gap-1.5 px-2 font-normal transition-colors hover:bg-muted"
+              className="cursor-pointer gap-1.5 px-2 font-normal transition-colors duration-300 ease-in-out hover:bg-muted"
             >
               <span
                 className="size-1.5 shrink-0 rounded-full"
@@ -269,16 +208,15 @@ export const taskColumns: ColumnDef<ITask, any>[] = [
         </DropdownMenu>
       )
     },
-  }),
+  },
 
-  // 6. Assignee
-  helper.accessor("assignee", {
-    id: "assignee",
-    header: "Assignee",
+  // 5. Assignee
+  {
+    accessorKey: "assignee",
+    label: "Assignee",
     size: 150,
-    meta: { label: "Assignee" },
     cell: ({ getValue }) => {
-      const assignee = getValue()
+      const assignee = getValue() as ITask["assignee"]
       if (!assignee)
         return <span className="text-xs text-muted-foreground">Unassigned</span>
       return (
@@ -293,67 +231,61 @@ export const taskColumns: ColumnDef<ITask, any>[] = [
         </div>
       )
     },
-  }),
+  },
 
-  // 7. Due date
-  helper.accessor("dueDate", {
-    id: "dueDate",
-    header: "Due Date",
+  // 6. Due date
+  {
+    accessorKey: "dueDate",
+    label: "Due Date",
     size: 112,
-    meta: { label: "Due Date" },
     cell: ({ getValue }) => {
-      const date = getValue()
+      const date = getValue() as string
       if (!date) return <span className="text-muted-foreground">—</span>
       const isPast = new Date(date) < new Date()
       return (
         <span className={isPast ? "text-xs text-destructive" : "text-xs"}>
-          {formatDate(date)}
+          {formatDate(date as unknown as Date)}
         </span>
       )
     },
-  }),
+  },
 
-  // 8. Estimated hours
-  helper.accessor("estimatedHours", {
-    id: "estimatedHours",
+  // 7. Estimated hours
+  {
+    accessorKey: "estimatedHours",
+    label: "Estimated hours",
     header: "Est. (h)",
     size: 80,
-    meta: {
-      label: "Estimated hours",
-      headerClassName: "text-right",
-      cellClassName: "text-right tabular-nums",
-    },
+    headerClassName: "text-right",
+    cellClassName: "text-right tabular-nums",
     cell: ({ getValue }) => {
       const v = getValue()
-      return <span className="text-xs">{v != null ? v : "—"}</span>
+      return <span className="text-xs">{v != null ? String(v) : "—"}</span>
     },
-  }),
+  },
 
-  // 9. Actual hours
-  helper.accessor("actualHours", {
-    id: "actualHours",
+  // 8. Actual hours
+  {
+    accessorKey: "actualHours",
+    label: "Actual hours",
     header: "Act. (h)",
     size: 80,
-    meta: {
-      label: "Actual hours",
-      headerClassName: "text-right",
-      cellClassName: "text-right tabular-nums",
-    },
+    headerClassName: "text-right",
+    cellClassName: "text-right tabular-nums",
     cell: ({ getValue }) => {
       const v = getValue()
-      return <span className="text-xs">{v != null ? v : "—"}</span>
+      return <span className="text-xs">{v != null ? String(v) : "—"}</span>
     },
-  }),
+  },
 
-  // 10. Actions (pinned right)
-  helper.display({
+  // 9. Actions (pinned right)
+  {
     id: "actions",
+    label: "Actions",
     size: 40,
-    meta: {
-      label: "Actions",
-      enablePinning: false,
-      enableReorder: false,
-    },
+    enablePinning: false,
+    enableReorder: false,
+    isActionColumn: true,
     cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -371,19 +303,19 @@ export const taskColumns: ColumnDef<ITask, any>[] = [
           <DropdownMenuItem
             onClick={() => console.log("Edit", row.original.id)}
           >
-            <Pencil className="mr-2 size-4" />
+            <Pencil className="size-4" />
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="text-destructive focus:text-destructive"
+            variant="destructive"
             onClick={() => console.log("Delete", row.original.id)}
           >
-            <Trash2 className="mr-2 size-4" />
+            <Trash2 className="size-4" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
-  }),
-]
+  },
+])
