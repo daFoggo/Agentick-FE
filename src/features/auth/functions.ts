@@ -21,10 +21,6 @@ export const signUpFn = createServerFn({ method: "POST" })
   .middleware([requestLoggerMiddleware])
   .inputValidator(SignUpSchema)
   .handler(async ({ data }) => {
-    const { useAppSession } = await import("@/lib/session")
     const response = await signUp(data)
-    // Sau khi đăng ký, thường API trả về user hoặc token. 
-    // Nếu API trả về token thì nên update session ở đây. 
-    // Tuy nhiên ở đây theo logic UI là navigate về sign-in, nên không bắt buộc.
     return response
   })

@@ -14,7 +14,7 @@ export const SidebarProjectList = () => {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
-      <SidebarMenu>
+      <SidebarMenu className="gap-0.5">
         {SAMPLE_PROJECTS.map((project) => (
           <SidebarMenuItem key={project.id}>
             <Link

@@ -1,6 +1,6 @@
 import { useMatches } from "@tanstack/react-router"
 
-export const PageHeader = () => {
+export const AppPageHeader = () => {
   const matches = useMatches()
 
   const headerSource = [...matches]
@@ -20,7 +20,7 @@ export const PageHeader = () => {
 
   if (staticData.header?.render) {
     return (
-      <div className="flex items-center w-full">
+      <div className="flex w-full items-center">
         {staticData.header.render()}
       </div>
     )
@@ -36,7 +36,7 @@ export const PageHeader = () => {
 
   return (
     <div className="flex items-center">
-      <p className="font-semibold text-foreground text-xl">{title}</p>
+      <p className="text-xl font-semibold text-foreground">{title}</p>
     </div>
   )
 }

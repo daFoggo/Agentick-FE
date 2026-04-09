@@ -1,4 +1,4 @@
-import { PageHeader } from "@/components/layout/app/page-header"
+import { AppPageHeader } from "@/components/layout/app/page-header"
 import { AppSidebar } from "@/components/layout/app/sidebar"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { userQueries } from "@/features/users"
@@ -31,8 +31,8 @@ function DashboardLayout() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <main className="flex flex-col flex-1 gap-4 p-4">
-          <PageHeader />
+        <main className="flex flex-1 flex-col gap-4 p-4">
+          <AppPageHeader />
           <Outlet />
         </main>
       </SidebarInset>

@@ -6,16 +6,17 @@ import { userQueries } from "@/features/users"
 export const UserProfile = () => {
   const { data: user } = useSuspenseQuery(userQueries.me())
 
-  const initials = user.name
-    ?.split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase() || "??"
+  const initials =
+    user.name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "??"
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton>
+      <SidebarMenuButton size="lg">
         <Avatar size="sm">
           {user?.avatarUrl && (
             <AvatarImage src={user.avatarUrl} alt={user.name} />
@@ -23,10 +24,10 @@ export const UserProfile = () => {
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col items-start text-sm leading-tight">
-          <span className="font-semibold truncate max-w-[150px]">
+          <span className="max-w-[150px] truncate font-semibold">
             {user?.name}
           </span>
-          <span className="text-xs text-muted-foreground truncate max-w-[150px]">
+          <span className="max-w-[150px] truncate text-xs text-muted-foreground">
             {user?.email}
           </span>
         </div>

@@ -1,27 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { useForm } from "@tanstack/react-form"
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "sonner"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-  Field,
-  FieldLabel,
-  FieldError,
-  FieldGroup,
-} from "@/components/ui/field"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { SignInSchema } from "@/features/auth/schemas"
-import { authMutationOptions } from "@/features/auth/queries"
-
+import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
+import { AuthPageHeader } from "@/components/layout/auth/page-header"
+import { SignInForm } from "@/features/auth"
 
 export const Route = createFileRoute("/auth/sign-in")({
   validateSearch: z.object({
@@ -32,137 +12,13 @@ export const Route = createFileRoute("/auth/sign-in")({
 
 function SignInPage() {
   const { redirect } = Route.useSearch()
-  const navigate = useNavigate()
-  const signInMutation = useMutation(authMutationOptions.signIn())
-
-  const form = useForm({
-    defaultValues: {
-      email__eq: "",
-      password: "",
-    },
-    validators: {
-      onSubmit: SignInSchema,
-    },
-    onSubmit: async ({ value }) => {
-      try {
-        const response = await signInMutation.mutateAsync(value)
-        // Store auth data in localStorage
-        localStorage.setItem("access_token", response.access_token)
-        localStorage.setItem("refresh_token", response.refresh_token)
-        localStorage.setItem("expiration", response.expiration)
-        localStorage.setItem("refresh_expiration", response.refresh_expiration)
-
-        toast.success("Đăng nhập thành công")
-        if (redirect) {
-          window.location.href = redirect
-        } else {
-          navigate({ to: "/dashboard" })
-        }
-      } catch (error) {
-        toast.error("Đăng nhập thất bại. Vui lòng thử lại.")
-        console.error(error)
-      }
-    },
-  })
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold tracking-tight">
-            Đăng nhập
-          </CardTitle>
-          <CardDescription>
-            Nhập email và mật khẩu của bạn để truy cập hệ thống
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              form.handleSubmit()
-            }}
-            className="space-y-6"
-          >
-            <FieldGroup>
-              <form.Field
-                name="email__eq"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched &&
-                    !!field.state.meta.errors.length
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="name@example.com"
-                        type="email"
-                        aria-invalid={isInvalid}
-                        autoComplete="username"
-                      />
-                      <FieldError errors={field.state.meta.errors} />
-                    </Field>
-                  )
-                }}
-              />
-
-              <form.Field
-                name="password"
-                children={(field) => {
-                  const isInvalid =
-                    field.state.meta.isTouched &&
-                    !!field.state.meta.errors.length
-                  return (
-                    <Field data-invalid={isInvalid}>
-                      <FieldLabel htmlFor={field.name}>Mật khẩu</FieldLabel>
-                      <Input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        type="password"
-                        aria-invalid={isInvalid}
-                        autoComplete="current-password"
-                      />
-                      <FieldError errors={field.state.meta.errors} />
-                    </Field>
-                  )
-                }}
-              />
-            </FieldGroup>
-
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <Button
-                  type="submit"
-                  className="w-full font-semibold"
-                  disabled={!canSubmit || isSubmitting}
-                >
-                  {isSubmitting ? "Đang xử lý..." : "Đăng nhập"}
-                </Button>
-              )}
-            />
-          </form>
-
-          <div className="mt-4 text-center text-sm">
-            Chưa có tài khoản?{" "}
-            <a
-              href="/auth/sign-up"
-              className="font-medium text-primary underline underline-offset-4"
-            >
-              Đăng ký ngay
-            </a>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="flex h-screen flex-col overflow-hidden bg-background p-6">
+      <AuthPageHeader />
+      <main className="flex flex-1 items-center justify-center">
+        <SignInForm redirect={redirect} />
+      </main>
     </div>
   )
 }
