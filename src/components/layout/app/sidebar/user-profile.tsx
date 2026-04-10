@@ -1,10 +1,36 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { authMutationOptions } from "@/features/auth"
 import { userQueries } from "@/features/users"
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
+import { useNavigate } from "@tanstack/react-router"
+import { ChevronsUpDown, Loader2, LogOut, Settings, SquareUserRound } from "lucide-react"
+import { toast } from "sonner"
 
 export const UserProfile = () => {
+  const navigate = useNavigate()
   const { data: user } = useSuspenseQuery(userQueries.me())
+  const logoutMutation = useMutation(authMutationOptions.signOut())
+
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync()
+      const { deleteAuthToken } = await import("@/lib/auth-token")
+      await deleteAuthToken()
+      toast.success("Logged out successfully")
+      navigate({ to: "/auth/sign-in" })
+    } catch (error) {
+      toast.error("Logout failed. Please try again.")
+    }
+  }
 
   const initials =
     user.name
@@ -16,22 +42,64 @@ export const UserProfile = () => {
 
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton size="lg">
-        <Avatar size="sm">
-          {user?.avatarUrl && (
-            <AvatarImage src={user.avatarUrl} alt={user.name} />
-          )}
-          <AvatarFallback>{initials}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col items-start text-sm leading-tight">
-          <span className="max-w-[150px] truncate font-semibold">
-            {user?.name}
-          </span>
-          <span className="max-w-[150px] truncate text-xs text-muted-foreground">
-            {user?.email}
-          </span>
-        </div>
-      </SidebarMenuButton>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <SidebarMenuButton size="lg">
+            <Avatar size="sm">
+              {user?.avatarUrl && (
+                <AvatarImage src={user.avatarUrl} alt={user.name} />
+              )}
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+            <div className="flex w-full items-center justify-between text-sm">
+              <span className="line-clamp-1 max-w-[150px] truncate font-semibold">
+                {user?.name}
+              </span>
+              <ChevronsUpDown className="size-4" />
+            </div>
+          </SidebarMenuButton>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" side="top">
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <div className="flex w-full flex-col items-start text-sm">
+                <span className="line-clamp-1 max-w-[170px] truncate font-semibold">
+                  {user?.name}
+                </span>
+                <span className="line-clamp-1 max-w-[170px] truncate text-muted-foreground">
+                  {user?.email}
+                </span>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem className="cursor-pointer">
+              <SquareUserRound />
+              My Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Settings />
+              Settings
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={handleLogout}
+              disabled={logoutMutation.isPending}
+            >
+              {logoutMutation.isPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <LogOut className="size-4" />
+              )}
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </SidebarMenuItem>
   )
 }

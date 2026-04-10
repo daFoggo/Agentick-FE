@@ -1,4 +1,4 @@
-import { signInFn, signUpFn } from "./functions"
+import { signInFn, signOutFn, signUpFn } from "./functions"
 import type { TSignInInput, TSignUpInput } from "./schemas"
 
 /**
@@ -10,5 +10,8 @@ export const authMutationOptions = {
   }),
   signUp: () => ({
     mutationFn: (variables: TSignUpInput) => signUpFn({ data: variables }),
+  }),
+  signOut: () => ({
+    mutationFn: () => signOutFn(),
   }),
 }
