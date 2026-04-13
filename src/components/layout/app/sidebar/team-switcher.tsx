@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import type { TTeamMember } from "@/features/team-members"
 import type { TTeam } from "@/features/teams"
 import { teamQueries } from "@/features/teams"
 import { useQuery } from "@tanstack/react-query"
@@ -25,7 +26,7 @@ import { Area, AreaChart } from "recharts"
 const chartConfig = {
   tasks: {
     label: "Tasks",
-    color: "hsl(var(--primary))",
+    color: "var(--chart-1)",
   },
 } satisfies ChartConfig
 
@@ -36,7 +37,7 @@ const MOCK_TEAMS: TTeam[] = [
     avatar_url: "https://api.dicebear.com/7.x/identicon/svg?seed=Engineering",
     owner_id: "user-1",
     created_at: new Date().toISOString(),
-    members: [{}, {}, {}] as any,
+    members: [{}, {}, {}] as TTeamMember[],
   },
   {
     id: "team-2",
@@ -44,7 +45,7 @@ const MOCK_TEAMS: TTeam[] = [
     avatar_url: "https://api.dicebear.com/7.x/identicon/svg?seed=Marketing",
     owner_id: "user-1",
     created_at: new Date().toISOString(),
-    members: [{}, {}] as any,
+    members: [{}, {}] as TTeamMember[],
   },
 ]
 
@@ -63,26 +64,26 @@ const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
       <button className="flex h-auto w-full flex-col items-start justify-start rounded-none p-2.5 text-left font-normal">
         <div className="mb-2 flex w-full items-center gap-2">
           <div className="relative flex h-6 w-6 min-w-[24px] items-center justify-center overflow-hidden rounded-sm border border-white/10 bg-muted/50">
-            {team.avatar_url ? (
+            {!team.avatar_url ? (
               <img
                 src={team.avatar_url}
                 alt={team.name}
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="text-[9px] font-bold text-muted-foreground uppercase">
+              <div className="text-xs font-medium text-muted-foreground uppercase">
                 {team.name.slice(0, 2)}
               </div>
             )}
           </div>
-          <div className="flex-1 truncate text-[13px] font-medium">
+          <div className="flex-1 truncate text-xs font-semibold">
             {team.name}
           </div>
           <div className="ml-auto flex items-center gap-1">
-            <kbd className="flex h-3.5 w-3.5 items-center justify-center rounded border border-border bg-muted text-[9px] text-muted-foreground group-hover:hidden">
+            <kbd className="flex size-3.5 items-center justify-center rounded border border-border bg-muted text-[9px] text-muted-foreground group-hover:hidden">
               {index + 1}
             </kbd>
-            <GripVertical className="hidden h-3 w-3 cursor-grab text-muted-foreground group-hover:block" />
+            <GripVertical className="hidden size-3 cursor-grab text-muted-foreground group-hover:block" />
           </div>
         </div>
 
@@ -131,7 +132,7 @@ const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
             <span>tasks</span>
           </div>
           <div className="flex items-center gap-1 font-medium text-emerald-500">
-            <CheckCircle2 className="h-2.5 w-2.5" />
+            <CheckCircle2 className="size-2.5" />
             {completionRate}%
           </div>
         </div>
@@ -143,7 +144,7 @@ const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
 const EmptyTile = () => (
   <div className="flex h-full min-h-[90px] w-full items-center justify-center border-t border-l border-dashed border-border">
     <div className="rotate-45 text-muted-foreground/10">
-      <Plus className="h-3.5 w-3.5" />
+      <Plus className="size-3.5" />
     </div>
   </div>
 )
@@ -165,7 +166,7 @@ export const TeamSwitcher = () => {
   // Combine db teams with mock teams for demonstration
   const teams = [...(dbTeams ?? []), ...MOCK_TEAMS]
 
-  // We want a 4x4 grid = 16 slots.
+  // Min 4x4 grid = 16 slots.
   // Last slot is ALWAYS CreateTeamTile.
   const totalSlots = 16
   const displayTeams = teams.slice(0, totalSlots - 1)
