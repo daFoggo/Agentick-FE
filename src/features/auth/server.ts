@@ -41,9 +41,3 @@ export async function refreshToken(
     .json<TBaseResponse<TTokenResponse>>()
   return response.data
 }
-/**
- * @description Đăng xuất khỏi hệ thống
- */
-export async function signOut(): Promise<void> {
-  await api.post("auth/sign-out")
-}

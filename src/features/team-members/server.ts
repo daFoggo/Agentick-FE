@@ -1,15 +1,23 @@
-import "@tanstack/react-start/server-only"
 import { api } from "@/lib/ky"
 import type { TBaseResponse } from "@/types/api"
-import type { TTeamMember, TTeamRole } from "./schemas"
+import "@tanstack/react-start/server-only"
+import { z } from "zod"
+import type {
+  AddTeamMemberSchema,
+  TTeamMember,
+  TTeamMembersResponse,
+  UpdateTeamMemberRoleSchema,
+} from "./schemas"
 
 /**
  * @description Lấy danh sách thành viên của team
  */
-export async function fetchTeamMembers(teamId: string): Promise<TTeamMember[]> {
+export async function fetchTeamMembers(
+  teamId: string
+): Promise<TTeamMembersResponse> {
   const response = await api
     .get(`teams/${teamId}/members`)
-    .json<TBaseResponse<TTeamMember[]>>()
+    .json<TBaseResponse<TTeamMembersResponse>>()
   return response.data
 }
 
@@ -18,13 +26,8 @@ export async function fetchTeamMembers(teamId: string): Promise<TTeamMember[]> {
  */
 export async function addTeamMember(
   teamId: string,
-  userId: string,
-  role: TTeamRole
+  payload: z.infer<typeof AddTeamMemberSchema>
 ): Promise<TTeamMember> {
-  const payload = {
-    user_id: userId,
-    role,
-  }
   const response = await api
     .post(`teams/${teamId}/members`, { json: payload })
     .json<TBaseResponse<TTeamMember>>()
@@ -37,11 +40,8 @@ export async function addTeamMember(
 export async function updateTeamMemberRole(
   teamId: string,
   userId: string,
-  role: TTeamRole
+  payload: z.infer<typeof UpdateTeamMemberRoleSchema>
 ): Promise<TTeamMember> {
-  const payload = {
-    role,
-  }
   const response = await api
     .patch(`teams/${teamId}/members/${userId}`, { json: payload })
     .json<TBaseResponse<TTeamMember>>()
@@ -54,8 +54,9 @@ export async function updateTeamMemberRole(
 export async function removeTeamMember(
   teamId: string,
   userId: string
-): Promise<void> {
-  await api
+): Promise<boolean> {
+  const response = await api
     .delete(`teams/${teamId}/members/${userId}`)
-    .json<TBaseResponse<void>>()
+    .json<TBaseResponse<boolean>>()
+  return response.data
 }

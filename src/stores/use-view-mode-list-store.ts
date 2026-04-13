@@ -70,6 +70,7 @@ interface IViewModeListStore {
   ) => void
   setActiveMode: (scope: string, value: string) => void
   resetToDefault: (scope: string) => void
+  resetAll: () => void
 }
 
 export interface IViewModeScopeState {
@@ -214,13 +215,18 @@ export const useViewModeListStore = create<IViewModeListStore>()(
 
       resetToDefault: (scope) =>
         set((state) => {
-          const nextState = { ...state.modesByScope }
+          const nextState = { ...state.modesByScope}
           delete nextState[scope]
 
           return {
             modesByScope: nextState,
           }
         }),
+
+      resetAll: () =>
+        set(() => ({
+          modesByScope: {},
+        })),
     }),
     {
       name: "view-mode-list-storage",

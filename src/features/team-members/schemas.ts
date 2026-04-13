@@ -14,7 +14,9 @@ export const TeamMemberSchema = z.object({
   user_id: z.string(),
   team_id: z.string(),
   role: TeamRoleSchema,
-  joined_at: z.iso.datetime().optional(),
+  joined_at: z.string(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional().nullable(),
   user: UserSchema.optional(),
 })
 
@@ -25,18 +27,38 @@ export type TTeamMember = z.infer<typeof TeamMemberSchema>
 export const FetchTeamMembersSchema = z.string()
 
 export const AddTeamMemberSchema = z.object({
-  team_id: z.string(),
+  role: TeamRoleSchema.default("member"),
   user_id: z.string(),
-  role: TeamRoleSchema,
 })
 
 export const UpdateTeamMemberRoleSchema = z.object({
+  role: TeamRoleSchema,
+})
+
+export const AddTeamMemberInputSchema = z.object({
+  team_id: z.string(),
+  payload: AddTeamMemberSchema,
+})
+
+export const UpdateTeamMemberRoleInputSchema = z.object({
   team_id: z.string(),
   user_id: z.string(),
-  role: TeamRoleSchema,
+  payload: UpdateTeamMemberRoleSchema,
 })
 
 export const RemoveTeamMemberSchema = z.object({
   team_id: z.string(),
   user_id: z.string(),
 })
+
+export interface TTeamMemberSearchOptions {
+  ordering: string | null
+  page: number
+  page_size: number
+  total_count: number
+}
+
+export interface TTeamMembersResponse {
+  founds: TTeamMember[]
+  search_options: TTeamMemberSearchOptions
+}

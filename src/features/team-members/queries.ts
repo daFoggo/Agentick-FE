@@ -24,7 +24,7 @@ export const useTeamMemberMutations = () => {
   const queryClient = useQueryClient()
 
   const add = useMutation({
-    mutationFn: (data: { team_id: string; user_id: string; role: any }) =>
+    mutationFn: (data: { team_id: string; payload: { user_id: string; role: any } }) =>
       addTeamMemberFn({ data }),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["teams", variables.team_id, "members"] })
@@ -32,7 +32,7 @@ export const useTeamMemberMutations = () => {
   })
 
   const updateRole = useMutation({
-    mutationFn: (data: { team_id: string; user_id: string; role: any }) =>
+    mutationFn: (data: { team_id: string; user_id: string; payload: { role: any } }) =>
       updateTeamMemberRoleFn({ data }),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["teams", variables.team_id, "members"] })

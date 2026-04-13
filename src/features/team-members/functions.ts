@@ -8,8 +8,8 @@ import {
 } from "./server"
 import {
   FetchTeamMembersSchema,
-  AddTeamMemberSchema,
-  UpdateTeamMemberRoleSchema,
+  AddTeamMemberInputSchema,
+  UpdateTeamMemberRoleInputSchema,
   RemoveTeamMemberSchema,
 } from "./schemas"
 
@@ -20,14 +20,14 @@ export const fetchTeamMembersFn = createServerFn({ method: "GET" })
 
 export const addTeamMemberFn = createServerFn({ method: "POST" })
   .middleware([requestLoggerMiddleware])
-  .inputValidator(AddTeamMemberSchema)
-  .handler(({ data }) => addTeamMember(data.team_id, data.user_id, data.role))
+  .inputValidator(AddTeamMemberInputSchema)
+  .handler(({ data }) => addTeamMember(data.team_id, data.payload))
 
 export const updateTeamMemberRoleFn = createServerFn({ method: "POST" })
   .middleware([requestLoggerMiddleware])
-  .inputValidator(UpdateTeamMemberRoleSchema)
+  .inputValidator(UpdateTeamMemberRoleInputSchema)
   .handler(({ data }) =>
-    updateTeamMemberRole(data.team_id, data.user_id, data.role)
+    updateTeamMemberRole(data.team_id, data.user_id, data.payload)
   )
 
 export const removeTeamMemberFn = createServerFn({ method: "POST" })

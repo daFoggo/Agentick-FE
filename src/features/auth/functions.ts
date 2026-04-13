@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start"
 import { requestLoggerMiddleware } from "@/lib/middleware"
 import { SignInSchema, SignUpSchema } from "./schemas"
-import { signIn, signOut, signUp } from "./server"
+import { signIn, signUp } from "./server"
 
 export const signInFn = createServerFn({ method: "POST" })
   .middleware([requestLoggerMiddleware])
@@ -21,7 +21,11 @@ export const signUpFn = createServerFn({ method: "POST" })
   .middleware([requestLoggerMiddleware])
   .inputValidator(SignUpSchema)
   .handler(async ({ data }) => {
+    const { useAppSession } = await import("@/lib/session.server")
     const response = await signUp(data)
+    // Xóa session cũ nếu có trước khi chuyển hướng sang đăng nhập
+    const session = await useAppSession()
+    await session.clear()
     return response
   })
 
@@ -30,11 +34,5 @@ export const signOutFn = createServerFn({ method: "POST" })
   .handler(async () => {
     const { useAppSession } = await import("@/lib/session.server")
     const session = await useAppSession()
-    try {
-      await signOut()
-    } catch (error) {
-      console.error("Backend signOut failed", error)
-    } finally {
-      await session.clear()
-    }
+    await session.clear()
   })

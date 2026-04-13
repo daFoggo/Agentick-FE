@@ -10,9 +10,18 @@ import {
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { authMutationOptions } from "@/features/auth"
 import { userQueries } from "@/features/users"
+import { queryClient } from "@/lib/query-client"
+import { useDashboardStore } from "@/stores/use-dashboard-store"
+import { useViewModeListStore } from "@/stores/use-view-mode-list-store"
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
-import { ChevronsUpDown, Loader2, LogOut, Settings, SquareUserRound } from "lucide-react"
+import {
+  ChevronsUpDown,
+  Loader2,
+  LogOut,
+  Settings,
+  SquareUserRound,
+} from "lucide-react"
 import { toast } from "sonner"
 
 export const UserProfile = () => {
@@ -25,6 +34,12 @@ export const UserProfile = () => {
       await logoutMutation.mutateAsync()
       const { deleteAuthToken } = await import("@/lib/auth-token")
       await deleteAuthToken()
+
+      // Clear client-side data
+      useDashboardStore.getState().reset()
+      useViewModeListStore.getState().resetAll()
+      queryClient.clear()
+
       toast.success("Logged out successfully")
       navigate({ to: "/auth/sign-in" })
     } catch (error) {

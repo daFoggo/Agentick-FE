@@ -1,6 +1,7 @@
 import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   fetchTeamsFn,
+  fetchMyTeamsFn,
   fetchTeamByIdFn,
   createTeamFn,
   updateTeamFn,
@@ -15,6 +16,11 @@ export const teamQueries = {
     queryOptions({
       queryKey: ["teams", "list", params],
       queryFn: () => fetchTeamsFn({ data: params }),
+    }),
+  myTeams: () =>
+    queryOptions({
+      queryKey: ["teams", "me"],
+      queryFn: () => fetchMyTeamsFn(),
     }),
   detail: (team_id: string) =>
     queryOptions({

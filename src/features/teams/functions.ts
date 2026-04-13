@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start"
 import { requestLoggerMiddleware } from "@/lib/middleware"
 import {
   fetchTeams,
+  fetchMyTeams,
   fetchTeamById,
   createTeam,
   updateTeam,
@@ -18,6 +19,10 @@ export const fetchTeamsFn = createServerFn({ method: "GET" })
   .middleware([requestLoggerMiddleware])
   .inputValidator(GetTeamsSchema)
   .handler(({ data }) => fetchTeams(data))
+
+export const fetchMyTeamsFn = createServerFn({ method: "GET" })
+  .middleware([requestLoggerMiddleware])
+  .handler(() => fetchMyTeams())
 
 export const fetchTeamByIdFn = createServerFn({ method: "GET" })
   .middleware([requestLoggerMiddleware])

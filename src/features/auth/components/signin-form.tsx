@@ -15,7 +15,11 @@ import { Input } from "@/components/ui/input"
 import { SITE_CONFIG } from "@/configs/site"
 import { authMutationOptions } from "@/features/auth/queries"
 import { SignInSchema } from "@/features/auth/schemas"
+import { queryClient } from "@/lib/query-client"
 import { Loader2, LogIn } from "lucide-react"
+
+import { useDashboardStore } from "@/stores/use-dashboard-store"
+import { useViewModeListStore } from "@/stores/use-view-mode-list-store"
 
 interface ISignInFormProps {
   redirect?: string
@@ -43,18 +47,16 @@ export const SignInForm = ({ redirect }: ISignInFormProps) => {
         localStorage.setItem("refresh_expiration", response.refresh_expiration)
 
         toast.success("Signed in successfully")
+
+        // Reset persistent stores and clear cache for the new user session
+        useDashboardStore.getState().reset()
+        useViewModeListStore.getState().resetAll()
+        queryClient.clear()
+
         if (redirect) {
           window.location.href = redirect
         } else {
-          const teamId = response.user_info.default_team_id
-          if (teamId) {
-            navigate({
-              to: "/dashboard/$teamId/overview",
-              params: { teamId },
-            })
-          } else {
-            navigate({ to: "/dashboard" })
-          }
+          navigate({ to: "/dashboard" })
         }
       } catch (error) {
         toast.error("Sign in failed. Please try again.")

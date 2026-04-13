@@ -6,16 +6,41 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { TTeamMember } from "@/features/team-members"
-import { SAMPLE_TEAM } from "@/features/teams/sample-data"
+import { teamQueries } from "@/features/teams"
+import { useQuery } from "@tanstack/react-query"
 import { UserPlus, Users } from "lucide-react"
 
 export interface TeamDetailsHeaderProps {
   teamId: string
 }
 
-export function TeamDetailsHeader({ teamId: _teamId }: TeamDetailsHeaderProps) {
-  const team = SAMPLE_TEAM
+export function TeamDetailsHeader({ teamId }: TeamDetailsHeaderProps) {
+  const { data: team, isLoading, error } = useQuery(teamQueries.detail(teamId))
+
+  if (isLoading) {
+    return (
+      <div className="flex w-full items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <Skeleton className="size-8 rounded-md" />
+          <Skeleton className="h-7 w-48" />
+        </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-24 rounded-full" />
+          <Skeleton className="h-10 w-24 rounded-md" />
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !team) {
+    return (
+      <div className="flex w-full items-center justify-between gap-4 py-2 text-destructive">
+        Error loading team details
+      </div>
+    )
+  }
 
   return (
     <div className="flex w-full items-center justify-between gap-4">

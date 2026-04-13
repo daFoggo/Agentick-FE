@@ -1,21 +1,26 @@
 import "@tanstack/react-start/server-only"
+import { z } from "zod"
 import { api } from "@/lib/ky"
 import type { TBaseResponse } from "@/types/api"
-import type { TTeam } from "./schemas"
+import type { TTeam, GetTeamsSchema, TTeamsResponse, CreateTeamSchema, UpdateTeamSchema } from "./schemas"
 
 /**
  * @description Lấy danh sách teams
  */
-export async function fetchTeams(params?: {
-  name__ilike?: string
-  page?: number
-  size?: number
-}): Promise<TTeam[]> {
+export async function fetchTeams(params?: z.infer<typeof GetTeamsSchema>): Promise<TTeamsResponse> {
   const response = await api
     .get("teams", { searchParams: params })
-    .json<TBaseResponse<{ founds: TTeam[]; total: number }>>()
+    .json<TBaseResponse<TTeamsResponse>>()
 
-  return response.data.founds
+  return response.data
+}
+
+/**
+ * @description Lấy danh sách teams của user hiện tại (bao gồm owner và tham gia)
+ */
+export async function fetchMyTeams(): Promise<TTeam[]> {
+  const response = await api.get("teams/me").json<TBaseResponse<TTeam[]>>()
+  return response.data
 }
 
 /**
@@ -34,7 +39,7 @@ export async function fetchTeamById(teamId: string): Promise<TTeam | null> {
 /**
  * @description Tạo team mới
  */
-export async function createTeam(data: Partial<TTeam>): Promise<TTeam> {
+export async function createTeam(data: z.infer<typeof CreateTeamSchema>): Promise<TTeam> {
   const response = await api.post("teams", { json: data }).json<TBaseResponse<TTeam>>()
   return response.data
 }
@@ -44,7 +49,7 @@ export async function createTeam(data: Partial<TTeam>): Promise<TTeam> {
  */
 export async function updateTeam(
   teamId: string,
-  data: Partial<TTeam>
+  data: z.infer<typeof UpdateTeamSchema>
 ): Promise<TTeam> {
   const response = await api
     .patch(`teams/${teamId}`, { json: data })
@@ -55,6 +60,7 @@ export async function updateTeam(
 /**
  * @description Xóa team (Soft Delete)
  */
-export async function deleteTeam(teamId: string): Promise<void> {
-  await api.delete(`teams/${teamId}`).json<TBaseResponse<void>>()
+export async function deleteTeam(teamId: string): Promise<boolean> {
+  const response = await api.delete(`teams/${teamId}`).json<TBaseResponse<boolean>>()
+  return response.data
 }
