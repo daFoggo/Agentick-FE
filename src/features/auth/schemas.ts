@@ -19,9 +19,6 @@ export const SignInResponseSchema = z.object({
   user_info: UserSchema,
 })
 
-export type TSignInInput = z.infer<typeof SignInSchema>
-export type TSignInResponse = z.infer<typeof SignInResponseSchema>
-
 /**
  * @description Refresh Token Logic
  */
@@ -36,9 +33,6 @@ export const TokenResponseSchema = z.object({
   refresh_expiration: z.string(),
 })
 
-export type TRefreshTokenInput = z.infer<typeof RefreshTokenInputSchema>
-export type TTokenResponse = z.infer<typeof TokenResponseSchema>
-
 /**
  * @description Sign Up Business Logic
  */
@@ -51,5 +45,9 @@ export const SignUpSchema = z.object({
 
 export const SignUpResponseSchema = UserSchema
 
+export type TSignInInput = z.infer<typeof SignInSchema>
+export type TSignInResponse = z.infer<typeof SignInResponseSchema>
 export type TSignUpInput = z.infer<typeof SignUpSchema>
 export type TSignUpResponse = z.infer<typeof SignUpResponseSchema>
+export type TRefreshTokenInput = z.infer<typeof RefreshTokenInputSchema>
+export type TTokenResponse = z.infer<typeof TokenResponseSchema>

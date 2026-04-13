@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { TTeam } from "@/features/teams"
-import { teamQueries } from "@/features/teams"
+import { CreateTeamDialog, teamQueries } from "@/features/teams"
 import { useQuery } from "@tanstack/react-query"
 import { Link, useParams } from "@tanstack/react-router"
 import {
@@ -46,6 +46,7 @@ export const TeamSwitcher = () => {
   const teams = myTeams ?? []
 
   const [page, setPage] = useState(0)
+  const [isCreateTeamDialogOpen, setIsCreateTeamDialogOpen] = useState(false)
   const ITEMS_PER_PAGE = 3
   const totalPages = Math.max(
     1,
@@ -106,12 +107,17 @@ export const TeamSwitcher = () => {
                   index={page * ITEMS_PER_PAGE + idx}
                 />
               ))}
-              {Array.from({ length: emptySlotsCount }).map((_, idx) => (
+               {Array.from({ length: emptySlotsCount }).map((_, idx) => (
                 <EmptyTile key={`empty-${idx}`} />
               ))}
-              <CreateTeamTile />
+              <CreateTeamTile onClick={() => setIsCreateTeamDialogOpen(true)} />
             </div>
           </div>
+
+          <CreateTeamDialog
+            open={isCreateTeamDialogOpen}
+            onOpenChange={setIsCreateTeamDialogOpen}
+          />
 
           {totalPages > 1 && (
             <div className="flex w-full items-center justify-between p-2">
@@ -248,8 +254,11 @@ const EmptyTile = () => (
   </div>
 )
 
-const CreateTeamTile = () => (
-  <button className="group relative flex h-full min-h-[90px] flex-col items-center justify-center gap-1.5 rounded-none border-t border-l border-dashed border-border p-2 transition-colors hover:bg-accent/50">
+const CreateTeamTile = ({ onClick }: { onClick?: () => void }) => (
+  <button
+    onClick={onClick}
+    className="group relative flex h-full min-h-[90px] flex-col items-center justify-center gap-1.5 rounded-none border-t border-l border-dashed border-border p-2 transition-colors hover:bg-accent/50"
+  >
     <div className="flex size-5 items-center justify-center rounded-sm border border-border bg-background transition-colors group-hover:border-primary group-hover:bg-primary">
       <Plus className="size-3.5 text-muted-foreground transition-colors group-hover:text-primary-foreground" />
     </div>

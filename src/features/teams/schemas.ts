@@ -13,11 +13,6 @@ export const TeamSchema = z.object({
   updated_at: z.string().optional().nullable(),
 })
 
-export type TTeam = z.infer<typeof TeamSchema> & {
-  members?: TTeamMember[]
-  projects?: TProject[]
-}
-
 export const CreateTeamSchema = z.object({
   name: z.string().min(2, "Tên team tối thiểu 2 ký tự"),
   description: z.string().optional(),
@@ -56,3 +51,10 @@ export interface TTeamsResponse {
   founds: TTeam[]
   search_options: TTeamSearchOptions
 }
+
+export type TTeam = z.infer<typeof TeamSchema> & {
+  members?: TTeamMember[]
+  projects?: TProject[]
+}
+export type TCreateTeamInput = z.infer<typeof CreateTeamSchema>
+export type TUpdateTeamInput = z.infer<typeof UpdateTeamSchema>

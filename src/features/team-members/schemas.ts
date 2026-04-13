@@ -20,9 +20,6 @@ export const TeamMemberSchema = z.object({
   user: UserSchema.optional(),
 })
 
-export type TTeamRole = z.infer<typeof TeamRoleSchema>
-export type TTeamMember = z.infer<typeof TeamMemberSchema>
-
 export const FetchTeamMembersSchema = z.string()
 
 export const AddTeamMemberSchema = z.object({
@@ -61,3 +58,6 @@ export interface TTeamMembersResponse {
   founds: TTeamMember[]
   search_options: TTeamMemberSearchOptions
 }
+
+export type TTeamRole = z.infer<typeof TeamRoleSchema>
+export type TTeamMember = z.infer<typeof TeamMemberSchema>

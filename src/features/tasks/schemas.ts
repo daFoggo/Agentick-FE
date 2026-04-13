@@ -64,9 +64,14 @@ export const TaskSchema = z.object({
   updated_at: z.iso.datetime().or(z.date()),
 })
 
-/**
- * @description Task Types with Relations
- */
+export const CreateTaskSchema = TaskSchema.omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+})
+
+export const UpdateTaskSchema = CreateTaskSchema.partial()
+
 export type TTask = z.infer<typeof TaskSchema> & {
   tags?: TTag[]
   phase?: TPhase
@@ -75,11 +80,3 @@ export type TTask = z.infer<typeof TaskSchema> & {
 
 export type TTag = z.infer<typeof TagSchema>
 export type TPhase = z.infer<typeof PhaseSchema>
-
-export const CreateTaskSchema = TaskSchema.omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-})
-
-export const UpdateTaskSchema = CreateTaskSchema.partial()
