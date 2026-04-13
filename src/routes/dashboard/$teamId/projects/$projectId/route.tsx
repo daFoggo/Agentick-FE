@@ -1,8 +1,5 @@
 import { ViewModeList } from "@/components/layout/app/view-mode-list"
-import {
-  PROJECT_VIEW_MODE_CATALOG,
-  buildViewModes,
-} from "@/constants/view-mode-list"
+import { PROJECT_VIEW_MODE_CATALOG } from "@/constants/view-mode-list"
 import {
   Avatar,
   AvatarFallback,
@@ -13,9 +10,8 @@ import {
 import { Button } from "@/components/ui/button"
 import type { TProjectMember } from "@/features/project-members"
 import { projectQueryOptions } from "@/features/projects/queries"
-import { SAMPLE_TASKS, TaskTable } from "@/features/tasks"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { createFileRoute } from "@tanstack/react-router"
+import { Outlet, createFileRoute } from "@tanstack/react-router"
 import { FolderOpen, Share2 } from "lucide-react"
 
 export const Route = createFileRoute("/dashboard/$teamId/projects/$projectId")({
@@ -26,20 +22,21 @@ export const Route = createFileRoute("/dashboard/$teamId/projects/$projectId")({
     header: {
       render: () => <ProjectHeader />,
     },
-    viewModeScope: "project",
-    viewModes: buildViewModes(PROJECT_VIEW_MODE_CATALOG, {
-      dashboard: () => <ProjectDashboardView />,
-      list: () => <ProjectListView />,
-      board: () => <ProjectBoardView />,
-      timeline: () => <ProjectTimelineView />,
-    }),
   },
 })
 
 function RouteComponent() {
+  const { teamId, projectId } = Route.useParams()
+
   return (
     <div className="flex flex-col gap-4">
-      <ViewModeList />
+      <ViewModeList
+        catalog={PROJECT_VIEW_MODE_CATALOG}
+        scope="project"
+        params={{ teamId, projectId }}
+        allowCustomization={false}
+      />
+      <Outlet />
     </div>
   )
 }
@@ -80,23 +77,4 @@ function ProjectHeader() {
       </div>
     </div>
   )
-}
-
-function ProjectDashboardView() {
-  const { projectId } = Route.useParams()
-  return <div>Project dashboard: {projectId}</div>
-}
-
-function ProjectListView() {
-  return <TaskTable data={SAMPLE_TASKS} groupBy="status" />
-}
-
-function ProjectBoardView() {
-  const { projectId } = Route.useParams()
-  return <div>Project board: {projectId}</div>
-}
-
-function ProjectTimelineView() {
-  const { projectId } = Route.useParams()
-  return <div>Project timeline: {projectId}</div>
 }

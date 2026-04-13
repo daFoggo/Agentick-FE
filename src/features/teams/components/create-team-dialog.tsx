@@ -19,17 +19,20 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import type { TTeam } from "../schemas"
 import { useTeamMutations } from "../queries"
 import { CreateTeamSchema, type TCreateTeamInput } from "../schemas"
 
 interface ICreateTeamDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onCreated?: (team: TTeam) => void
 }
 
 export const CreateTeamDialog = ({
   open,
   onOpenChange,
+  onCreated,
 }: ICreateTeamDialogProps) => {
   const { create } = useTeamMutations()
 
@@ -44,8 +47,9 @@ export const CreateTeamDialog = ({
     },
     onSubmit: async ({ value }) => {
       try {
-        await create.mutateAsync(value)
+        const team = await create.mutateAsync(value)
         toast.success("Team created successfully")
+        onCreated?.(team)
         onOpenChange(false)
         form.reset()
       } catch (error) {
@@ -112,7 +116,7 @@ export const CreateTeamDialog = ({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="What does this team do?"
-                      className="min-h-[100px] resize-none"
+                      className="min-h-25 resize-none"
                       aria-invalid={isInvalid}
                     />
                     <FieldError errors={field.state.meta.errors} />

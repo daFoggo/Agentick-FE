@@ -7,147 +7,169 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  type IViewModeDefinition,
   resolveViewModes,
   useViewModeListHydrated,
   useViewModeListStore,
 } from "@/stores/use-view-mode-list-store"
-import { useMatches } from "@tanstack/react-router"
+import type { IViewModeCatalogItem } from "@/types/view-mode-list"
+import { Link, useLocation } from "@tanstack/react-router"
 import { SlidersHorizontal } from "lucide-react"
+import { type ReactNode, useEffect } from "react"
 import { ViewModeListSkeleton } from "./skeleton"
 
 interface IViewModeListProps {
-  definitions?: IViewModeDefinition[]
-  scope?: string
+  catalog: IViewModeCatalogItem[]
+  scope: string
+  params?: Record<string, string>
+  badgeMap?: Partial<Record<string, ReactNode>>
   hide?: boolean
   allowCustomization?: boolean
 }
 
 export const ViewModeList = ({
-  definitions,
+  catalog,
   scope,
+  params,
+  badgeMap,
   hide,
   allowCustomization,
 }: IViewModeListProps) => {
-  const matches = useMatches()
-  const currentMatch = matches.at(-1)
-  const currentStaticData = currentMatch?.staticData
-
-  // Ưu tiên danh sách từ route, nhưng vẫn cho phép truyền vào trực tiếp.
-  const viewModeDefinitions = definitions ?? currentStaticData?.viewModes ?? []
-
-  // Scope quyết định dữ liệu nào sẽ được đọc và cập nhật.
-  // Route có thể đổi scope để dùng lại component ở nhiều màn hình.
-  const viewModeScope =
-    scope ??
-    currentStaticData?.viewModeScope ??
-    currentMatch?.routeId ??
-    "global"
-  // Mặc định cho phép chỉnh sửa, trừ khi route chủ động tắt.
-  const allowViewModeCustomization =
-    allowCustomization ?? currentStaticData?.allowViewModeCustomization ?? true
+  const { pathname } = useLocation()
+  const viewModeScope = scope
+  const allowViewModeCustomization = allowCustomization ?? true
   const hasHydrated = useViewModeListHydrated()
 
-  // Chỉ lấy phần của mục hiện tại để màn hình này không bị ảnh hưởng
-  // khi mục khác thay đổi.
   const scopeState = useViewModeListStore(
     (state) => state.modesByScope[viewModeScope]
   )
   const setActiveMode = useViewModeListStore((state) => state.setActiveMode)
+  const updateMode = useViewModeListStore((state) => state.updateMode)
   const toggleModeVisibility = useViewModeListStore(
     (state) => state.toggleModeVisibility
   )
 
-  if (
-    hide ||
-    currentStaticData?.hideViewModes ||
-    viewModeDefinitions.length === 0
-  ) {
+  const navDefinitions = catalog.map((mode) => ({
+    ...mode,
+    badge: badgeMap?.[mode.value] ?? mode.badge,
+    render: () => null,
+  }))
+  
+  const toByValue = Object.fromEntries(
+    catalog.map((mode) => [mode.value, mode.to])
+  ) as Record<string, string | undefined>
+
+  const activeMode = pathname.replace(/\/+$/, "").split("/").at(-1)
+  const shouldHide = hide || navDefinitions.length === 0
+
+  const { modes } = resolveViewModes(navDefinitions, scopeState)
+
+  const visibleModes = modes.filter((mode) => mode.isVisible)
+  const displayModes = modes.filter(
+    (mode) => mode.isVisible || mode.value === activeMode
+  )
+
+  useEffect(() => {
+    if (!activeMode) return
+
+    const active = modes.find((mode) => mode.value === activeMode)
+    if (active && !active.isVisible) {
+      updateMode(
+        viewModeScope,
+        activeMode,
+        { isVisible: true },
+        navDefinitions
+      )
+    }
+  }, [activeMode, modes, navDefinitions, updateMode, viewModeScope])
+
+  if (shouldHide) {
     return null
   }
 
-  // Chờ dữ liệu tải xong rồi mới hiển thị để tránh lệch giao diện.
   if (!hasHydrated) {
     return <ViewModeListSkeleton />
   }
 
-  // Gộp danh sách gốc với lựa chọn đã lưu trước khi hiển thị.
-  const { modes, activeValue } = resolveViewModes(
-    viewModeDefinitions,
-    scopeState
-  )
-
-  const visibleModes = modes.filter((mode) => mode.isVisible)
-
-  if (visibleModes.length === 0) {
+  if (displayModes.length === 0) {
     return null
   }
 
   return (
-    <Tabs
-      value={activeValue ?? visibleModes[0].value}
-      onValueChange={(value) => setActiveMode(viewModeScope, value)}
-      className="w-full"
-    >
-      <div className="flex justify-between items-center gap-2">
-        <TabsList variant="default">
-          {visibleModes.map((mode) => (
-            <TabsTrigger value={mode.value} key={`trigger-${mode.value}`}>
-              <div className="flex items-center gap-2">
-                {mode.icon && <mode.icon />}
-                {mode.label}
-                {mode.badge && <span>{mode.badge}</span>}
-              </div>
-            </TabsTrigger>
-          ))}
-        </TabsList>
+    <div className="flex items-center justify-between gap-2">
+      <div className="inline-flex w-fit items-center rounded-lg bg-muted p-0.75 text-muted-foreground">
+        {displayModes.map((mode) => {
+          const to = toByValue[mode.value]
+          if (!to) return null
 
-        {allowViewModeCustomization ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <SlidersHorizontal />
-                Customize
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64">
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>View Modes</DropdownMenuLabel>
-                {modes.map((mode) => {
-                  const disabled = mode.isVisible && visibleModes.length === 1
-
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={`mode-setting-${mode.value}`}
-                      checked={mode.isVisible}
-                      disabled={disabled}
-                      onCheckedChange={() => {
-                        toggleModeVisibility(
-                          viewModeScope,
-                          mode.value,
-                          viewModeDefinitions
-                        )
-                      }}
-                    >
-                      <span className="flex items-center gap-2">
-                        <mode.icon />
-                        {mode.label}
-                      </span>
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : null}
+          return (
+            <Link
+              key={mode.value}
+              to={to as any}
+              params={params as any}
+              onClick={() => setActiveMode(viewModeScope, mode.value)}
+            >
+              {({ isActive }) => (
+                <span
+                  className={[
+                    "inline-flex h-[calc(100%-1px)] items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-colors",
+                    isActive
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-foreground/60 hover:text-foreground",
+                  ].join(" ")}
+                >
+                  <mode.icon className="size-4" />
+                  {mode.label}
+                  {mode.badge ? (
+                    <span className="text-xs text-muted-foreground">
+                      {mode.badge}
+                    </span>
+                  ) : null}
+                </span>
+              )}
+            </Link>
+          )
+        })}
       </div>
-      {visibleModes.map((mode) => (
-        <TabsContent value={mode.value} key={`content-${mode.value}`}>
-          {mode.render()}
-        </TabsContent>
-      ))}
-    </Tabs>
+
+      {allowViewModeCustomization ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <SlidersHorizontal />
+              Customize
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64">
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>View Modes</DropdownMenuLabel>
+              {modes.map((mode) => {
+                const disabled = mode.isVisible && visibleModes.length === 1
+
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={`mode-setting-${mode.value}`}
+                    checked={mode.isVisible}
+                    disabled={disabled}
+                    onCheckedChange={() => {
+                      toggleModeVisibility(
+                        viewModeScope,
+                        mode.value,
+                        navDefinitions
+                      )
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <mode.icon />
+                      {mode.label}
+                    </span>
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : null}
+    </div>
   )
 }

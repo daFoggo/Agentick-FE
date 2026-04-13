@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import type { TTeam } from "@/features/teams"
 import { CreateTeamDialog, teamQueries } from "@/features/teams"
 import { useQuery } from "@tanstack/react-query"
-import { Link, useParams } from "@tanstack/react-router"
+import { Link, useNavigate, useParams } from "@tanstack/react-router"
 import {
   CheckCircle2,
   ChevronLeft,
@@ -36,13 +36,14 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export const TeamSwitcher = () => {
+  const navigate = useNavigate()
   const { teamId } = useParams({ strict: false }) as { teamId?: string }
   const { data: teamDetail, isLoading: isLoadingDetail } = useQuery({
     ...teamQueries.detail(teamId ?? ""),
     enabled: !!teamId,
   })
 
-  const { data: myTeams, isLoading: isLoadingTeams } = useQuery(teamQueries.myTeams())
+  const { data: myTeams } = useQuery(teamQueries.myTeams())
   const teams = myTeams ?? []
 
   const [page, setPage] = useState(0)
@@ -64,6 +65,13 @@ export const TeamSwitcher = () => {
 
   const handlePrev = () => setPage((p) => Math.max(0, p - 1))
   const handleNext = () => setPage((p) => Math.min(totalPages - 1, p + 1))
+
+  const handleTeamCreated = (team: TTeam) => {
+    navigate({
+      to: "/dashboard/$teamId/overview",
+      params: { teamId: team.id },
+    })
+  }
 
   return (
     <SidebarMenuItem>
@@ -89,7 +97,7 @@ export const TeamSwitcher = () => {
         <PopoverContent
           align="start"
           side="bottom"
-          className="w-[420px] gap-0 p-0"
+          className="w-105 gap-0 p-0"
         >
           <div className="flex w-full items-center justify-between p-2">
             <PopoverTitle>My Teams</PopoverTitle>
@@ -107,7 +115,7 @@ export const TeamSwitcher = () => {
                   index={page * ITEMS_PER_PAGE + idx}
                 />
               ))}
-               {Array.from({ length: emptySlotsCount }).map((_, idx) => (
+              {Array.from({ length: emptySlotsCount }).map((_, idx) => (
                 <EmptyTile key={`empty-${idx}`} />
               ))}
               <CreateTeamTile onClick={() => setIsCreateTeamDialogOpen(true)} />
@@ -117,6 +125,7 @@ export const TeamSwitcher = () => {
           <CreateTeamDialog
             open={isCreateTeamDialogOpen}
             onOpenChange={setIsCreateTeamDialogOpen}
+            onCreated={handleTeamCreated}
           />
 
           {totalPages > 1 && (
@@ -192,7 +201,7 @@ const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
           </div>
         </div>
 
-        <div className="mb-1.5 h-[24px] w-full">
+        <div className="mb-1.5 h-6 w-full">
           <ChartContainer
             config={chartConfig}
             className="aspect-auto! h-full w-full"
@@ -247,7 +256,7 @@ const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
 }
 
 const EmptyTile = () => (
-  <div className="flex h-full min-h-[90px] w-full items-center justify-center border-t border-l border-dashed border-border">
+  <div className="flex h-full min-h-22.5 w-full items-center justify-center border-t border-l border-dashed border-border">
     <div className="rotate-45 text-muted-foreground/10">
       <Plus className="size-3.5" />
     </div>
@@ -257,7 +266,7 @@ const EmptyTile = () => (
 const CreateTeamTile = ({ onClick }: { onClick?: () => void }) => (
   <button
     onClick={onClick}
-    className="group relative flex h-full min-h-[90px] flex-col items-center justify-center gap-1.5 rounded-none border-t border-l border-dashed border-border p-2 transition-colors hover:bg-accent/50"
+    className="group relative flex h-full min-h-22.5 flex-col items-center justify-center gap-1.5 rounded-none border-t border-l border-dashed border-border p-2 transition-colors hover:bg-accent/50"
   >
     <div className="flex size-5 items-center justify-center rounded-sm border border-border bg-background transition-colors group-hover:border-primary group-hover:bg-primary">
       <Plus className="size-3.5 text-muted-foreground transition-colors group-hover:text-primary-foreground" />

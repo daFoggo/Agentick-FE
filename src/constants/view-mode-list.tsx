@@ -18,6 +18,7 @@ export const PROJECT_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [
     value: "dashboard",
     label: "Dashboard",
     icon: ChartLine,
+    to: "/dashboard/$teamId/projects/$projectId/dashboard",
     isDefault: true,
     isVisibleByDefault: true,
   },
@@ -25,18 +26,21 @@ export const PROJECT_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [
     value: "list",
     label: "List",
     icon: ListTree,
+    to: "/dashboard/$teamId/projects/$projectId/list",
     isVisibleByDefault: true,
   },
   {
     value: "board",
     label: "Board",
     icon: Kanban,
+    to: "/dashboard/$teamId/projects/$projectId/board",
     isVisibleByDefault: true,
   },
   {
     value: "timeline",
     label: "Timeline",
     icon: ChartNoAxesGantt,
+    to: "/dashboard/$teamId/projects/$projectId/timeline",
     isVisibleByDefault: false,
   },
 ]
@@ -46,17 +50,20 @@ export const INBOX_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [
     value: "active",
     label: "Active",
     icon: Inbox,
+    to: "/dashboard/$teamId/inbox/active",
     isDefault: true,
   },
   {
     value: "bookmarks",
     label: "Bookmarks",
     icon: Bookmark,
+    to: "/dashboard/$teamId/inbox/bookmarks",
   },
   {
     value: "archive",
     label: "Archive",
     icon: Archive,
+    to: "/dashboard/$teamId/inbox/archive",
   },
 ]
 
@@ -65,17 +72,20 @@ export const TEAM_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [
     value: "overview",
     label: "Overview",
     icon: LayoutDashboard,
+    to: "/dashboard/$teamId/team/overview",
     isDefault: true,
   },
   {
     value: "members",
     label: "Members",
     icon: Users,
+    to: "/dashboard/$teamId/team/members",
   },
   {
     value: "settings",
     label: "Settings",
     icon: Settings,
+    to: "/dashboard/$teamId/team/settings",
   },
 ]
 

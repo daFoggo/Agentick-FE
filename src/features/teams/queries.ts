@@ -35,26 +35,35 @@ export const useTeamMutations = () => {
 
   const create = useMutation({
     mutationFn: (payload: any) => createTeamFn({ data: payload }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["teams", "list"] })
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["teams", "list"] }),
+        queryClient.invalidateQueries({ queryKey: ["teams", "me"] }),
+      ])
     },
   })
 
   const update = useMutation({
     mutationFn: (data: { team_id: string; payload: any }) =>
       updateTeamFn({ data }),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["teams", "list"] })
-      queryClient.invalidateQueries({
-        queryKey: ["teams", "detail", variables.team_id],
-      })
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["teams", "list"] }),
+        queryClient.invalidateQueries({ queryKey: ["teams", "me"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["teams", "detail", variables.team_id],
+        }),
+      ])
     },
   })
 
   const remove = useMutation({
     mutationFn: (team_id: string) => deleteTeamFn({ data: team_id }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["teams", "list"] })
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["teams", "list"] }),
+        queryClient.invalidateQueries({ queryKey: ["teams", "me"] }),
+      ])
     },
   })
 

@@ -67,7 +67,7 @@ export const UserProfile = () => {
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div className="flex w-full items-center justify-between text-sm">
-              <span className="line-clamp-1 max-w-[150px] truncate font-semibold">
+              <span className="line-clamp-1 max-w-37.5 truncate font-semibold">
                 {user?.name}
               </span>
               <ChevronsUpDown className="size-4" />
@@ -78,10 +78,10 @@ export const UserProfile = () => {
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <div className="flex w-full flex-col items-start text-sm">
-                <span className="line-clamp-1 max-w-[170px] truncate font-semibold">
+                <span className="line-clamp-1 max-w-42.5 truncate font-semibold">
                   {user?.name}
                 </span>
-                <span className="line-clamp-1 max-w-[170px] truncate text-muted-foreground">
+                <span className="line-clamp-1 max-w-42.5 truncate text-muted-foreground">
                   {user?.email}
                 </span>
               </div>

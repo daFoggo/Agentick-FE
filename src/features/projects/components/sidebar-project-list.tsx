@@ -19,7 +19,7 @@ export const SidebarProjectList = () => {
         {SAMPLE_PROJECTS.map((project) => (
           <SidebarMenuItem key={project.id}>
             <Link
-              to="/dashboard/$teamId/projects/$projectId"
+              to="/dashboard/$teamId/projects/$projectId/dashboard"
               params={{ teamId: teamId!, projectId: project.id }}
             >
               {({ isActive }) => {
