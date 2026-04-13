@@ -75,7 +75,7 @@ export const SignUpForm = (_props: ISignUpFormProps) => {
           }}
           className="space-y-4"
         >
-          <FieldGroup>
+          <FieldGroup className="gap-6">
             <form.Field
               name="name"
               children={(field) => {

@@ -6,6 +6,5 @@ export const ViewModeListSkeleton = () => (
       <Skeleton className="rounded-lg w-72 h-8" />
       <Skeleton className="rounded-md w-28 h-8" />
     </div>
-    <Skeleton className="rounded-lg w-full h-36" />
   </div>
 )

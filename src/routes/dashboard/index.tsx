@@ -5,15 +5,15 @@ import { createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/dashboard/")({
   beforeLoad: async ({ context }) => {
-    // Ensure user is loaded
+    // Đảm bảo đã load user
     await context.queryClient.ensureQueryData(userQueries.me())
 
-    // Fetch teams the user belongs to
+    // Lấy danh sách team của user
     const teams = await context.queryClient.ensureQueryData(
       teamQueries.myTeams()
     )
 
-    // Lấy team cuối cùng từ store (persistent)
+    // Lấy team truy cập gần nhất từ store (persistent)
     const lastTeamId = useDashboardStore.getState().last_team_id
 
     // Kiểm tra xem team cuối cùng có còn hợp lệ trong danh sách không

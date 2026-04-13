@@ -1,3 +1,4 @@
+import { TeamSettings } from "@/features/teams"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/dashboard/$teamId/team/settings")({
@@ -5,12 +6,6 @@ export const Route = createFileRoute("/dashboard/$teamId/team/settings")({
 })
 
 function TeamSettingsView() {
-  return (
-    <div className="flex flex-col gap-4 py-8 text-center">
-      <h3 className="text-lg font-medium">Team Settings</h3>
-      <p className="text-muted-foreground">
-        Configuration and team management options will appear here.
-      </p>
-    </div>
-  )
+  const { teamId } = Route.useParams()
+  return <TeamSettings teamId={teamId} />
 }

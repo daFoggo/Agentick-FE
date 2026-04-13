@@ -90,7 +90,7 @@ export const SignInForm = ({ redirect }: ISignInFormProps) => {
           }}
           className="space-y-4"
         >
-          <FieldGroup>
+          <FieldGroup className="gap-6">
             <form.Field
               name="email__eq"
               children={(field) => {

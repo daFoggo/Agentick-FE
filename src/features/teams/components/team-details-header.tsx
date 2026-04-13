@@ -12,11 +12,11 @@ import { teamQueries } from "@/features/teams"
 import { useQuery } from "@tanstack/react-query"
 import { UserPlus, Users } from "lucide-react"
 
-export interface TeamDetailsHeaderProps {
+export interface ITeamDetailsHeaderProps {
   teamId: string
 }
 
-export function TeamDetailsHeader({ teamId }: TeamDetailsHeaderProps) {
+export function TeamDetailsHeader({ teamId }: ITeamDetailsHeaderProps) {
   const { data: team, isLoading, error } = useQuery(teamQueries.detail(teamId))
 
   if (isLoading) {

@@ -196,7 +196,7 @@ export const TeamMemberList = ({ teamId }: ITeamMemberListProps) => {
                           })
                         }
                       >
-                        <UserMinus className="mr-2 h-4 w-4" />
+                        <UserMinus className="size-4" />
                         Remove from Team
                       </DropdownMenuItem>
                     </DropdownMenuContent>
