@@ -28,16 +28,16 @@ export const SignUpForm = (_props: ISignUpFormProps) => {
       name: "",
       email: "",
       password: "",
-      avatarUrl: "",
+      avatar_url: "",
     } as TSignUpInput,
     validators: {
       onSubmit: SignUpSchema,
     },
     onSubmit: async ({ value }) => {
-      const { avatarUrl, ...rest } = value
+      const { avatar_url, ...rest } = value
       const data: TSignUpInput = {
         ...rest,
-        avatarUrl: avatarUrl || undefined,
+        avatar_url: avatar_url || undefined,
       }
       try {
         await signUpMutation.mutateAsync(data)

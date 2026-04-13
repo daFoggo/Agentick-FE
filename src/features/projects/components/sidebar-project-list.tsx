@@ -6,11 +6,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import { Link } from "@tanstack/react-router"
+import { Link, useParams } from "@tanstack/react-router"
 import { FolderClosed, FolderOpen } from "lucide-react"
 import { SAMPLE_PROJECTS } from "../sample-data"
 
 export const SidebarProjectList = () => {
+  const { teamId } = useParams({ strict: false })
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
@@ -18,8 +19,8 @@ export const SidebarProjectList = () => {
         {SAMPLE_PROJECTS.map((project) => (
           <SidebarMenuItem key={project.id}>
             <Link
-              to="/dashboard/projects/$projectId"
-              params={{ projectId: project.id }}
+              to="/dashboard/$teamId/projects/$projectId"
+              params={{ teamId: teamId!, projectId: project.id }}
             >
               {({ isActive }) => {
                 const Icon = isActive ? FolderOpen : FolderClosed

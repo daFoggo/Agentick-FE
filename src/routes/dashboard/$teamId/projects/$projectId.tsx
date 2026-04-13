@@ -18,7 +18,7 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { FolderOpen, Share2 } from "lucide-react"
 
-export const Route = createFileRoute("/dashboard/projects/$projectId")({
+export const Route = createFileRoute("/dashboard/$teamId/projects/$projectId")({
   loader: ({ context, params }) =>
     context.queryClient.ensureQueryData(projectQueryOptions(params.projectId)),
   component: RouteComponent,

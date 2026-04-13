@@ -1,5 +1,5 @@
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { teamMemberQueries, useTeamMemberMutations } from "../queries"
+import { SAMPLE_TEAM_MEMBERS } from "../sample-data"
+import { useTeamMemberMutations } from "../queries"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -33,7 +33,7 @@ interface IMemberListProps {
 }
 
 export const MemberList = ({ teamId }: IMemberListProps) => {
-  const { data: members } = useSuspenseQuery(teamMemberQueries.list(teamId))
+  const members = SAMPLE_TEAM_MEMBERS
   const { updateRole, remove } = useTeamMemberMutations()
 
   const getRoleBadge = (role: string) => {

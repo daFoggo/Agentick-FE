@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart"
 import {
   Popover,
@@ -16,11 +17,15 @@ import { teamQueries } from "@/features/teams"
 import { useQuery } from "@tanstack/react-query"
 import {
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   ChevronsUpDown,
   GripVertical,
   Plus,
   Shapes,
 } from "lucide-react"
+import { Link } from "@tanstack/react-router"
+import { useState } from "react"
 import { Area, AreaChart } from "recharts"
 
 const chartConfig = {
@@ -47,6 +52,30 @@ const MOCK_TEAMS: TTeam[] = [
     created_at: new Date().toISOString(),
     members: [{}, {}] as TTeamMember[],
   },
+  {
+    id: "team-3",
+    name: "Product",
+    avatar_url: "https://api.dicebear.com/7.x/identicon/svg?seed=Product",
+    owner_id: "user-1",
+    created_at: new Date().toISOString(),
+    members: [{}, {}] as TTeamMember[],
+  },
+  {
+    id: "team-4",
+    name: "Design",
+    avatar_url: "https://api.dicebear.com/7.x/identicon/svg?seed=Design",
+    owner_id: "user-1",
+    created_at: new Date().toISOString(),
+    members: [{}, {}] as TTeamMember[],
+  },
+  {
+    id: "team-5",
+    name: "Sales",
+    avatar_url: "https://api.dicebear.com/7.x/identicon/svg?seed=Sales",
+    owner_id: "user-1",
+    created_at: new Date().toISOString(),
+    members: [{}, {}] as TTeamMember[],
+  },
 ]
 
 const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
@@ -61,9 +90,13 @@ const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
 
   return (
     <div className="group relative border-t border-l border-dashed border-border transition-colors hover:bg-accent/50">
-      <button className="flex h-auto w-full flex-col items-start justify-start rounded-none p-2.5 text-left font-normal">
+      <Link
+        to="/dashboard/$teamId/overview"
+        params={{ teamId: team.id }}
+        className="flex h-auto w-full flex-col items-start justify-start rounded-none p-2.5 text-left font-normal"
+      >
         <div className="mb-2 flex w-full items-center gap-2">
-          <div className="relative flex h-6 w-6 min-w-[24px] items-center justify-center overflow-hidden rounded-sm border border-white/10 bg-muted/50">
+          <div className="relative flex size-5 min-w-[32px] items-center justify-center overflow-hidden rounded-sm border bg-muted/50">
             {!team.avatar_url ? (
               <img
                 src={team.avatar_url}
@@ -136,7 +169,7 @@ const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
             {completionRate}%
           </div>
         </div>
-      </button>
+      </Link>
     </div>
   )
 }
@@ -166,11 +199,18 @@ export const TeamSwitcher = () => {
   // Combine db teams with mock teams for demonstration
   const teams = [...(dbTeams ?? []), ...MOCK_TEAMS]
 
-  // Min 4x4 grid = 16 slots.
-  // Last slot is ALWAYS CreateTeamTile.
-  const totalSlots = 16
-  const displayTeams = teams.slice(0, totalSlots - 1)
-  const emptySlotsCount = Math.max(0, totalSlots - 1 - displayTeams.length)
+  const [page, setPage] = useState(0)
+  const ITEMS_PER_PAGE = 3
+  const totalPages = Math.max(1, Math.ceil(teams.length / ITEMS_PER_PAGE))
+
+  const displayTeams = teams.slice(
+    page * ITEMS_PER_PAGE,
+    (page + 1) * ITEMS_PER_PAGE
+  )
+  const emptySlotsCount = Math.max(0, ITEMS_PER_PAGE - displayTeams.length)
+
+  const handlePrev = () => setPage((p) => Math.max(0, p - 1))
+  const handleNext = () => setPage((p) => Math.min(totalPages - 1, p + 1))
 
   return (
     <SidebarMenuItem>
@@ -186,23 +226,61 @@ export const TeamSwitcher = () => {
             </SidebarMenuBadge>
           </SidebarMenuButton>
         </PopoverTrigger>
-        <PopoverContent align="start" side="bottom" className="w-[700px]">
-          <div className="flex w-full items-center justify-between">
+
+        <PopoverContent
+          align="start"
+          side="bottom"
+          className="w-[420px] gap-0 p-0"
+        >
+          <div className="flex w-full items-center justify-between p-2">
             <PopoverTitle>My Teams</PopoverTitle>
             <p className="text-xs font-medium text-muted-foreground">
               Statistics in this week
             </p>
           </div>
 
-          <div className="grid grid-cols-4 overflow-hidden rounded-sm border-r border-b border-dashed border-border">
-            {displayTeams.map((team, idx) => (
-              <TeamTile key={team.id} team={team} index={idx} />
-            ))}
-            {Array.from({ length: emptySlotsCount }).map((_, idx) => (
-              <EmptyTile key={`empty-${idx}`} />
-            ))}
-            <CreateTeamTile />
+          <div className="p-2">
+            <div className="grid grid-cols-2 overflow-hidden rounded-sm border-r border-b border-dashed border-border">
+              {displayTeams.map((team, idx) => (
+                <TeamTile
+                  key={team.id}
+                  team={team}
+                  index={page * ITEMS_PER_PAGE + idx}
+                />
+              ))}
+              {Array.from({ length: emptySlotsCount }).map((_, idx) => (
+                <EmptyTile key={`empty-${idx}`} />
+              ))}
+              <CreateTeamTile />
+            </div>
           </div>
+
+          {totalPages > 1 && (
+            <div className="flex w-full items-center justify-between p-2">
+              <p className="text-xs font-medium text-muted-foreground">
+                {Math.min((page + 1) * ITEMS_PER_PAGE, teams.length)} of{" "}
+                {teams.length} teams
+              </p>
+              <div className="flex items-center gap-1">
+                <Button
+                  onClick={handlePrev}
+                  disabled={page === 0}
+                  variant="outline"
+                  size="icon-xs"
+                >
+                  <ChevronLeft className="size-4" />
+                </Button>
+                <Button
+                  onClick={handleNext}
+                  disabled={page === totalPages - 1}
+                  size="icon-xs"
+                  variant="outline"
+                >
+                  <ChevronRight className="size-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </PopoverContent>
       </Popover>
     </SidebarMenuItem>

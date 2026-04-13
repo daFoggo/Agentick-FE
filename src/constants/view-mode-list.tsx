@@ -6,7 +6,9 @@ import {
   ChartNoAxesGantt,
   Inbox,
   Kanban,
+  LayoutDashboard,
   ListTree,
+  Users,
 } from "lucide-react"
 import type { ReactNode } from "react"
 
@@ -54,6 +56,20 @@ export const INBOX_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [
     value: "archive",
     label: "Archive",
     icon: Archive,
+  },
+]
+
+export const TEAM_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [
+  {
+    value: "overview",
+    label: "Overview",
+    icon: LayoutDashboard,
+    isDefault: true,
+  },
+  {
+    value: "members",
+    label: "Members",
+    icon: Users,
   },
 ]
 

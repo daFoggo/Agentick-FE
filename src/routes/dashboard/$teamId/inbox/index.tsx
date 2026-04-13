@@ -17,7 +17,7 @@ const toInboxBadgeMap = (stats: TInboxStats) => ({
   archive: stats.archiveCount,
 })
 
-export const Route = createFileRoute("/dashboard/inbox/")({
+export const Route = createFileRoute("/dashboard/$teamId/inbox/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(inboxStatsQueryOptions()),
   component: RouteComponent,
   staticData: {

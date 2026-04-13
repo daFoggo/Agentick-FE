@@ -8,6 +8,7 @@ export const UserSchema = z.object({
   name: z.string(),
   email: z.email(),
   avatar_url: z.url().optional().or(z.literal("")),
+  default_team_id: z.string().optional().nullable(),
   created_at: z.iso.datetime(),
 })
 

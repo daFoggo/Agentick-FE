@@ -7,11 +7,11 @@ import type { TTask } from "../tasks"
  */
 export const ProjectSchema = z.object({
   id: z.string(),
-  teamId: z.string(),
+  team_id: z.string(),
   name: z.string().min(3, "Tên dự án tối thiểu 3 ký tự"),
   description: z.string().optional(),
-  avatarUrl: z.url().optional().or(z.literal("")),
-  createdAt: z.iso.datetime().optional(),
+  avatar_url: z.url().optional().or(z.literal("")),
+  created_at: z.iso.datetime().optional(),
 })
 
 export type TProject = z.infer<typeof ProjectSchema> & {
@@ -27,12 +27,12 @@ export const GetProjectSchema = z.object({
 })
 
 export const GetProjectsSchema = z.object({
-  teamId: z.string().optional(),
+  team_id: z.string().optional(),
 })
 
 export const CreateProjectSchema = ProjectSchema.omit({
   id: true,
-  createdAt: true,
+  created_at: true,
 })
 
 export const UpdateProjectSchema = CreateProjectSchema.partial()

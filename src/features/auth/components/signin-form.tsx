@@ -46,7 +46,15 @@ export const SignInForm = ({ redirect }: ISignInFormProps) => {
         if (redirect) {
           window.location.href = redirect
         } else {
-          navigate({ to: "/dashboard" })
+          const teamId = response.user_info.default_team_id
+          if (teamId) {
+            navigate({
+              to: "/dashboard/$teamId/overview",
+              params: { teamId },
+            })
+          } else {
+            navigate({ to: "/dashboard" })
+          }
         }
       } catch (error) {
         toast.error("Sign in failed. Please try again.")

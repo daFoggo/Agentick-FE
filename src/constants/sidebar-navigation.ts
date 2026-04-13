@@ -11,17 +11,17 @@ export const SIDEBAR_PERSONAL: ISidebarGroup = {
   items: [
     {
       title: "Overview",
-      to: "/dashboard/overview",
+      to: "/dashboard/$teamId/overview",
       icon: LayoutTemplate,
     },
     {
       title: "My Tasks",
-      to: "/dashboard/my-tasks",
+      to: "/dashboard/$teamId/my-tasks",
       icon: ChartNoAxesGantt,
     },
     {
       title: "Inbox",
-      to: "/dashboard/inbox",
+      to: "/dashboard/$teamId/inbox",
       icon: Inbox,
     },
   ],
@@ -32,7 +32,7 @@ export const SIDEBAR_TEAM: ISidebarGroup = {
   items: [
     {
       title: "Team",
-      to: "/dashboard/team",
+      to: "/dashboard/$teamId/team",
       icon: Users,
     },
   ],

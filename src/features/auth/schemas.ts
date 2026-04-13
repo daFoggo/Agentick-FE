@@ -46,7 +46,7 @@ export const SignUpSchema = z.object({
   email: z.email(),
   password: z.string().min(6),
   name: z.string().min(3),
-  avatarUrl: z.url().optional().or(z.literal("")),
+  avatar_url: z.url().optional().or(z.literal("")),
 })
 
 export const SignUpResponseSchema = UserSchema

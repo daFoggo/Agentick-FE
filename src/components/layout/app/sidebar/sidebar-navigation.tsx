@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router"
+import { Link, useParams } from "@tanstack/react-router"
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils"
 import type { ISidebarGroup } from "@/types/sidebar"
 
 export const SidebarGroupSection = ({ group }: { group: ISidebarGroup }) => {
+  const { teamId } = useParams({ strict: false })
+
   return (
     <SidebarGroup key={group.label || "default"}>
       {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
@@ -18,7 +20,10 @@ export const SidebarGroupSection = ({ group }: { group: ISidebarGroup }) => {
         <SidebarMenu className="gap-0.5">
           {group.items.map((item) => (
             <SidebarMenuItem key={item.to}>
-              <Link to={item.to}>
+              <Link
+              to={item.to as any}
+              params={{ teamId } as any}
+            >
                 {({ isActive }) => (
                   <SidebarMenuButton tooltip={item.title} isActive={isActive}>
                     {item.icon && (

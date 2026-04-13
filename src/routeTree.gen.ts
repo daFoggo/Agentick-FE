@@ -13,15 +13,15 @@ import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as DashboardTeamIdRouteImport } from './routes/dashboard/$teamId'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/auth/sign-in'
-import { Route as DashboardTeamIndexRouteImport } from './routes/dashboard/team/index'
-import { Route as DashboardProjectsIndexRouteImport } from './routes/dashboard/projects/index'
-import { Route as DashboardOverviewIndexRouteImport } from './routes/dashboard/overview/index'
-import { Route as DashboardMyTasksIndexRouteImport } from './routes/dashboard/my-tasks/index'
-import { Route as DashboardInboxIndexRouteImport } from './routes/dashboard/inbox/index'
-import { Route as DashboardTeamTeam_idRouteImport } from './routes/dashboard/team/$team_id'
-import { Route as DashboardProjectsProjectIdRouteImport } from './routes/dashboard/projects/$projectId'
+import { Route as DashboardTeamIdTeamIndexRouteImport } from './routes/dashboard/$teamId/team/index'
+import { Route as DashboardTeamIdProjectsIndexRouteImport } from './routes/dashboard/$teamId/projects/index'
+import { Route as DashboardTeamIdOverviewIndexRouteImport } from './routes/dashboard/$teamId/overview/index'
+import { Route as DashboardTeamIdMyTasksIndexRouteImport } from './routes/dashboard/$teamId/my-tasks/index'
+import { Route as DashboardTeamIdInboxIndexRouteImport } from './routes/dashboard/$teamId/inbox/index'
+import { Route as DashboardTeamIdProjectsProjectIdRouteImport } from './routes/dashboard/$teamId/projects/$projectId'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -43,6 +43,11 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   path: '/auth/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardTeamIdRoute = DashboardTeamIdRouteImport.update({
+  id: '/$teamId',
+  path: '/$teamId',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
   id: '/auth/sign-up',
   path: '/auth/sign-up',
@@ -53,41 +58,41 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   path: '/auth/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardTeamIndexRoute = DashboardTeamIndexRouteImport.update({
-  id: '/team/',
-  path: '/team/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardProjectsIndexRoute = DashboardProjectsIndexRouteImport.update({
-  id: '/projects/',
-  path: '/projects/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardOverviewIndexRoute = DashboardOverviewIndexRouteImport.update({
-  id: '/overview/',
-  path: '/overview/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardMyTasksIndexRoute = DashboardMyTasksIndexRouteImport.update({
-  id: '/my-tasks/',
-  path: '/my-tasks/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardInboxIndexRoute = DashboardInboxIndexRouteImport.update({
-  id: '/inbox/',
-  path: '/inbox/',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardTeamTeam_idRoute = DashboardTeamTeam_idRouteImport.update({
-  id: '/team/$team_id',
-  path: '/team/$team_id',
-  getParentRoute: () => DashboardRouteRoute,
-} as any)
-const DashboardProjectsProjectIdRoute =
-  DashboardProjectsProjectIdRouteImport.update({
+const DashboardTeamIdTeamIndexRoute =
+  DashboardTeamIdTeamIndexRouteImport.update({
+    id: '/team/',
+    path: '/team/',
+    getParentRoute: () => DashboardTeamIdRoute,
+  } as any)
+const DashboardTeamIdProjectsIndexRoute =
+  DashboardTeamIdProjectsIndexRouteImport.update({
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => DashboardTeamIdRoute,
+  } as any)
+const DashboardTeamIdOverviewIndexRoute =
+  DashboardTeamIdOverviewIndexRouteImport.update({
+    id: '/overview/',
+    path: '/overview/',
+    getParentRoute: () => DashboardTeamIdRoute,
+  } as any)
+const DashboardTeamIdMyTasksIndexRoute =
+  DashboardTeamIdMyTasksIndexRouteImport.update({
+    id: '/my-tasks/',
+    path: '/my-tasks/',
+    getParentRoute: () => DashboardTeamIdRoute,
+  } as any)
+const DashboardTeamIdInboxIndexRoute =
+  DashboardTeamIdInboxIndexRouteImport.update({
+    id: '/inbox/',
+    path: '/inbox/',
+    getParentRoute: () => DashboardTeamIdRoute,
+  } as any)
+const DashboardTeamIdProjectsProjectIdRoute =
+  DashboardTeamIdProjectsProjectIdRouteImport.update({
     id: '/projects/$projectId',
     path: '/projects/$projectId',
-    getParentRoute: () => DashboardRouteRoute,
+    getParentRoute: () => DashboardTeamIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -95,29 +100,29 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/dashboard/$teamId': typeof DashboardTeamIdRouteWithChildren
   '/auth/': typeof AuthIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
-  '/dashboard/team/$team_id': typeof DashboardTeamTeam_idRoute
-  '/dashboard/inbox/': typeof DashboardInboxIndexRoute
-  '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
-  '/dashboard/overview/': typeof DashboardOverviewIndexRoute
-  '/dashboard/projects/': typeof DashboardProjectsIndexRoute
-  '/dashboard/team/': typeof DashboardTeamIndexRoute
+  '/dashboard/$teamId/projects/$projectId': typeof DashboardTeamIdProjectsProjectIdRoute
+  '/dashboard/$teamId/inbox/': typeof DashboardTeamIdInboxIndexRoute
+  '/dashboard/$teamId/my-tasks/': typeof DashboardTeamIdMyTasksIndexRoute
+  '/dashboard/$teamId/overview/': typeof DashboardTeamIdOverviewIndexRoute
+  '/dashboard/$teamId/projects/': typeof DashboardTeamIdProjectsIndexRoute
+  '/dashboard/$teamId/team/': typeof DashboardTeamIdTeamIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/dashboard/$teamId': typeof DashboardTeamIdRouteWithChildren
   '/auth': typeof AuthIndexRoute
   '/dashboard': typeof DashboardIndexRoute
-  '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
-  '/dashboard/team/$team_id': typeof DashboardTeamTeam_idRoute
-  '/dashboard/inbox': typeof DashboardInboxIndexRoute
-  '/dashboard/my-tasks': typeof DashboardMyTasksIndexRoute
-  '/dashboard/overview': typeof DashboardOverviewIndexRoute
-  '/dashboard/projects': typeof DashboardProjectsIndexRoute
-  '/dashboard/team': typeof DashboardTeamIndexRoute
+  '/dashboard/$teamId/projects/$projectId': typeof DashboardTeamIdProjectsProjectIdRoute
+  '/dashboard/$teamId/inbox': typeof DashboardTeamIdInboxIndexRoute
+  '/dashboard/$teamId/my-tasks': typeof DashboardTeamIdMyTasksIndexRoute
+  '/dashboard/$teamId/overview': typeof DashboardTeamIdOverviewIndexRoute
+  '/dashboard/$teamId/projects': typeof DashboardTeamIdProjectsIndexRoute
+  '/dashboard/$teamId/team': typeof DashboardTeamIdTeamIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,15 +130,15 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
+  '/dashboard/$teamId': typeof DashboardTeamIdRouteWithChildren
   '/auth/': typeof AuthIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
-  '/dashboard/team/$team_id': typeof DashboardTeamTeam_idRoute
-  '/dashboard/inbox/': typeof DashboardInboxIndexRoute
-  '/dashboard/my-tasks/': typeof DashboardMyTasksIndexRoute
-  '/dashboard/overview/': typeof DashboardOverviewIndexRoute
-  '/dashboard/projects/': typeof DashboardProjectsIndexRoute
-  '/dashboard/team/': typeof DashboardTeamIndexRoute
+  '/dashboard/$teamId/projects/$projectId': typeof DashboardTeamIdProjectsProjectIdRoute
+  '/dashboard/$teamId/inbox/': typeof DashboardTeamIdInboxIndexRoute
+  '/dashboard/$teamId/my-tasks/': typeof DashboardTeamIdMyTasksIndexRoute
+  '/dashboard/$teamId/overview/': typeof DashboardTeamIdOverviewIndexRoute
+  '/dashboard/$teamId/projects/': typeof DashboardTeamIdProjectsIndexRoute
+  '/dashboard/$teamId/team/': typeof DashboardTeamIdTeamIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -142,44 +147,44 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/$teamId'
     | '/auth/'
     | '/dashboard/'
-    | '/dashboard/projects/$projectId'
-    | '/dashboard/team/$team_id'
-    | '/dashboard/inbox/'
-    | '/dashboard/my-tasks/'
-    | '/dashboard/overview/'
-    | '/dashboard/projects/'
-    | '/dashboard/team/'
+    | '/dashboard/$teamId/projects/$projectId'
+    | '/dashboard/$teamId/inbox/'
+    | '/dashboard/$teamId/my-tasks/'
+    | '/dashboard/$teamId/overview/'
+    | '/dashboard/$teamId/projects/'
+    | '/dashboard/$teamId/team/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/$teamId'
     | '/auth'
     | '/dashboard'
-    | '/dashboard/projects/$projectId'
-    | '/dashboard/team/$team_id'
-    | '/dashboard/inbox'
-    | '/dashboard/my-tasks'
-    | '/dashboard/overview'
-    | '/dashboard/projects'
-    | '/dashboard/team'
+    | '/dashboard/$teamId/projects/$projectId'
+    | '/dashboard/$teamId/inbox'
+    | '/dashboard/$teamId/my-tasks'
+    | '/dashboard/$teamId/overview'
+    | '/dashboard/$teamId/projects'
+    | '/dashboard/$teamId/team'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/auth/sign-in'
     | '/auth/sign-up'
+    | '/dashboard/$teamId'
     | '/auth/'
     | '/dashboard/'
-    | '/dashboard/projects/$projectId'
-    | '/dashboard/team/$team_id'
-    | '/dashboard/inbox/'
-    | '/dashboard/my-tasks/'
-    | '/dashboard/overview/'
-    | '/dashboard/projects/'
-    | '/dashboard/team/'
+    | '/dashboard/$teamId/projects/$projectId'
+    | '/dashboard/$teamId/inbox/'
+    | '/dashboard/$teamId/my-tasks/'
+    | '/dashboard/$teamId/overview/'
+    | '/dashboard/$teamId/projects/'
+    | '/dashboard/$teamId/team/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -220,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/$teamId': {
+      id: '/dashboard/$teamId'
+      path: '/$teamId'
+      fullPath: '/dashboard/$teamId'
+      preLoaderRoute: typeof DashboardTeamIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
     '/auth/sign-up': {
       id: '/auth/sign-up'
       path: '/auth/sign-up'
@@ -234,78 +246,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/team/': {
-      id: '/dashboard/team/'
+    '/dashboard/$teamId/team/': {
+      id: '/dashboard/$teamId/team/'
       path: '/team'
-      fullPath: '/dashboard/team/'
-      preLoaderRoute: typeof DashboardTeamIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/$teamId/team/'
+      preLoaderRoute: typeof DashboardTeamIdTeamIndexRouteImport
+      parentRoute: typeof DashboardTeamIdRoute
     }
-    '/dashboard/projects/': {
-      id: '/dashboard/projects/'
+    '/dashboard/$teamId/projects/': {
+      id: '/dashboard/$teamId/projects/'
       path: '/projects'
-      fullPath: '/dashboard/projects/'
-      preLoaderRoute: typeof DashboardProjectsIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/$teamId/projects/'
+      preLoaderRoute: typeof DashboardTeamIdProjectsIndexRouteImport
+      parentRoute: typeof DashboardTeamIdRoute
     }
-    '/dashboard/overview/': {
-      id: '/dashboard/overview/'
+    '/dashboard/$teamId/overview/': {
+      id: '/dashboard/$teamId/overview/'
       path: '/overview'
-      fullPath: '/dashboard/overview/'
-      preLoaderRoute: typeof DashboardOverviewIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/$teamId/overview/'
+      preLoaderRoute: typeof DashboardTeamIdOverviewIndexRouteImport
+      parentRoute: typeof DashboardTeamIdRoute
     }
-    '/dashboard/my-tasks/': {
-      id: '/dashboard/my-tasks/'
+    '/dashboard/$teamId/my-tasks/': {
+      id: '/dashboard/$teamId/my-tasks/'
       path: '/my-tasks'
-      fullPath: '/dashboard/my-tasks/'
-      preLoaderRoute: typeof DashboardMyTasksIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/$teamId/my-tasks/'
+      preLoaderRoute: typeof DashboardTeamIdMyTasksIndexRouteImport
+      parentRoute: typeof DashboardTeamIdRoute
     }
-    '/dashboard/inbox/': {
-      id: '/dashboard/inbox/'
+    '/dashboard/$teamId/inbox/': {
+      id: '/dashboard/$teamId/inbox/'
       path: '/inbox'
-      fullPath: '/dashboard/inbox/'
-      preLoaderRoute: typeof DashboardInboxIndexRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/$teamId/inbox/'
+      preLoaderRoute: typeof DashboardTeamIdInboxIndexRouteImport
+      parentRoute: typeof DashboardTeamIdRoute
     }
-    '/dashboard/team/$team_id': {
-      id: '/dashboard/team/$team_id'
-      path: '/team/$team_id'
-      fullPath: '/dashboard/team/$team_id'
-      preLoaderRoute: typeof DashboardTeamTeam_idRouteImport
-      parentRoute: typeof DashboardRouteRoute
-    }
-    '/dashboard/projects/$projectId': {
-      id: '/dashboard/projects/$projectId'
+    '/dashboard/$teamId/projects/$projectId': {
+      id: '/dashboard/$teamId/projects/$projectId'
       path: '/projects/$projectId'
-      fullPath: '/dashboard/projects/$projectId'
-      preLoaderRoute: typeof DashboardProjectsProjectIdRouteImport
-      parentRoute: typeof DashboardRouteRoute
+      fullPath: '/dashboard/$teamId/projects/$projectId'
+      preLoaderRoute: typeof DashboardTeamIdProjectsProjectIdRouteImport
+      parentRoute: typeof DashboardTeamIdRoute
     }
   }
 }
 
+interface DashboardTeamIdRouteChildren {
+  DashboardTeamIdProjectsProjectIdRoute: typeof DashboardTeamIdProjectsProjectIdRoute
+  DashboardTeamIdInboxIndexRoute: typeof DashboardTeamIdInboxIndexRoute
+  DashboardTeamIdMyTasksIndexRoute: typeof DashboardTeamIdMyTasksIndexRoute
+  DashboardTeamIdOverviewIndexRoute: typeof DashboardTeamIdOverviewIndexRoute
+  DashboardTeamIdProjectsIndexRoute: typeof DashboardTeamIdProjectsIndexRoute
+  DashboardTeamIdTeamIndexRoute: typeof DashboardTeamIdTeamIndexRoute
+}
+
+const DashboardTeamIdRouteChildren: DashboardTeamIdRouteChildren = {
+  DashboardTeamIdProjectsProjectIdRoute: DashboardTeamIdProjectsProjectIdRoute,
+  DashboardTeamIdInboxIndexRoute: DashboardTeamIdInboxIndexRoute,
+  DashboardTeamIdMyTasksIndexRoute: DashboardTeamIdMyTasksIndexRoute,
+  DashboardTeamIdOverviewIndexRoute: DashboardTeamIdOverviewIndexRoute,
+  DashboardTeamIdProjectsIndexRoute: DashboardTeamIdProjectsIndexRoute,
+  DashboardTeamIdTeamIndexRoute: DashboardTeamIdTeamIndexRoute,
+}
+
+const DashboardTeamIdRouteWithChildren = DashboardTeamIdRoute._addFileChildren(
+  DashboardTeamIdRouteChildren,
+)
+
 interface DashboardRouteRouteChildren {
+  DashboardTeamIdRoute: typeof DashboardTeamIdRouteWithChildren
   DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardProjectsProjectIdRoute: typeof DashboardProjectsProjectIdRoute
-  DashboardTeamTeam_idRoute: typeof DashboardTeamTeam_idRoute
-  DashboardInboxIndexRoute: typeof DashboardInboxIndexRoute
-  DashboardMyTasksIndexRoute: typeof DashboardMyTasksIndexRoute
-  DashboardOverviewIndexRoute: typeof DashboardOverviewIndexRoute
-  DashboardProjectsIndexRoute: typeof DashboardProjectsIndexRoute
-  DashboardTeamIndexRoute: typeof DashboardTeamIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardTeamIdRoute: DashboardTeamIdRouteWithChildren,
   DashboardIndexRoute: DashboardIndexRoute,
-  DashboardProjectsProjectIdRoute: DashboardProjectsProjectIdRoute,
-  DashboardTeamTeam_idRoute: DashboardTeamTeam_idRoute,
-  DashboardInboxIndexRoute: DashboardInboxIndexRoute,
-  DashboardMyTasksIndexRoute: DashboardMyTasksIndexRoute,
-  DashboardOverviewIndexRoute: DashboardOverviewIndexRoute,
-  DashboardProjectsIndexRoute: DashboardProjectsIndexRoute,
-  DashboardTeamIndexRoute: DashboardTeamIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

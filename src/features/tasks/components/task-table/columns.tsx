@@ -235,7 +235,7 @@ export const taskColumns = generateColumns<TTask>([
 
   // 6. Due date
   {
-    accessorKey: "dueDate",
+    accessorKey: "due_date",
     label: "Due Date",
     size: 112,
     cell: ({ getValue }) => {
@@ -252,7 +252,7 @@ export const taskColumns = generateColumns<TTask>([
 
   // 7. Estimated hours
   {
-    accessorKey: "estimatedHours",
+    accessorKey: "estimated_hours",
     label: "Estimated hours",
     header: "Est. (h)",
     size: 80,
@@ -266,7 +266,7 @@ export const taskColumns = generateColumns<TTask>([
 
   // 8. Actual hours
   {
-    accessorKey: "actualHours",
+    accessorKey: "actual_hours",
     label: "Actual hours",
     header: "Act. (h)",
     size: 80,
