@@ -1,4 +1,4 @@
-import ky, { type Options } from "ky"
+import ky from "ky"
 import { API_ENDPOINTS } from "@/configs/env"
 
 /**

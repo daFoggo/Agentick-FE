@@ -104,7 +104,18 @@ import { teamSchema } from "@/features/teams/schemas";
 import { teamSchema } from "@/features/teams";
 ```
 
-## 📚 5. Recommended Documentation
+## 🛡️ 5. Quality Assurance (Pre-commit)
+
+To maintain codebase stability, every developer **must** ensure that the project builds successfully and passes all type checks before committing code.
+
+### Required Checks:
+1. **Type Check**: `pnpm typecheck` (Runs `tsc --noEmit`)
+2. **Production Build**: `pnpm build` (Ensures the project can be deployed)
+
+> [!IMPORTANT]
+> Any commit that breaks the build or contains TypeScript errors should not be pushed to the repository. It is highly recommended to run these checks before every commit.
+
+## 📚 6. Recommended Documentation
 
 To effectively contribute to the project, familiarize yourself with our core tech stack:
 
@@ -115,3 +126,4 @@ To effectively contribute to the project, familiarize yourself with our core tec
 - [TanStack Table](https://tanstack.com/table) - Headless table logic
 - [Zod](https://zod.dev) - Schema validation
 - [Shadcn UI](https://ui.shadcn.com) - UI component system
+

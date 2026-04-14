@@ -1,7 +1,7 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
 import type { ReactNode } from "react"
 import type { QueryClient } from "@tanstack/react-query"
-import type { IViewModeDefinition } from "@/stores/use-view-mode-list-store"
+import type { IViewModeDefinition } from "@/types/view-mode-list"
 import { queryClient } from "@/lib/query-client"
 import { routeTree } from "./routeTree.gen"
 
