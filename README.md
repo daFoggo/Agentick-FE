@@ -65,37 +65,43 @@ src/
 
 Maintaining a clean separation between global and feature-specific code is crucial for maintainability.
 
-| Scope | When to use? | Example |
+| Scope | When to use? | Real Examples |
 | :--- | :--- | :--- |
-| **Feature** | If the code belongs to a specific business domain. | `ProjectSettings`, `authSchema`, `useTeamsQuery` |
-| **Global** | If the code is used across 2+ features OR is a generic utility. | `Button`, `Dialog`, `useLocalStorage`, `formatDate` |
+| **Feature** | Code that belongs to a specific business domain (Auth, Project, Team). | `ProjectSettings`, `authSchema`, `useTeamsQuery` |
+| **Common / Global** | Reusable logic used across 2+ features or core system entities. | `RoleBadge`, `DataTable`, `MarkdownRenderer` |
+| **Layout** | Core structural components shared across the entire application shell. | `ViewModeList`, `Sidebar`, `AppHeader` |
 
 #### Comparison Example:
-- **Feature Component**: A `TaskBadge` that shows a task status and color. This should live in `features/tasks/components/`.
-- **Global Component**: A generic `Badge` that accepts variants and colors. This should live in `components/ui/`.
+- **Feature Component**: `src/features/projects/components/project-settings.tsx` - This component is tightly coupled with the Project entity and its update logic.
+- **Common Component**: `src/components/common/role-badge.tsx` - While it handles user roles, it is used across Teams, Projects, and User profiles, making it a "Common" utility.
+- **Layout Component**: `src/components/layout/app/view-mode-list/` - This is a structural part of the dashboard that affects how all project-related data is displayed.
 
 ### Creating a New Feature
 
-When building a new feature (e.g., "Notifications"), follow this pattern:
+When building a new feature (e.g., "Teams"), follow this standard structure:
 
-1. **Initialize Directory**: Create `src/features/notifications/`.
-2. **Define Schema**: Create `schemas.ts` for Zod validation.
-3. **API Logic**: Create `functions.ts` for fetching/mutating data.
-4. **Hooks**: Create `queries.ts` using TanStack Query.
-5. **UI**: Create `components/` for the feature's views.
-6. **Export**: Use `index.ts` to export only what is necessary for other parts of the app.
+1. **Initialize Directory**: Create `src/features/teams/`.
+2. **Define Schema** (`schemas.ts`): Use Zod to define data models and form validation.
+   - *Example*: `teamSchema` for creating/updating teams.
+3. **API Logic** (`functions.ts`): Define API interaction functions.
+4. **Hooks** (`queries.ts`): Create TanStack Query hooks for caching and state management.
+   - *Example*: `useTeamsQuery`, `useUpdateTeamMutation`.
+5. **UI Components** (`components/`): Build feature-specific views.
+   - *Example*: `TeamSettings`, `CreateTeamDialog`.
+6. **Server Actions** (`server.ts`): Define server-side functions (TanStack Start specific).
+7. **Export** (`index.ts`): Use a barrel file to export the public API of the feature.
 
 #### Export/Import Pattern
 To keep the internal structure of a feature private, always use the `index.ts` file as the entry point.
 
 **Wrong (Direct access):**
 ```typescript
-import { projectSchema } from "@/features/projects/schemas";
+import { teamSchema } from "@/features/teams/schemas";
 ```
 
 **Correct (Via Barrel File):**
 ```typescript
-import { projectSchema } from "@/features/projects";
+import { teamSchema } from "@/features/teams";
 ```
 
 ## 📚 5. Recommended Documentation
