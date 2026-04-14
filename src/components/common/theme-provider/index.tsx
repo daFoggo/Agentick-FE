@@ -11,6 +11,10 @@ type TThemeProviderProps = PropsWithChildren<{ theme: TTheme }>
 
 const ThemeContext = createContext<TThemeContextVal | null>(null)
 
+/**
+ * Provider quản lý trạng thái Light/Dark mode cho toàn bộ ứng dụng. 
+ * Xử lý việc đồng bộ hóa theme giữa Client-side state và Server-side cookie để tránh hiện tượng nhấp nháy (FOUC).
+ */
 export const ThemeProvider = ({ children, theme: initialTheme }: TThemeProviderProps) => {
   const router = useRouter()
   const [theme, setThemeState] = useState<TTheme>(initialTheme)

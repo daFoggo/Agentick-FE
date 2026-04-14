@@ -16,81 +16,6 @@ import type { TProjectMember } from "../schemas"
 import { useProjectMemberMutations } from "../queries"
 import type { CellContext } from "@tanstack/react-table"
 
-// Reuse team roles catalog since project roles are identical (owner, manager, member, viewer)
-
-const RoleCell = ({ row }: CellContext<TProjectMember, any>) => {
-  const member = row.original
-  const { updateRole } = useProjectMemberMutations()
-  const roleOption = getTeamRoleOption(member.role as any)
-
-  if (!roleOption) return null
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Badge
-          variant={roleOption.variant as any}
-          className={`cursor-pointer transition-colors ${roleOption.className}`}
-        >
-          <roleOption.icon className="size-3" />
-          {roleOption.label}
-          <ChevronDown className="size-3 opacity-50" />
-        </Badge>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-40">
-        <DropdownMenuLabel>Change Role</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {TEAM_ROLE_CATALOG.map((opt) => (
-          <DropdownMenuItem
-            key={opt.value}
-            className="gap-2"
-            disabled={member.role === opt.value}
-            onClick={() =>
-              updateRole.mutate({
-                projectId: member.project_id,
-                user_id: member.user_id,
-                payload: { role: opt.value as any },
-              })
-            }
-          >
-            <opt.icon className="size-4" />
-            {opt.label}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
-}
-
-const ActionCell = ({ row }: CellContext<TProjectMember, any>) => {
-  const member = row.original
-  const { removeMember } = useProjectMemberMutations()
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-8">
-          <MoreHorizontal className="size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem
-          className="text-destructive focus:bg-destructive/10 focus:text-destructive"
-          onClick={() =>
-            removeMember.mutate({
-              projectId: member.project_id,
-              user_id: member.user_id,
-            })
-          }
-        >
-          <UserMinus className="size-4" />
-          Remove from Project
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
-}
-
 export const projectMemberColumns = generateColumns<TProjectMember>([
   {
     id: "member",
@@ -143,3 +68,76 @@ export const projectMemberColumns = generateColumns<TProjectMember>([
     cell: ActionCell,
   },
 ])
+
+function RoleCell({ row }: CellContext<TProjectMember, any>) {
+  const member = row.original
+  const { updateRole } = useProjectMemberMutations()
+  const roleOption = getTeamRoleOption(member.role as any)
+
+  if (!roleOption) return null
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Badge
+          variant={roleOption.variant as any}
+          className={`cursor-pointer transition-colors ${roleOption.className}`}
+        >
+          <roleOption.icon className="size-3" />
+          {roleOption.label}
+          <ChevronDown className="size-3 opacity-50" />
+        </Badge>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-40">
+        <DropdownMenuLabel>Change Role</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {TEAM_ROLE_CATALOG.map((opt) => (
+          <DropdownMenuItem
+            key={opt.value}
+            className="gap-2"
+            disabled={member.role === opt.value}
+            onClick={() =>
+              updateRole.mutate({
+                projectId: member.project_id,
+                user_id: member.user_id,
+                payload: { role: opt.value as any },
+              })
+            }
+          >
+            <opt.icon className="size-4" />
+            {opt.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+function ActionCell({ row }: CellContext<TProjectMember, any>) {
+  const member = row.original
+  const { removeMember } = useProjectMemberMutations()
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="size-8">
+          <MoreHorizontal className="size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuItem
+          className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+          onClick={() =>
+            removeMember.mutate({
+              projectId: member.project_id,
+              user_id: member.user_id,
+            })
+          }
+        >
+          <UserMinus className="size-4" />
+          Remove from Project
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}

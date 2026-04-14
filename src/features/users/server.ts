@@ -5,7 +5,7 @@ import { z } from "zod"
 import { SearchUsersInputSchema, type TUser, type TUserSearchResult } from "./schemas"
 
 /**
- * @description Lấy thông tin người dùng hiện tại
+ * Lấy thông tin tài khoản của người dùng hiện tại đang đăng nhập.
  */
 export async function getUserMe(): Promise<TUser> {
   const response = await api.get("users/me").json<TBaseResponse<TUser>>()
@@ -13,7 +13,8 @@ export async function getUserMe(): Promise<TUser> {
 }
 
 /**
- * @description Search users by email or name with advanced exclusion filters
+ * Tìm kiếm người dùng theo tên hoặc email.
+ * Hỗ trợ các bộ lọc loại trừ theo Team hoặc Project (Exclusion filters) để phục vụ việc mời thành viên.
  */
 export async function searchUsers(
   params: z.infer<typeof SearchUsersInputSchema>

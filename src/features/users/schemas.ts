@@ -1,8 +1,5 @@
 import { z } from "zod"
 
-/**
- * @description User Schema & Type (Single Source of Truth) - Using snake_case
- */
 export const UserSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -13,9 +10,6 @@ export const UserSchema = z.object({
 
 export type TUser = z.infer<typeof UserSchema>
 
-/**
- * @description User Search Result Schema — subset an toàn, không có sensitive data
- */
 export const UserSearchResultSchema = z.object({
   id: z.string(),
   name: z.string(),

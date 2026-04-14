@@ -9,7 +9,7 @@ import type {
 } from "./schemas"
 
 /**
- * @description Lấy danh sách thành viên của team
+ * Lấy danh sách thành viên của một Team, hỗ trợ tìm kiếm theo tên hoặc email.
  */
 export async function fetchTeamMembers(params: {
   teamId: string
@@ -26,7 +26,7 @@ export async function fetchTeamMembers(params: {
 }
 
 /**
- * @description Thêm thành viên vào team
+ * Mời hoặc thêm thành viên mới vào Team.
  */
 export async function addTeamMember(
   teamId: string,
@@ -40,7 +40,7 @@ export async function addTeamMember(
 }
 
 /**
- * @description Cập nhật quyền của thành viên trong team
+ * Cập nhật vai trò (Role) cho thành viên trong Team.
  */
 export async function updateTeamMemberRole(
   teamId: string,
@@ -55,7 +55,7 @@ export async function updateTeamMemberRole(
 }
 
 /**
- * @description Xóa thành viên khỏi team
+ * Xóa một thành viên khỏi Team.
  */
 export async function removeTeamMember(
   teamId: string,
@@ -68,7 +68,7 @@ export async function removeTeamMember(
 }
 
 /**
- * @description Lấy số lượng project mà member đang tham gia trong team
+ * Lấy số lượng các Project mà một thành viên đang tham gia trong Team.
  */
 export async function getMemberProjectCount(
   teamId: string,

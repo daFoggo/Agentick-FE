@@ -1,14 +1,8 @@
 import { z } from "zod"
 import { UserSchema } from "../users"
 
-/**
- * @description Team Role Schema
- */
 export const TeamRoleSchema = z.enum(["owner", "manager", "member", "viewer"])
 
-/**
- * @description Team Member Schema - Using snake_case to match Backend
- */
 export const TeamMemberSchema = z.object({
   id: z.string(),
   user_id: z.string(),
@@ -34,26 +28,17 @@ export const UpdateTeamMemberRoleSchema = z.object({
   role: TeamRoleSchema,
 })
 
-/**
- * @description Input schema for adding member (with teamId)
- */
 export const AddTeamMemberInputSchema = z.object({
   teamId: z.string(),
   payload: AddTeamMemberSchema,
 })
 
-/**
- * @description Input schema for updating member role
- */
 export const UpdateTeamMemberRoleInputSchema = z.object({
   teamId: z.string(),
   user_id: z.string(),
   payload: UpdateTeamMemberRoleSchema,
 })
 
-/**
- * @description Input schema for removing member
- */
 export const RemoveTeamMemberSchema = z.object({
   teamId: z.string(),
   user_id: z.string(),

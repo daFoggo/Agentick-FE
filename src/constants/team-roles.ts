@@ -2,9 +2,6 @@ import type { ITeamRoleCatalogItem } from "@/types/team-roles"
 import type { TTeamRole } from "@/features/team-members/schemas"
 import { Eye, ShieldCheck, ShieldUser, User } from "lucide-react"
 
-/**
- * @description Danh sách role catalog — dùng chung cho badge, dropdown, select, v.v.
- */
 export const TEAM_ROLE_CATALOG: ITeamRoleCatalogItem[] = [
   {
     value: "owner",
@@ -38,12 +35,9 @@ export const TEAM_ROLE_CATALOG: ITeamRoleCatalogItem[] = [
   },
 ]
 
-/** Các role mà user có thể assign cho người khác (trừ owner) */
 export const ASSIGNABLE_ROLES = TEAM_ROLE_CATALOG.filter(
   (r) => r.value !== "owner"
 )
-
-/** Tìm catalog item theo role value */
 export function getTeamRoleOption(role: TTeamRole) {
   return TEAM_ROLE_CATALOG.find((r) => r.value === role)
 }

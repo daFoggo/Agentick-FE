@@ -1,7 +1,8 @@
 import { useForm } from "@tanstack/react-form"
-import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { Loader2 } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -13,40 +14,35 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { CreateTeamDialog } from "./create-team-dialog"
-import { TeamDeleteDialog } from "@/features/teams/components/team-delete-dialog"
-import { useEffect, useRef, useState } from "react"
-import { teamQueries, useTeamMutations } from "../queries"
-import { CreateTeamSchema, type TCreateTeamInput, type TTeam } from "../schemas"
+import { projectQueryOptions, useProjectMutations } from "../queries"
+import { UpdateProjectSchema, type TUpdateProjectInput } from "../schemas"
+import { ProjectDeleteDialog } from "./project-delete-dialog"
 
-interface ITeamSettingsProps {
+interface IProjectSettingsProps {
+  projectId: string
   teamId: string
 }
 
 /**
- * Thành phần trang thiết lập Team. 
- * Cho phép quản lý thông tin chung và thực hiện quy trình xóa Team an toàn.
+ * Thành phần quản lý cấu hình Project.
+ * Hỗ trợ cập nhật thông tin chung (name, avatar) và cung cấp tính năng xóa dự án.
  */
-export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
+export const ProjectSettings = ({
+  projectId,
+  teamId,
+}: IProjectSettingsProps) => {
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const { data: team } = useSuspenseQuery(teamQueries.detail(teamId))
-  const { data: myTeams } = useQuery(teamQueries.myTeams())
-  const { update, remove } = useTeamMutations()
+  const { data: project } = useSuspenseQuery(projectQueryOptions(projectId))
+  const { update, remove } = useProjectMutations()
   const [updatingField, setUpdatingField] = useState<
-    keyof TCreateTeamInput | null
+    keyof TUpdateProjectInput | null
   >(null)
   const [recentlyUpdatedField, setRecentlyUpdatedField] = useState<
-    keyof TCreateTeamInput | null
+    keyof TUpdateProjectInput | null
   >(null)
   const recentlyUpdatedTimeoutRef = useRef<ReturnType<
     typeof setTimeout
   > | null>(null)
-  const [isCreateTeamDialogOpen, setIsCreateTeamDialogOpen] = useState(false)
-  const [requiresTeamCreation, setRequiresTeamCreation] = useState(false)
-
-  const isLastTeam =
-    myTeams?.length === 1 && myTeams?.[0]?.id === teamId
 
   useEffect(() => {
     return () => {
@@ -58,16 +54,16 @@ export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
 
   const form = useForm({
     defaultValues: {
-      name: team?.name || "",
-      description: team?.description || "",
-      avatar_url: team?.avatar_url || "",
-    } as TCreateTeamInput,
+      name: project?.name || "",
+      description: project?.description || "",
+      avatar_url: project?.avatar_url || "",
+    } as TUpdateProjectInput,
     validators: {
-      onSubmit: CreateTeamSchema,
+      onSubmit: UpdateProjectSchema,
     },
   })
 
-  const handleFieldUpdate = async (fieldName: keyof TCreateTeamInput) => {
+  const handleFieldUpdate = async (fieldName: keyof TUpdateProjectInput) => {
     if (update.isPending) {
       return
     }
@@ -77,7 +73,7 @@ export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
     try {
       const value = form.getFieldValue(fieldName)
       await update.mutateAsync({
-        teamId: teamId,
+        projectId: projectId,
         payload: { [fieldName]: value },
       })
 
@@ -100,66 +96,21 @@ export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
     }
   }
 
-  const handleDeleteTeam = async () => {
-    if (isLastTeam) {
-      setRequiresTeamCreation(true)
-      setIsCreateTeamDialogOpen(true)
-      toast.info("Create a new team first, then we will delete this one")
-      return true
-    }
-
+  const handleDeleteProject = async () => {
     try {
-      await remove.mutateAsync(teamId)
-      toast.success("Team deleted successfully")
+      await remove.mutateAsync(projectId)
+      toast.success("Project deleted successfully")
 
-      const teamsAfterDelete = await queryClient.fetchQuery(teamQueries.myTeams())
-      const nextTeam = teamsAfterDelete.find((item) => item.id !== teamId)
-
-      if (nextTeam) {
-        navigate({
-          to: "/dashboard/$teamId/team/overview",
-          params: { teamId: nextTeam.id },
-          replace: true,
-        })
-      } else {
-        setRequiresTeamCreation(true)
-        setIsCreateTeamDialogOpen(true)
-        setTimeout(() => {
-          toast.info("Please create a new team to continue")
-        }, 250)
-      }
+      navigate({
+        to: "/dashboard/$teamId/projects",
+        params: { teamId },
+        replace: true,
+      })
       return true
     } catch (error) {
-      toast.error("Failed to delete team")
+      toast.error("Failed to delete project")
       return false
     }
-  }
-
-  const handleCreatedAfterDelete = async (createdTeam: TTeam) => {
-    if (requiresTeamCreation) {
-      try {
-        await remove.mutateAsync(teamId)
-        toast.success("Team deleted successfully")
-      } catch (error) {
-        toast.error("New team created, but failed to delete old team")
-      }
-    }
-
-    setRequiresTeamCreation(false)
-    setIsCreateTeamDialogOpen(false)
-    navigate({
-      to: "/dashboard/$teamId/team/overview",
-      params: { teamId: createdTeam.id },
-      replace: true,
-    })
-  }
-
-  const handleCreateTeamDialogOpenChange = (open: boolean) => {
-    if (!open && requiresTeamCreation) {
-      return
-    }
-
-    setIsCreateTeamDialogOpen(open)
   }
 
   return (
@@ -169,9 +120,9 @@ export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
           <SettingField
             form={form}
             name="name"
-            label="Team Name"
-            placeholder="e.g. Acme Marketing"
-            originalValue={team?.name}
+            label="Project Name"
+            placeholder="e.g. Website Redesign"
+            originalValue={project?.name}
             isPending={update.isPending && updatingField === "name"}
             keepVisible={recentlyUpdatedField === "name"}
             disableAction={update.isPending || recentlyUpdatedField === "name"}
@@ -183,7 +134,7 @@ export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
             name="avatar_url"
             label="Avatar URL"
             placeholder="https://example.com/icon.png"
-            originalValue={team?.avatar_url || ""}
+            originalValue={project?.avatar_url || ""}
             isPending={update.isPending && updatingField === "avatar_url"}
             keepVisible={recentlyUpdatedField === "avatar_url"}
             disableAction={
@@ -196,8 +147,8 @@ export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
             form={form}
             name="description"
             label="Description"
-            placeholder="Brief description about this team"
-            originalValue={team?.description || ""}
+            placeholder="Brief description about this project"
+            originalValue={project?.description || ""}
             isPending={update.isPending && updatingField === "description"}
             keepVisible={recentlyUpdatedField === "description"}
             disableAction={
@@ -210,16 +161,9 @@ export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
 
       <Separator />
 
-      <TeamDeleteDialog
+      <ProjectDeleteDialog
         isPending={remove.isPending}
-        isLastTeam={Boolean(isLastTeam)}
-        onConfirm={handleDeleteTeam}
-      />
-
-      <CreateTeamDialog
-        open={isCreateTeamDialogOpen}
-        onOpenChange={handleCreateTeamDialogOpenChange}
-        onCreated={handleCreatedAfterDelete}
+        onConfirm={handleDeleteProject}
       />
     </div>
   )
@@ -227,7 +171,7 @@ export const TeamSettings = ({ teamId }: ITeamSettingsProps) => {
 
 interface ISettingFieldProps {
   form: any
-  name: keyof TCreateTeamInput
+  name: keyof TUpdateProjectInput
   label: string
   placeholder: string
   originalValue: string | undefined | null

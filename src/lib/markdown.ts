@@ -18,6 +18,12 @@ export type MarkdownResult = {
   headings: Array<MarkdownHeading>
 }
 
+/**
+ * Chuyển đổi nội dung Markdown thành mã HTML an toàn.
+ * Hàm này sử dụng hệ sinh thái Unified/Remark/Rehype để hỗ trợ đầy đủ GFM,
+ * tự động gán ID cho tiêu đề và trích xuất danh sách tiêu đề (headings) 
+ * để sử dụng cho các thành phần như Mục lục (Table of Contents).
+ */
 export async function renderMarkdown(content: string): Promise<MarkdownResult> {
   const headings: Array<MarkdownHeading> = []
 

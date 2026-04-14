@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Link } from "@tanstack/react-router"
 import { Home, RotateCcw } from "lucide-react"
 
+/**
+ * Component hiển thị giao diện khi người dùng truy cập vào một route không tồn tại (404 Not Found).
+ */
 export const NotFound = () => {
   return (
     <PixelBackground
@@ -30,6 +33,10 @@ export const NotFound = () => {
   )
 }
 
+/**
+ * Component hiển thị khi ứng dụng gặp lỗi runtime nghiêm trọng (500 Error Boundary),
+ * cho phép người dùng thử tải lại trang hoặc quay về trang chủ.
+ */
 export const ErrorFallback = ({ reset }: { reset: () => void }) => {
   return (
     <PixelBackground

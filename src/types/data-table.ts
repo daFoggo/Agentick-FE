@@ -1,5 +1,4 @@
-import type { RowData } from "@tanstack/react-table"
-import type { CellContext, HeaderContext } from "@tanstack/react-table"
+import type { CellContext, HeaderContext, RowData } from "@tanstack/react-table"
 
 // Extend TanStack's ColumnMeta to add custom metadata per column
 declare module "@tanstack/react-table" {

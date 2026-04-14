@@ -10,7 +10,7 @@ import { z } from "zod"
 import { CreateProjectSchema, UpdateProjectSchema } from "./schemas"
 
 /**
- * @description Lấy danh sách projects có filter + pagination
+ * Lấy danh sách các Project hiện có, hỗ trợ filter và pagination.
  */
 export async function fetchProjects(
   params?: TGetProjectsInput
@@ -23,7 +23,7 @@ export async function fetchProjects(
 }
 
 /**
- * @description Lấy danh sách projects của user hiện tại
+ * Lấy danh sách các Project mà người dùng hiện tại đang tham gia.
  */
 export async function fetchMyProjects(): Promise<TProject[]> {
   const response = await api.get("projects/me").json<TBaseResponse<TProject[]>>()
@@ -31,7 +31,7 @@ export async function fetchMyProjects(): Promise<TProject[]> {
 }
 
 /**
- * @description Lấy chi tiết project theo ID
+ * Lấy thông tin chi tiết của một Project theo ID.
  */
 export async function fetchProjectById(
   projectId: string
@@ -46,7 +46,7 @@ export async function fetchProjectById(
 }
 
 /**
- * @description Tạo project mới
+ * Tạo một Project mới.
  */
 export async function createProject(
   payload: z.infer<typeof CreateProjectSchema>
@@ -59,7 +59,7 @@ export async function createProject(
 }
 
 /**
- * @description Cập nhật project
+ * Cập nhật thông tin (name, description, etc.) của một Project.
  */
 export async function updateProject(
   projectId: string,
@@ -73,7 +73,7 @@ export async function updateProject(
 }
 
 /**
- * @description Xóa project (soft delete)
+ * Thực hiện xóa Project (thường là Soft Delete).
  */
 export async function deleteProject(projectId: string): Promise<boolean> {
   const response = await api.delete(`projects/${projectId}`).json<TBaseResponse<boolean>>()

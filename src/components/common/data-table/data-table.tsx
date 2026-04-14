@@ -50,6 +50,12 @@ export interface IDataTableProps<TData> {
   getRowId?: (row: TData) => string
 }
 
+/**
+ * Component bảng dữ liệu mạnh mẽ dựa trên TanStack Table.
+ * Hỗ trợ các tính năng cao cấp như: Pagination, Column Reordering (kéo thả), 
+ * Column Pinning (ghim cột), Row Grouping và Row Selection.
+ * Được thiết kế để có tính tùy biến cao và tái sử dụng cho mọi loại dữ liệu trong dự án.
+ */
 const DataTableInner = <TData,>({
   data,
   columns,

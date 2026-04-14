@@ -8,9 +8,6 @@ export const ProjectRoleSchema = z.enum([
   "viewer",
 ])
 
-/**
- * @description Project Member Schema - Using snake_case to match Backend API
- */
 export const ProjectMemberSchema = z.object({
   id: z.string(),
   project_id: z.string(),
@@ -22,41 +19,26 @@ export const ProjectMemberSchema = z.object({
   updated_at: z.string().datetime().optional().nullable(),
 })
 
-/**
- * @description Schema for adding a project member
- */
 export const AddProjectMemberSchema = z.object({
   user_id: z.string(),
   role: ProjectRoleSchema.default("member"),
 })
 
-/**
- * @description Schema for updating project member role
- */
 export const UpdateProjectMemberRoleSchema = z.object({
   role: ProjectRoleSchema,
 })
 
-/**
- * @description Input schema for adding member (with projectId)
- */
 export const AddProjectMemberInputSchema = z.object({
   projectId: z.string(),
   payload: AddProjectMemberSchema,
 })
 
-/**
- * @description Input schema for updating member role
- */
 export const UpdateProjectMemberRoleInputSchema = z.object({
   projectId: z.string(),
   user_id: z.string(),
   payload: UpdateProjectMemberRoleSchema,
 })
 
-/**
- * @description Input schema for removing member
- */
 export const RemoveProjectMemberSchema = z.object({
   projectId: z.string(),
   user_id: z.string(),

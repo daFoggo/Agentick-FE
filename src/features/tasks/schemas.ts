@@ -6,9 +6,6 @@ import {
   TASK_TYPE_CATALOG,
 } from "./constants"
 
-/**
- * @description Task Enums from Constants
- */
 export const TaskTypeSchema = z.enum(
   TASK_TYPE_CATALOG.map((i) => i.value) as [string, ...string[]]
 )
@@ -19,9 +16,6 @@ export const TaskPrioritySchema = z.enum(
   TASK_PRIORITY_CATALOG.map((i) => i.value) as [string, ...string[]]
 )
 
-/**
- * @description Tag Schema
- */
 export const TagSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -30,9 +24,6 @@ export const TagSchema = z.object({
   created_at: z.iso.datetime().or(z.date()),
 })
 
-/**
- * @description Phase Schema
- */
 export const PhaseSchema = z.object({
   id: z.string(),
   project_id: z.string(),
@@ -43,9 +34,6 @@ export const PhaseSchema = z.object({
   created_at: z.iso.datetime().or(z.date()),
 })
 
-/**
- * @description Task Schema (Single Source of Truth)
- */
 export const TaskSchema = z.object({
   id: z.string(),
   project_id: z.string(),

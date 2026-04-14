@@ -1,13 +1,16 @@
 import ky, { type Options } from "ky"
 import { API_ENDPOINTS } from "@/configs/env"
 
-const AUTH_RETRY_HEADER = "x-auth-retry"
-
 /**
- * @description Cấu hình cơ sở cho Ky.
+ * Instance của thư viện `ky` được cấu hình sẵn cho các yêu cầu đến Backend Core.
+ * Tự động xử lý:
+ * - Gắn Bearer Token vào header mỗi khi gửi request.
+ * - Tự động thử lại (retry) một lần khi gặp lỗi 401 bằng cách gọi API refresh token.
+ * - Điều hướng về trang sign-in nếu xác thực thất bại hoàn toàn.
  */
-const baseOptions: Options = {
+export const api = ky.create({
   timeout: 30000,
+  prefix: API_ENDPOINTS.CORE_API_URL,
   hooks: {
     beforeRequest: [
       async ({ request }) => {
@@ -62,21 +65,16 @@ const baseOptions: Options = {
       },
     ],
   },
-}
-
-/**
- * @description Instance dùng cho Backend Core
- * Sử dụng CORE_API (đã có hậu tố /api) để fetch dữ liệu
- */
-export const api = ky.create({
-  ...baseOptions,
-  prefix: API_ENDPOINTS.CORE_API_URL,
 })
 
 /**
- * @description Instance dùng cho Backend AI
- * Sử dụng AI_API (đã có hậu tố /api) để fetch dữ liệu
+ * Instance mở rộng từ `api`, được cấu hình riêng cho Backend AI.
+ * Kế thừa toàn bộ logic xác thực, retry và prefix API cơ bản của dự án.
  */
 export const aiApi = api.extend({
   prefix: API_ENDPOINTS.AI_API_URL,
 })
+
+// --- Internal Constants & Configuration ---
+
+const AUTH_RETRY_HEADER = "x-auth-retry"

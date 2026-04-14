@@ -1,31 +1,11 @@
-import type { Row } from "@tanstack/react-table"
+import type { ColumnDef, Row } from "@tanstack/react-table"
 import type { CSSProperties } from "react"
-
-/** Returns sticky CSS for a pinned column given its getStart/getAfter values */
-export function getPinnedCellStyle(
-  isPinned: "left" | "right" | false,
-  start: number,
-  after: number
-): CSSProperties {
-  if (!isPinned) return {}
-  return {
-    position: "sticky",
-    left: isPinned === "left" ? `${start}px` : undefined,
-    right: isPinned === "right" ? `${after}px` : undefined,
-    zIndex: 2,
-  }
-}
-
-export function isGroupRow<TData>(row: Row<TData>): boolean {
-  return row.getIsGrouped()
-}
-
-import type { ColumnDef } from "@tanstack/react-table"
 import type { IDataTableColumnDef } from "@/types/data-table"
 
 /**
- * generateColumns abstracts away the repetitive boilerplate of defining
- * TanStack Table columns, consolidating id, header, and meta configuration.
+ * Chuyển đổi các định nghĩa cột thô (IDataTableColumnDef) thành cấu hình cột chuẩn của TanStack Table.
+ * Hàm này giúp giảm thiểu code lặp lại khi định nghĩa id, header và meta, đồng thời hỗ trợ các tính năng
+ * tùy chỉnh như ghim cột (pinning), sắp xếp lại (reorder) và render thủ công (custom cell).
  */
 export function generateColumns<TData>(
   definitions: IDataTableColumnDef<TData>[]
@@ -49,4 +29,26 @@ export function generateColumns<TData>(
       },
     } as ColumnDef<TData, any>
   })
+}
+
+/**
+ * Các hàm tiện ích hỗ trợ cho việc hiển thị và xử lý logic bảng (Data Table).
+ */
+
+export function getPinnedCellStyle(
+  isPinned: "left" | "right" | false,
+  start: number,
+  after: number
+): CSSProperties {
+  if (!isPinned) return {}
+  return {
+    position: "sticky",
+    left: isPinned === "left" ? `${start}px` : undefined,
+    right: isPinned === "right" ? `${after}px` : undefined,
+    zIndex: 2,
+  }
+}
+
+export function isGroupRow<TData>(row: Row<TData>): boolean {
+  return row.getIsGrouped()
 }

@@ -203,6 +203,10 @@ type PixelBackgroundProps = {
 const DEFAULT_DARK_COLORS = "#2a2a2a,#3b3b3b,#525252"
 const DEFAULT_LIGHT_COLORS = "#d4d4d4,#bdbdbd,#a3a3a3"
 
+/**
+ * Thành phần trang trí tạo hiệu ứng hình nền Pixel động bằng HTML5 Canvas.
+ * Hỗ trợ các thuộc tính tùy chỉnh về màu sắc, tốc độ và các Pattern chuyển động (như theo Cursor).
+ */
 const PixelBackground = ({
   gap = 5,
   speed = 35,

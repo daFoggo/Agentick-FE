@@ -1,9 +1,6 @@
 import { z } from "zod"
 import { UserSchema } from "../users"
 
-/**
- * @description Sign In Business Logic
- */
 export const SignInSchema = z.object({
   email__eq: z.email(),
   password: z.string().min(6),
@@ -17,9 +14,6 @@ export const SignInResponseSchema = z.object({
   user_info: UserSchema,
 })
 
-/**
- * @description Refresh Token Logic
- */
 export const RefreshTokenInputSchema = z.object({
   refresh_token: z.string(),
 })
@@ -31,9 +25,6 @@ export const TokenResponseSchema = z.object({
   refresh_expiration: z.string(),
 })
 
-/**
- * @description Sign Up Business Logic
- */
 export const SignUpSchema = z.object({
   email: z.email(),
   password: z.string().min(6),

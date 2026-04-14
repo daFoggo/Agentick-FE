@@ -44,6 +44,10 @@ interface IInviteProjectMemberDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
+/**
+ * Dialog xử lý việc mời thành viên mới vào Project. 
+ * Bao gồm tìm kiếm người dùng trong hệ thống (loại trừ những người đã tham gia) và chọn vai trò cho họ.
+ */
 export const InviteProjectMemberDialog = ({
   projectId,
   open,

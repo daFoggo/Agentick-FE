@@ -1,59 +1,62 @@
 import { renderMarkdown, type MarkdownResult } from "@/lib/markdown"
-import { Link } from "@tanstack/react-router"
-import parse, {
-  type HTMLReactParserOptions,
-  domToReact,
-  Element,
-  type DOMNode,
-} from "html-react-parser"
-import { useState, useEffect } from "react"
+import { cn } from "@/lib/utils"
+import { useEffect, useState } from "react"
 
-type MarkdownProps = {
+interface IMarkdownRendererProps {
   content: string
   className?: string
+  showTOC?: boolean
+  renderHeader?: (headings: MarkdownResult["headings"]) => React.ReactNode
 }
 
-export function MarkdownRenderer({ content, className }: MarkdownProps) {
+/**
+ * Component chuyên dụng để hiển thị nội dung Markdown. 
+ * Tự động chuyển đổi Markdown thành HTML an toàn, trích xuất Headings 
+ * và hỗ trợ render interface tùy chỉnh (như Table of Contents).
+ */
+export const MarkdownRenderer = ({
+  content,
+  className,
+  renderHeader,
+}: IMarkdownRendererProps) => {
   const [result, setResult] = useState<MarkdownResult | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    renderMarkdown(content).then(setResult)
+    const render = async () => {
+      setIsLoading(true)
+      try {
+        const rendered = await renderMarkdown(content)
+        setResult(rendered)
+      } catch (error) {
+        console.error("Failed to render markdown:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    render()
   }, [content])
 
-  if (!result) {
-    return <div className={className}>Loading...</div>
+  if (isLoading) {
+    return (
+      <div className={cn("animate-pulse space-y-4", className)}>
+        <div className="h-4 w-3/4 rounded bg-muted"></div>
+        <div className="h-4 w-full rounded bg-muted"></div>
+        <div className="h-4 w-5/6 rounded bg-muted"></div>
+      </div>
+    )
   }
 
-  const options: HTMLReactParserOptions = {
-    replace: (domNode) => {
-      if (domNode instanceof Element) {
-        // Customize rendering of specific elements
-        if (domNode.name === "a") {
-          // Handle links
-          const href = domNode.attribs.href
-          if (href?.startsWith("/")) {
-            // Internal link - use your router's Link component
-            return (
-              <Link to={href}>
-                {domToReact(domNode.children as DOMNode[], options)}
-              </Link>
-            )
-          }
-        }
+  if (!result) return null
 
-        if (domNode.name === "img") {
-          // Add lazy loading to images
-          return (
-            <img
-              {...domNode.attribs}
-              loading="lazy"
-              className="shadow-md rounded-lg"
-            />
-          )
-        }
-      }
-    },
-  }
-
-  return <div className={className}>{parse(result.markup, options)}</div>
+  return (
+    <div className={cn("flex flex-col gap-6", className)}>
+      {renderHeader && renderHeader(result.headings)}
+      <div
+        className="prose prose-sm dark:prose-invert max-w-none"
+        dangerouslySetInnerHTML={{ __html: result.markup }}
+      />
+    </div>
+  )
 }

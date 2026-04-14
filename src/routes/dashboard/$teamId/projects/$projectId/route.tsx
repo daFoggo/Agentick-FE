@@ -51,19 +51,15 @@ function RouteComponent() {
 
 function ProjectHeader() {
   const { teamId, projectId } = Route.useParams()
-  
-  // Use useQuery instead of useSuspenseQuery for the header to handle 
-  // intermediate states (like undefined ID) more gracefully during hydration
+
   const { data: project } = useQuery({
     ...projectQueryOptions(projectId || ""),
     enabled: !!projectId,
   })
-  
+
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   const navigate = useNavigate()
 
-  // Return a placeholder structure that matches the dimensions to avoid layout shifts
-  // but ensures basic elements are consistent
   return (
     <div className="flex w-full items-center justify-between gap-4">
       <div className="flex items-center gap-2">
@@ -97,29 +93,37 @@ function ProjectHeader() {
 
       <div className="flex items-center gap-4">
         {project?.members && project.members.length > 0 && (
-          <AvatarGroup
-            className="cursor-pointer transition-all hover:opacity-80 active:scale-95"
-            onClick={() =>
-              navigate({
-                to: "/dashboard/$teamId/projects/$projectId/members",
-                params: { teamId, projectId },
-              })
-            }
-          >
-            {project.members.slice(0, 4).map((member: TProjectMember) => (
-              <Avatar key={member.id} className="border-2 border-background">
-                <AvatarImage src={member.user?.avatar_url ?? undefined} />
-                <AvatarFallback className="bg-primary/10 text-[10px] font-medium text-primary">
-                  {member.user?.name?.charAt(0).toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
-            ))}
-            {project.members.length > 4 && (
-              <AvatarGroupCount className="border-2 border-background bg-muted text-[10px]">
-                +{project.members.length - 4}
-              </AvatarGroupCount>
-            )}
-          </AvatarGroup>
+          <Tooltip>
+            <TooltipTrigger>
+              <AvatarGroup
+                className="cursor-pointer transition-all hover:opacity-80 active:scale-95"
+                onClick={() =>
+                  navigate({
+                    to: "/dashboard/$teamId/projects/$projectId/members",
+                    params: { teamId, projectId },
+                  })
+                }
+              >
+                {project.members.slice(0, 4).map((member: TProjectMember) => (
+                  <Avatar
+                    key={member.id}
+                    className="border-2 border-background"
+                  >
+                    <AvatarImage src={member.user?.avatar_url ?? undefined} />
+                    <AvatarFallback className="bg-primary/10 text-[10px] font-medium text-primary">
+                      {member.user?.name?.charAt(0).toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                ))}
+                {project.members.length > 4 && (
+                  <AvatarGroupCount className="border-2 border-background bg-muted text-[10px]">
+                    +{project.members.length - 4}
+                  </AvatarGroupCount>
+                )}
+              </AvatarGroup>
+            </TooltipTrigger>
+            <TooltipContent>View all members</TooltipContent>
+          </Tooltip>
         )}
 
         <Button onClick={() => setIsInviteOpen(true)} className="gap-2">

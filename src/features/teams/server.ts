@@ -5,7 +5,7 @@ import type { TBaseResponse } from "@/types/api"
 import type { TTeam, GetTeamsSchema, TTeamsResponse, CreateTeamSchema, UpdateTeamSchema } from "./schemas"
 
 /**
- * @description Lấy danh sách teams
+ * Lấy danh sách các Team trong hệ thống (hỗ trợ filter và pagination).
  */
 export async function fetchTeams(params?: z.infer<typeof GetTeamsSchema>): Promise<TTeamsResponse> {
   const response = await api
@@ -16,7 +16,7 @@ export async function fetchTeams(params?: z.infer<typeof GetTeamsSchema>): Promi
 }
 
 /**
- * @description Lấy danh sách teams của user hiện tại (bao gồm owner và tham gia)
+ * Lấy danh sách các Team mà người dùng hiện tại đang tham gia hoặc sở hữu.
  */
 export async function fetchMyTeams(): Promise<TTeam[]> {
   const response = await api.get("teams/me").json<TBaseResponse<TTeam[]>>()
@@ -24,7 +24,7 @@ export async function fetchMyTeams(): Promise<TTeam[]> {
 }
 
 /**
- * @description Lấy chi tiết team theo ID
+ * Lấy thông tin chi tiết của một Team theo ID.
  */
 export async function fetchTeamById(teamId: string): Promise<TTeam | null> {
   try {
@@ -37,7 +37,7 @@ export async function fetchTeamById(teamId: string): Promise<TTeam | null> {
 }
 
 /**
- * @description Tạo team mới
+ * Tạo một Team mới.
  */
 export async function createTeam(data: z.infer<typeof CreateTeamSchema>): Promise<TTeam> {
   const response = await api.post("teams", { json: data }).json<TBaseResponse<TTeam>>()
@@ -45,7 +45,7 @@ export async function createTeam(data: z.infer<typeof CreateTeamSchema>): Promis
 }
 
 /**
- * @description Cập nhật thông tin team
+ * Cập nhật thông tin chi tiết của Team.
  */
 export async function updateTeam(
   teamId: string,
@@ -58,7 +58,7 @@ export async function updateTeam(
 }
 
 /**
- * @description Xóa team (Soft Delete)
+ * Thực hiện xóa Team khỏi hệ thống.
  */
 export async function deleteTeam(teamId: string): Promise<boolean> {
   const response = await api.delete(`teams/${teamId}`).json<TBaseResponse<boolean>>()

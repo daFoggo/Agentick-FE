@@ -1,5 +1,9 @@
 import { useMatches } from "@tanstack/react-router"
 
+/**
+ * Component quản lý Header cho các trang Dashboard. 
+ * Tự động đồng bộ tiêu đề (title) hoặc render các thành phần tùy chỉnh dựa trên staticData của Route hiện tại.
+ */
 export const AppPageHeader = () => {
   const matches = useMatches()
 

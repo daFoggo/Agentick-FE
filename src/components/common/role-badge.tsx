@@ -8,7 +8,8 @@ interface IRoleBadgeProps {
 }
 
 /**
- * @description Badge hiển thị role — dùng được ở bất kỳ đâu
+ * Reusable component hiển thị nhãn (badge) đi kèm icon cho các vai trò (role) trong hệ thống.
+ * Tự động ánh xạ từ role value sang giao diện (màu sắc, icon, label) dựa trên constants.
  */
 export function RoleBadge({ role, className }: IRoleBadgeProps) {
   const option = getTeamRoleOption(role)

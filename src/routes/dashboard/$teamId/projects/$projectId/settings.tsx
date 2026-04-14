@@ -1,3 +1,4 @@
+import { ProjectSettings } from "@/features/projects"
 import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute(
@@ -7,5 +8,7 @@ export const Route = createFileRoute(
 })
 
 function ProjectSettingsPage() {
-  return <div></div>
+  const { teamId, projectId } = Route.useParams()
+
+  return <ProjectSettings teamId={teamId} projectId={projectId} />
 }

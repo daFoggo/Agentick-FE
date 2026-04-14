@@ -25,6 +25,10 @@ interface ISignInFormProps {
   redirect?: string
 }
 
+/**
+ * Form đăng nhập (Sign-in form) của hệ thống.
+ * Xử lý việc validate dữ liệu người dùng và lưu trữ thông tin session sau khi đăng nhập thành công.
+ */
 export const SignInForm = ({ redirect }: ISignInFormProps) => {
   const navigate = useNavigate()
   const signInMutation = useMutation(authMutationOptions.signIn())

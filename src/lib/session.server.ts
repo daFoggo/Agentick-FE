@@ -1,8 +1,5 @@
 import { useSession } from "@tanstack/react-start/server"
 
-/**
- * @description Định nghĩa cấu trúc dữ liệu Session
- */
 type SessionData = {
   access_token?: string
   refresh_token?: string
@@ -10,7 +7,10 @@ type SessionData = {
 }
 
 /**
- * @description Hook server-only để quản lý session bằng HTTP-only cookie.
+ * Hook (chỉ sử dụng ở phía Server) để quản lý phiên đăng nhập của người dùng.
+ * Sử dụng thư viện `@tanstack/react-start` để quản lý session thông qua HTTP-only cookie,
+ * giúp lưu trữ các thông tin xác thực (access_token, refresh_token) một cách an toàn
+ * và tránh bị tấn công XSS.
  */
 export function useAppSession() {
   return useSession<SessionData>({
@@ -20,7 +20,7 @@ export function useAppSession() {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7, // Hết hạn sau 7 ngày
     },
   })
 }

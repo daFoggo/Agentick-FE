@@ -18,19 +18,17 @@ export const teamMemberKeys = {
   list: (teamId: string) => [...teamMemberKeys.lists(), teamId] as const,
 }
 
-// Query options
 export const teamMembersQueryOptions = (teamId: string) =>
   queryOptions({
     queryKey: teamMemberKeys.list(teamId),
     queryFn: () => fetchTeamMembersFn({ data: { teamId } }),
-    staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
 export const memberProjectCountQueryOptions = (teamId: string, userId: string) =>
   queryOptions({
     queryKey: [...teamMemberKeys.list(teamId), userId, "projectCount"],
     queryFn: () => getMemberProjectCountFn({ data: { teamId, user_id: userId } }),
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 1000 * 30,
   })
 
 export const useTeamMemberMutations = () => {

@@ -9,6 +9,9 @@ interface IProjectMemberListProps {
   projectId: string
 }
 
+/**
+ * Thành phần hiển thị danh sách tất cả các thành viên đang tham gia Project.
+ */
 export const ProjectMemberList = ({ projectId }: IProjectMemberListProps) => {
   const {
     data: membersData,

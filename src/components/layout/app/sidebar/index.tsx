@@ -18,6 +18,10 @@ import { ThemeToggleWrapper } from "./theme-toggle-wrapper"
 import { TimezoneViewer } from "./timezone-viewer"
 import { UserProfile } from "./user-profile"
 
+/**
+ * Thành phần Sidebar chính của ứng dụng Dashboard. 
+ * Quản lý Navigation, chuyển đổi Workspace (Team Switcher), danh sách Projects và thông tin User.
+ */
 export const AppSidebar = () => {
   return (
     <Sidebar variant="inset">

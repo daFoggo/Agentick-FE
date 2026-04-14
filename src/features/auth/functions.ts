@@ -23,7 +23,6 @@ export const signUpFn = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { useAppSession } = await import("@/lib/session.server")
     const response = await signUp(data)
-    // Xóa session cũ nếu có trước khi chuyển hướng sang đăng nhập
     const session = await useAppSession()
     await session.clear()
     return response

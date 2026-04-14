@@ -9,7 +9,7 @@ import type {
 } from "./schemas"
 
 /**
- * @description Fetch all members of a project
+ * Lấy danh sách thành viên của một Project.
  */
 export async function fetchProjectMembers(
   projectId: string
@@ -22,7 +22,7 @@ export async function fetchProjectMembers(
 }
 
 /**
- * @description Add a member to a project
+ * Thêm một thành viên mới vào Project.
  */
 export async function addProjectMember(
   payload: TAddProjectMemberInput
@@ -35,7 +35,7 @@ export async function addProjectMember(
 }
 
 /**
- * @description Update a member's role in a project
+ * Cập nhật vai trò (Role) của một thành viên trong Project.
  */
 export async function updateProjectMemberRole(
   payload: TUpdateProjectMemberRoleInput
@@ -50,7 +50,7 @@ export async function updateProjectMemberRole(
 }
 
 /**
- * @description Remove a member from a project
+ * Xóa một thành viên khỏi Project.
  */
 export async function removeProjectMember(
   projectId: string,

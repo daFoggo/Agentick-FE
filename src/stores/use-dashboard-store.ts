@@ -1,14 +1,11 @@
+import type { IDashboardStore } from "@/types/dashboard"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-interface IDashboardStore {
-  last_team_id: string | null
-  setLastTeamId: (teamId: string) => void
-  reset: () => void
-  hasHydrated: boolean
-  setHasHydrated: (value: boolean) => void
-}
-
+/**
+ * Lưu trữ một số thông tin thường dùng trong dashboard, ví dụ last_team_id để user nếu truy cầu từ /dashboard có thể đưa
+ * vào route như /dashboard/$teamId/...
+ */
 export const useDashboardStore = create<IDashboardStore>()(
   persist(
     (set) => ({
@@ -39,4 +36,5 @@ export const useDashboardStore = create<IDashboardStore>()(
   )
 )
 
-export const useDashboardHydrated = () => useDashboardStore((state) => state.hasHydrated)
+export const useDashboardHydrated = () =>
+  useDashboardStore((state) => state.hasHydrated)

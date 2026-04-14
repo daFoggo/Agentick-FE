@@ -37,10 +37,8 @@ function getTypeOption(value: string) {
   return TASK_TYPE_CATALOG.find((t) => t.value === value)
 }
 
-// ── Column definitions ─────────────────────────────────────────────────────
 
 export const taskColumns = generateColumns<TTask>([
-  // 1. Title (with expand for sub-tasks)
   {
     accessorKey: "title",
     label: "Title",
@@ -55,7 +53,6 @@ export const taskColumns = generateColumns<TTask>([
     },
   },
 
-  // 2. Type icon
   {
     accessorKey: "type",
     label: "Type",
@@ -75,7 +72,6 @@ export const taskColumns = generateColumns<TTask>([
     },
   },
 
-  // 3. Status
   {
     accessorKey: "status",
     label: "Status",
@@ -143,7 +139,6 @@ export const taskColumns = generateColumns<TTask>([
     },
   },
 
-  // 4. Priority
   {
     accessorKey: "priority",
     label: "Priority",
@@ -210,7 +205,6 @@ export const taskColumns = generateColumns<TTask>([
     },
   },
 
-  // 5. Assignee
   {
     accessorKey: "assignee",
     label: "Assignee",
@@ -233,7 +227,6 @@ export const taskColumns = generateColumns<TTask>([
     },
   },
 
-  // 6. Due date
   {
     accessorKey: "due_date",
     label: "Due Date",
@@ -250,7 +243,6 @@ export const taskColumns = generateColumns<TTask>([
     },
   },
 
-  // 7. Estimated hours
   {
     accessorKey: "estimated_hours",
     label: "Estimated hours",
@@ -264,7 +256,6 @@ export const taskColumns = generateColumns<TTask>([
     },
   },
 
-  // 8. Actual hours
   {
     accessorKey: "actual_hours",
     label: "Actual hours",
@@ -278,7 +269,6 @@ export const taskColumns = generateColumns<TTask>([
     },
   },
 
-  // 9. Actions (pinned right)
   {
     id: "actions",
     label: "Actions",

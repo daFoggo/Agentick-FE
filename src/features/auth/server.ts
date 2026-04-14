@@ -11,7 +11,7 @@ import type {
 } from "./schemas"
 
 /**
- * @description Đăng nhập vào hệ thống
+ * Gọi API thực hiện đăng nhập vào hệ thống.
  */
 export async function signIn(params: TSignInInput): Promise<TSignInResponse> {
   const response = await api
@@ -21,7 +21,7 @@ export async function signIn(params: TSignInInput): Promise<TSignInResponse> {
 }
 
 /**
- * @description Đăng ký tài khoản mới
+ * Gọi API thực hiện đăng ký tài khoản mới.
  */
 export async function signUp(params: TSignUpInput): Promise<TSignUpResponse> {
   const response = await api
@@ -31,7 +31,7 @@ export async function signUp(params: TSignUpInput): Promise<TSignUpResponse> {
 }
 
 /**
- * @description Làm mới token
+ * Gọi API để làm mới Access Token bằng Refresh Token.
  */
 export async function refreshToken(
   params: TRefreshTokenInput

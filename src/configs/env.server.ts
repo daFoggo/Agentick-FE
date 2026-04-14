@@ -2,12 +2,12 @@ import "@tanstack/react-start/server-only"
 import { z } from "zod"
 
 /**
- * @description SERVER-SIDE ONLY environment variables.
- * These variables contain sensitive secrets (API keys, DB URLs).
- * The 'server-only' import above ensures this file NEVER reaches the browser bundle.
+ * Quản lý các environment variables chỉ tồn tại ở phía Server-side.
+ * Chứa các thông tin sensitive (như API Keys). 
+ * File này được đảm bảo không lọt xuống Client-side nhờ import "server-only".
  */
 const serverEnvSchema = z.object({
-  DATABASE_URL: z.url(),
+  DATABASE_URL: z.string().url(),
   OPEN_AI_API_KEY: z.string().min(1),
   SELINE_TOKEN: z.string().min(1),
   NODE_ENV: z
@@ -15,6 +15,4 @@ const serverEnvSchema = z.object({
     .default("development"),
 })
 
-// Validate and export server environment
-// Accessible only in server functions, loaders (on server), and API routes.
 export const serverEnv = serverEnvSchema.parse(process.env)

@@ -43,6 +43,20 @@ export const PROJECT_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [
     to: "/dashboard/$teamId/projects/$projectId/timeline",
     isVisibleByDefault: false,
   },
+  {
+    value: "members",
+    label: "Members",
+    icon: Users,
+    to: "/dashboard/$teamId/projects/$projectId/members",
+    isDynamic: true,
+  },
+  {
+    value: "settings",
+    label: "Settings",
+    icon: Settings,
+    to: "/dashboard/$teamId/projects/$projectId/settings",
+    isDynamic: true,
+  },
 ]
 
 export const INBOX_VIEW_MODE_CATALOG: IViewModeCatalogItem[] = [

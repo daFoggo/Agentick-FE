@@ -9,6 +9,9 @@ interface ITeamMemberListProps {
   teamId: string
 }
 
+/**
+ * Hiển thị danh sách các thành viên trong Team dưới dạng bảng dữ liệu (DataTable).
+ */
 export const TeamMemberList = ({ teamId }: ITeamMemberListProps) => {
   const {
     data: membersData,

@@ -29,6 +29,9 @@ interface ICreateTeamDialogProps {
   onCreated?: (team: TTeam) => void
 }
 
+/**
+ * Dialog thông tin để khởi tạo một Team mới trong hệ thống.
+ */
 export const CreateTeamDialog = ({
   open,
   onOpenChange,

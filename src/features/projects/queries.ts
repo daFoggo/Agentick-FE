@@ -2,7 +2,6 @@ import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query
 import { getProjectByIdFn, getProjectsFn, getMyProjectsFn, createProjectFn, updateProjectFn, deleteProjectFn } from "./functions"
 import type { TGetProjectsInput } from "./schemas"
 
-// Query key factory
 export const projectKeys = {
   all: ["projects"] as const,
   lists: () => [...projectKeys.all, "list"] as const,
@@ -12,26 +11,22 @@ export const projectKeys = {
   detail: (id: string) => [...projectKeys.details(), id] as const,
 }
 
-// Query options
 export const projectsQueryOptions = (params: TGetProjectsInput = {}) =>
   queryOptions({
     queryKey: projectKeys.list(params),
     queryFn: () => getProjectsFn({ data: params }),
-    staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
 export const myProjectsQueryOptions = () =>
   queryOptions({
     queryKey: projectKeys.myProjects(),
     queryFn: () => getMyProjectsFn(),
-    staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
 export const projectQueryOptions = (projectId: string) =>
   queryOptions({
     queryKey: projectKeys.detail(projectId),
     queryFn: () => getProjectByIdFn({ data: { projectId } }),
-    staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
 export const useProjectMutations = () => {

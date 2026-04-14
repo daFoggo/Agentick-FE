@@ -1,9 +1,13 @@
-import '@tanstack/react-start/server-only'
+import "@tanstack/react-start/server-only"
 
 import type { GetInboxStatsInput, TInboxStats } from "./schemas"
 
-export async function fetchInboxStats(_params: GetInboxStatsInput): Promise<TInboxStats> {
-  // Simulate network delay
+/**
+ * Gọi API trả về thông số thống kê của Inbox (active, bookmarks, archive).
+ */
+export async function fetchInboxStats(
+  _params: GetInboxStatsInput
+): Promise<TInboxStats> {
   await new Promise((resolve) => setTimeout(resolve, 300))
 
   return {

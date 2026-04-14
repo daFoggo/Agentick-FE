@@ -8,6 +8,10 @@ interface ITaskTableProps {
   defaultPageSize?: number
 }
 
+/**
+ * Bảng hiển thị danh sách công việc (Task).
+ * Hỗ trợ các tính năng cao cấp như nhóm dữ liệu (Grouping), ghim cột (Pinning) và phân trang.
+ */
 export const TaskTable = ({
   data,
   groupBy,
