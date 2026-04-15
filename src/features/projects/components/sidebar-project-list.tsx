@@ -7,9 +7,10 @@ import {
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { Link, useParams } from "@tanstack/react-router"
-import { FolderClosed, FolderOpen, Loader2 } from "lucide-react"
+import { FolderClosed, FolderOpen } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { projectsQueryOptions } from "../queries"
+import { Skeleton } from "@/components/ui/skeleton"
 
 /**
  * Hiển thị danh sách các Project của Team trên thanh Sidebar.
@@ -28,11 +29,15 @@ export const SidebarProjectList = () => {
     <SidebarGroup>
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
       <SidebarMenu className="gap-0.5">
-        {isLoading && (
-          <div className="flex w-full items-center justify-center py-2">
-            <Loader2 className="size-4 animate-spin text-muted-foreground" />
-          </div>
-        )}
+        {isLoading &&
+          Array.from({ length: 2 }).map((_, i) => (
+            <SidebarMenuItem key={i}>
+              <SidebarMenuButton disabled>
+                <Skeleton className="size-4 shrink-0" />
+                <Skeleton className="h-3.5 flex-1" />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
 
         {!isLoading && projects.length === 0 && (
           <div className="px-2 py-1 text-xs text-muted-foreground">

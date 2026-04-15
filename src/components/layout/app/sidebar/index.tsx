@@ -8,9 +8,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { SIDEBAR_PERSONAL, SIDEBAR_TEAM } from "@/constants/sidebar-navigation"
+import {
+  SIDEBAR_PERSONAL,
+  SIDEBAR_PROJECT_SETTINGS,
+  SIDEBAR_TEAM,
+} from "@/constants/sidebar-navigation"
 import { SidebarProjectList } from "@/features/projects"
-import { Suspense } from "react"
+import { useSidebarContextStore } from "@/stores/use-sidebar-context-store"
+import { useLocation } from "@tanstack/react-router"
+import { Suspense, useEffect } from "react"
 import { HeaderContent } from "./header-content"
 import { SidebarGroupSection } from "./sidebar-navigation"
 import { TeamSwitcher } from "./team-switcher"
@@ -19,28 +25,50 @@ import { TimezoneViewer } from "./timezone-viewer"
 import { UserProfile } from "./user-profile"
 
 /**
- * Thành phần Sidebar chính của ứng dụng Dashboard. 
+ * Thành phần Sidebar chính của ứng dụng Dashboard.
  * Quản lý Navigation, chuyển đổi Workspace (Team Switcher), danh sách Projects và thông tin User.
  */
 export const AppSidebar = () => {
+  const { pathname } = useLocation()
+  const activeContextId = useSidebarContextStore((state) => state.activeContextId)
+  const routeParams = useSidebarContextStore((state) => state.routeParams)
+  const syncWithPathname = useSidebarContextStore((state) => state.syncWithPathname)
+
+  useEffect(() => {
+    syncWithPathname(pathname)
+  }, [pathname, syncWithPathname])
+
+  const isProjectSettingsContext = activeContextId === "project-settings"
+
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
         <HeaderContent />
       </SidebarHeader>
       <SidebarContent>
+        {/* Tiện ích Header */}
         <SidebarGroup>
           <SidebarMenu>
             <TeamSwitcher />
           </SidebarMenu>
         </SidebarGroup>
 
-        <SidebarGroupSection group={SIDEBAR_PERSONAL} />
+        {isProjectSettingsContext ? (
+          <SidebarGroupSection
+            group={SIDEBAR_PROJECT_SETTINGS}
+            params={routeParams}
+          />
+        ) : (
+          <>
+            <SidebarGroupSection group={SIDEBAR_PERSONAL} />
 
-        <SidebarProjectList />
+            <SidebarProjectList />
 
-        <SidebarGroupSection group={SIDEBAR_TEAM} />
+            <SidebarGroupSection group={SIDEBAR_TEAM} />
+          </>
+        )}
 
+        {/* Tiện ích Footer */}
         <SidebarGroup className="mt-auto">
           <SidebarMenu>
             <TimezoneViewer />

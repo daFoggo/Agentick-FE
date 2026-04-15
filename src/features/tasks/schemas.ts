@@ -68,3 +68,88 @@ export type TTask = z.infer<typeof TaskSchema> & {
 
 export type TTag = z.infer<typeof TagSchema>
 export type TPhase = z.infer<typeof PhaseSchema>
+
+const ApiDateSchema = z.iso.datetime().or(z.date())
+
+export const ProjectTaskSchema = z.object({
+  id: z.string(),
+  created_at: ApiDateSchema,
+  updated_at: ApiDateSchema,
+  project_id: z.string(),
+  parent_id: z.string().nullable(),
+  title: z.string().min(1, "Tiêu đề không được để trống"),
+  description: z.string().optional().nullable(),
+  status_id: z.string(),
+  type_id: z.string(),
+  priority_id: z.string(),
+  assigner_id: z.string(),
+  assignee_id: z.string().nullable(),
+  phase_id: z.string().nullable(),
+  start_date: ApiDateSchema,
+  due_date: ApiDateSchema,
+  order: z.number(),
+  is_archived: z.boolean(),
+  is_deleted: z.boolean(),
+})
+
+export const ProjectTaskCreateSchema = z.object({
+  project_id: z.string().optional(),
+  parent_id: z.string().nullable().optional(),
+  title: z.string().min(1, "Tiêu đề không được để trống"),
+  description: z.string().optional().nullable(),
+  status_id: z.string(),
+  type_id: z.string(),
+  priority_id: z.string(),
+  assigner_id: z.string(),
+  assignee_id: z.string().nullable().optional(),
+  phase_id: z.string().nullable().optional(),
+  start_date: ApiDateSchema,
+  due_date: ApiDateSchema,
+  order: z.number().int(),
+})
+
+export const ProjectTaskUpdateSchema = ProjectTaskCreateSchema.omit({
+  project_id: true,
+})
+  .partial()
+  .extend({
+    is_archived: z.boolean().optional(),
+  })
+
+export const ProjectTaskFindSchema = z
+  .object({
+    id__eq: z.string().optional(),
+    title__ilike: z.string().optional(),
+    status_id__eq: z.string().optional(),
+    assignee_id__eq: z.string().optional(),
+    is_archived__eq: z.boolean().optional(),
+    is_deleted__eq: z.boolean().optional(),
+    page: z.number().int().positive().optional(),
+    page_size: z.union([z.number().int().positive(), z.literal("all")]).optional(),
+    ordering: z.string().optional(),
+  })
+  .optional()
+
+export const ProjectTaskSearchOptionsSchema = z.object({
+  page: z.number(),
+  page_size: z.union([z.number(), z.literal("all")]),
+  ordering: z.string(),
+  total_count: z.number(),
+})
+
+export interface TProjectTaskSearchOptions {
+  page: number
+  page_size: number | "all"
+  ordering: string
+  total_count: number
+}
+
+export interface TProjectTasksResponse {
+  founds: TProjectTask[]
+  search_options: TProjectTaskSearchOptions
+}
+
+export type TProjectTask = z.infer<typeof ProjectTaskSchema>
+export type TProjectTaskCreateInput = z.infer<typeof ProjectTaskCreateSchema>
+export type TProjectTaskUpdateInput = z.infer<typeof ProjectTaskUpdateSchema>
+export type TProjectTaskFindInput = z.infer<typeof ProjectTaskFindSchema>

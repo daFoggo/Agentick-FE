@@ -1,9 +1,11 @@
 import { ViewModeList } from "@/components/layout/app/view-mode-list"
 import { TEAM_VIEW_MODE_CATALOG } from "@/constants/view-mode-list"
-import { TeamDetailsHeader } from "@/features/teams"
+import { teamQueries, TeamDetailsHeader } from "@/features/teams"
 import { Outlet, createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/dashboard/$teamId/team")({
+  loader: ({ context, params }) =>
+    context.queryClient.ensureQueryData(teamQueries.detail(params.teamId)),
   component: RouteComponent,
   staticData: {
     getTitle: () => "Team Details",
@@ -14,8 +16,8 @@ export const Route = createFileRoute("/dashboard/$teamId/team")({
 })
 
 function HeaderWrapper() {
-  const { teamId } = Route.useParams()
-  return <TeamDetailsHeader teamId={teamId} />
+  const team = Route.useLoaderData()
+  return <TeamDetailsHeader team={team} />
 }
 
 function RouteComponent() {
