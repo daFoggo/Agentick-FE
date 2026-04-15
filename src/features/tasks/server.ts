@@ -2,38 +2,49 @@ import "@tanstack/react-start/server-only"
 import { api } from "@/lib/ky"
 import type { TBaseResponse } from "@/types/api"
 import {
-  ProjectTaskCreateSchema,
-  ProjectTaskUpdateSchema,
-  type TProjectTask,
-  type TProjectTaskCreateInput,
-  type TProjectTaskFindInput,
-  type TProjectTaskUpdateInput,
-  type TProjectTasksResponse,
+  CreateTaskSchema,
+  UpdateTaskSchema,
+  type TTask,
+  type TCreateTaskInput,
+  type TFindTasksInput,
+  type TUpdateTaskInput,
+  type TTasksResponse,
 } from "./schemas"
 
+/**
+ * Xây dựng đường dẫn API cho Task theo ProjectId
+ */
 const buildTaskPath = (projectId: string) => `projects/${projectId}/tasks`
 
+/**
+ * Lấy danh sách các Task trong một Project (có hỗ trợ filter và pagination).
+ */
 export async function fetchTasks(
   projectId: string,
-  params?: TProjectTaskFindInput
-): Promise<TProjectTasksResponse> {
+  params?: TFindTasksInput
+): Promise<TTasksResponse> {
   const response = await api
     .get(buildTaskPath(projectId), {
-      searchParams: params as Record<string, string | number | boolean> | undefined,
+      searchParams: params as
+        | Record<string, string | number | boolean>
+        | undefined,
     })
-    .json<TBaseResponse<TProjectTasksResponse>>()
+    .json<TBaseResponse<TTasksResponse>>()
 
   return response.data
 }
 
+/**
+ * Lấy thông tin chi tiết của một Task theo TaskId trong Project.
+ */
 export async function fetchTaskById(
   projectId: string,
   taskId: string
-): Promise<TProjectTask | null> {
+): Promise<TTask | null> {
   try {
     const response = await api
       .get(`${buildTaskPath(projectId)}/${taskId}`)
-      .json<TBaseResponse<TProjectTask>>()
+      .json<TBaseResponse<TTask>>()
     return response.data
   } catch (error) {
     console.error("error fetch task detail:", error)
@@ -41,33 +52,45 @@ export async function fetchTaskById(
   }
 }
 
+/**
+ * Tạo một Task mới trong Project.
+ */
 export async function createTask(
   projectId: string,
-  payload: TProjectTaskCreateInput
-): Promise<TProjectTask> {
+  payload: TCreateTaskInput
+): Promise<TTask> {
   const response = await api
     .post(buildTaskPath(projectId), {
-      json: ProjectTaskCreateSchema.parse(payload),
+      json: CreateTaskSchema.parse({
+        ...payload,
+        project_id: payload.project_id ?? projectId,
+      }),
     })
-    .json<TBaseResponse<TProjectTask>>()
+    .json<TBaseResponse<TTask>>()
 
   return response.data
 }
 
+/**
+ * Cập nhật thông tin chi tiết của một Task.
+ */
 export async function updateTask(
   projectId: string,
   taskId: string,
-  payload: TProjectTaskUpdateInput
-): Promise<TProjectTask> {
+  payload: TUpdateTaskInput
+): Promise<TTask> {
   const response = await api
     .patch(`${buildTaskPath(projectId)}/${taskId}`, {
-      json: ProjectTaskUpdateSchema.parse(payload),
+      json: UpdateTaskSchema.parse(payload),
     })
-    .json<TBaseResponse<TProjectTask>>()
+    .json<TBaseResponse<TTask>>()
 
   return response.data
 }
 
+/**
+ * Thực hiện xóa một Task khỏi Project.
+ */
 export async function deleteTask(
   projectId: string,
   taskId: string

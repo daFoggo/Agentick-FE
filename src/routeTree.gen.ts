@@ -37,10 +37,12 @@ import { Route as DashboardTeamIdProjectsProjectIdMembersRouteImport } from './r
 import { Route as DashboardTeamIdProjectsProjectIdListRouteImport } from './routes/dashboard/$teamId/projects/$projectId/list'
 import { Route as DashboardTeamIdProjectsProjectIdDashboardRouteImport } from './routes/dashboard/$teamId/projects/$projectId/dashboard'
 import { Route as DashboardTeamIdProjectsProjectIdBoardRouteImport } from './routes/dashboard/$teamId/projects/$projectId/board'
+import { Route as DashboardTeamIdProjectsProjectIdSettingsIndexRouteImport } from './routes/dashboard/$teamId/projects/$projectId/settings.index'
 import { Route as DashboardTeamIdProjectsProjectIdSettingsTaskTypesRouteImport } from './routes/dashboard/$teamId/projects/$projectId/settings.task-types'
 import { Route as DashboardTeamIdProjectsProjectIdSettingsTaskTagsRouteImport } from './routes/dashboard/$teamId/projects/$projectId/settings.task-tags'
 import { Route as DashboardTeamIdProjectsProjectIdSettingsTaskStatusesRouteImport } from './routes/dashboard/$teamId/projects/$projectId/settings.task-statuses'
 import { Route as DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRouteImport } from './routes/dashboard/$teamId/projects/$projectId/settings.task-priorities'
+import { Route as DashboardTeamIdProjectsProjectIdSettingsMembersRouteImport } from './routes/dashboard/$teamId/projects/$projectId/settings.members'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -203,6 +205,12 @@ const DashboardTeamIdProjectsProjectIdBoardRoute =
     path: '/board',
     getParentRoute: () => DashboardTeamIdProjectsProjectIdRouteRoute,
   } as any)
+const DashboardTeamIdProjectsProjectIdSettingsIndexRoute =
+  DashboardTeamIdProjectsProjectIdSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => DashboardTeamIdProjectsProjectIdSettingsRoute,
+  } as any)
 const DashboardTeamIdProjectsProjectIdSettingsTaskTypesRoute =
   DashboardTeamIdProjectsProjectIdSettingsTaskTypesRouteImport.update({
     id: '/task-types',
@@ -225,6 +233,12 @@ const DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRoute =
   DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRouteImport.update({
     id: '/task-priorities',
     path: '/task-priorities',
+    getParentRoute: () => DashboardTeamIdProjectsProjectIdSettingsRoute,
+  } as any)
+const DashboardTeamIdProjectsProjectIdSettingsMembersRoute =
+  DashboardTeamIdProjectsProjectIdSettingsMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
     getParentRoute: () => DashboardTeamIdProjectsProjectIdSettingsRoute,
   } as any)
 
@@ -257,10 +271,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/$teamId/projects/$projectId/settings': typeof DashboardTeamIdProjectsProjectIdSettingsRouteWithChildren
   '/dashboard/$teamId/projects/$projectId/timeline': typeof DashboardTeamIdProjectsProjectIdTimelineRoute
   '/dashboard/$teamId/projects/$projectId/': typeof DashboardTeamIdProjectsProjectIdIndexRoute
+  '/dashboard/$teamId/projects/$projectId/settings/members': typeof DashboardTeamIdProjectsProjectIdSettingsMembersRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-priorities': typeof DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-statuses': typeof DashboardTeamIdProjectsProjectIdSettingsTaskStatusesRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-tags': typeof DashboardTeamIdProjectsProjectIdSettingsTaskTagsRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-types': typeof DashboardTeamIdProjectsProjectIdSettingsTaskTypesRoute
+  '/dashboard/$teamId/projects/$projectId/settings/': typeof DashboardTeamIdProjectsProjectIdSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -284,13 +300,14 @@ export interface FileRoutesByTo {
   '/dashboard/$teamId/projects/$projectId/dashboard': typeof DashboardTeamIdProjectsProjectIdDashboardRoute
   '/dashboard/$teamId/projects/$projectId/list': typeof DashboardTeamIdProjectsProjectIdListRoute
   '/dashboard/$teamId/projects/$projectId/members': typeof DashboardTeamIdProjectsProjectIdMembersRoute
-  '/dashboard/$teamId/projects/$projectId/settings': typeof DashboardTeamIdProjectsProjectIdSettingsRouteWithChildren
   '/dashboard/$teamId/projects/$projectId/timeline': typeof DashboardTeamIdProjectsProjectIdTimelineRoute
   '/dashboard/$teamId/projects/$projectId': typeof DashboardTeamIdProjectsProjectIdIndexRoute
+  '/dashboard/$teamId/projects/$projectId/settings/members': typeof DashboardTeamIdProjectsProjectIdSettingsMembersRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-priorities': typeof DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-statuses': typeof DashboardTeamIdProjectsProjectIdSettingsTaskStatusesRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-tags': typeof DashboardTeamIdProjectsProjectIdSettingsTaskTagsRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-types': typeof DashboardTeamIdProjectsProjectIdSettingsTaskTypesRoute
+  '/dashboard/$teamId/projects/$projectId/settings': typeof DashboardTeamIdProjectsProjectIdSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -322,10 +339,12 @@ export interface FileRoutesById {
   '/dashboard/$teamId/projects/$projectId/settings': typeof DashboardTeamIdProjectsProjectIdSettingsRouteWithChildren
   '/dashboard/$teamId/projects/$projectId/timeline': typeof DashboardTeamIdProjectsProjectIdTimelineRoute
   '/dashboard/$teamId/projects/$projectId/': typeof DashboardTeamIdProjectsProjectIdIndexRoute
+  '/dashboard/$teamId/projects/$projectId/settings/members': typeof DashboardTeamIdProjectsProjectIdSettingsMembersRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-priorities': typeof DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-statuses': typeof DashboardTeamIdProjectsProjectIdSettingsTaskStatusesRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-tags': typeof DashboardTeamIdProjectsProjectIdSettingsTaskTagsRoute
   '/dashboard/$teamId/projects/$projectId/settings/task-types': typeof DashboardTeamIdProjectsProjectIdSettingsTaskTypesRoute
+  '/dashboard/$teamId/projects/$projectId/settings/': typeof DashboardTeamIdProjectsProjectIdSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -358,10 +377,12 @@ export interface FileRouteTypes {
     | '/dashboard/$teamId/projects/$projectId/settings'
     | '/dashboard/$teamId/projects/$projectId/timeline'
     | '/dashboard/$teamId/projects/$projectId/'
+    | '/dashboard/$teamId/projects/$projectId/settings/members'
     | '/dashboard/$teamId/projects/$projectId/settings/task-priorities'
     | '/dashboard/$teamId/projects/$projectId/settings/task-statuses'
     | '/dashboard/$teamId/projects/$projectId/settings/task-tags'
     | '/dashboard/$teamId/projects/$projectId/settings/task-types'
+    | '/dashboard/$teamId/projects/$projectId/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -385,13 +406,14 @@ export interface FileRouteTypes {
     | '/dashboard/$teamId/projects/$projectId/dashboard'
     | '/dashboard/$teamId/projects/$projectId/list'
     | '/dashboard/$teamId/projects/$projectId/members'
-    | '/dashboard/$teamId/projects/$projectId/settings'
     | '/dashboard/$teamId/projects/$projectId/timeline'
     | '/dashboard/$teamId/projects/$projectId'
+    | '/dashboard/$teamId/projects/$projectId/settings/members'
     | '/dashboard/$teamId/projects/$projectId/settings/task-priorities'
     | '/dashboard/$teamId/projects/$projectId/settings/task-statuses'
     | '/dashboard/$teamId/projects/$projectId/settings/task-tags'
     | '/dashboard/$teamId/projects/$projectId/settings/task-types'
+    | '/dashboard/$teamId/projects/$projectId/settings'
   id:
     | '__root__'
     | '/'
@@ -422,10 +444,12 @@ export interface FileRouteTypes {
     | '/dashboard/$teamId/projects/$projectId/settings'
     | '/dashboard/$teamId/projects/$projectId/timeline'
     | '/dashboard/$teamId/projects/$projectId/'
+    | '/dashboard/$teamId/projects/$projectId/settings/members'
     | '/dashboard/$teamId/projects/$projectId/settings/task-priorities'
     | '/dashboard/$teamId/projects/$projectId/settings/task-statuses'
     | '/dashboard/$teamId/projects/$projectId/settings/task-tags'
     | '/dashboard/$teamId/projects/$projectId/settings/task-types'
+    | '/dashboard/$teamId/projects/$projectId/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -634,6 +658,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTeamIdProjectsProjectIdBoardRouteImport
       parentRoute: typeof DashboardTeamIdProjectsProjectIdRouteRoute
     }
+    '/dashboard/$teamId/projects/$projectId/settings/': {
+      id: '/dashboard/$teamId/projects/$projectId/settings/'
+      path: '/'
+      fullPath: '/dashboard/$teamId/projects/$projectId/settings/'
+      preLoaderRoute: typeof DashboardTeamIdProjectsProjectIdSettingsIndexRouteImport
+      parentRoute: typeof DashboardTeamIdProjectsProjectIdSettingsRoute
+    }
     '/dashboard/$teamId/projects/$projectId/settings/task-types': {
       id: '/dashboard/$teamId/projects/$projectId/settings/task-types'
       path: '/task-types'
@@ -660,6 +691,13 @@ declare module '@tanstack/react-router' {
       path: '/task-priorities'
       fullPath: '/dashboard/$teamId/projects/$projectId/settings/task-priorities'
       preLoaderRoute: typeof DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRouteImport
+      parentRoute: typeof DashboardTeamIdProjectsProjectIdSettingsRoute
+    }
+    '/dashboard/$teamId/projects/$projectId/settings/members': {
+      id: '/dashboard/$teamId/projects/$projectId/settings/members'
+      path: '/members'
+      fullPath: '/dashboard/$teamId/projects/$projectId/settings/members'
+      preLoaderRoute: typeof DashboardTeamIdProjectsProjectIdSettingsMembersRouteImport
       parentRoute: typeof DashboardTeamIdProjectsProjectIdSettingsRoute
     }
   }
@@ -706,14 +744,18 @@ const DashboardTeamIdTeamRouteRouteWithChildren =
   )
 
 interface DashboardTeamIdProjectsProjectIdSettingsRouteChildren {
+  DashboardTeamIdProjectsProjectIdSettingsMembersRoute: typeof DashboardTeamIdProjectsProjectIdSettingsMembersRoute
   DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRoute: typeof DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRoute
   DashboardTeamIdProjectsProjectIdSettingsTaskStatusesRoute: typeof DashboardTeamIdProjectsProjectIdSettingsTaskStatusesRoute
   DashboardTeamIdProjectsProjectIdSettingsTaskTagsRoute: typeof DashboardTeamIdProjectsProjectIdSettingsTaskTagsRoute
   DashboardTeamIdProjectsProjectIdSettingsTaskTypesRoute: typeof DashboardTeamIdProjectsProjectIdSettingsTaskTypesRoute
+  DashboardTeamIdProjectsProjectIdSettingsIndexRoute: typeof DashboardTeamIdProjectsProjectIdSettingsIndexRoute
 }
 
 const DashboardTeamIdProjectsProjectIdSettingsRouteChildren: DashboardTeamIdProjectsProjectIdSettingsRouteChildren =
   {
+    DashboardTeamIdProjectsProjectIdSettingsMembersRoute:
+      DashboardTeamIdProjectsProjectIdSettingsMembersRoute,
     DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRoute:
       DashboardTeamIdProjectsProjectIdSettingsTaskPrioritiesRoute,
     DashboardTeamIdProjectsProjectIdSettingsTaskStatusesRoute:
@@ -722,6 +764,8 @@ const DashboardTeamIdProjectsProjectIdSettingsRouteChildren: DashboardTeamIdProj
       DashboardTeamIdProjectsProjectIdSettingsTaskTagsRoute,
     DashboardTeamIdProjectsProjectIdSettingsTaskTypesRoute:
       DashboardTeamIdProjectsProjectIdSettingsTaskTypesRoute,
+    DashboardTeamIdProjectsProjectIdSettingsIndexRoute:
+      DashboardTeamIdProjectsProjectIdSettingsIndexRoute,
   }
 
 const DashboardTeamIdProjectsProjectIdSettingsRouteWithChildren =

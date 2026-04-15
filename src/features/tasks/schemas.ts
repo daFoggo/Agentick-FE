@@ -7,22 +7,10 @@ import {
   FindPageSizeWithAllSchema,
 } from "@/lib/zod-common"
 import type { TBaseFindResponse, TBaseSearchOptions } from "@/types/api"
-import {
-  TASK_PRIORITY_CATALOG,
-  TASK_STATUS_CATALOG,
-  TASK_TYPE_CATALOG,
-} from "./constants"
 
-export const TaskTypeSchema = z.enum(
-  TASK_TYPE_CATALOG.map((i) => i.value) as [string, ...string[]]
-)
-export const TaskStatusSchema = z.enum(
-  TASK_STATUS_CATALOG.map((i) => i.value) as [string, ...string[]]
-)
-export const TaskPrioritySchema = z.enum(
-  TASK_PRIORITY_CATALOG.map((i) => i.value) as [string, ...string[]]
-)
-
+/**
+ * Schema cho Tag của Task
+ */
 export const TagSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -31,6 +19,11 @@ export const TagSchema = z.object({
   created_at: ApiDateSchema,
 })
 
+export type TTag = z.infer<typeof TagSchema>
+
+/**
+ * Schema cho Phase (Giai đoạn) của Task
+ */
 export const PhaseSchema = z.object({
   id: z.string(),
   project_id: z.string(),
@@ -41,41 +34,11 @@ export const PhaseSchema = z.object({
   created_at: ApiDateSchema,
 })
 
-export const TaskSchema = z.object({
-  id: z.string(),
-  project_id: z.string(),
-  title: z.string().min(1, "Tiêu đề không được để trống"),
-  description: z.string().optional(),
-  type: TaskTypeSchema,
-  status: TaskStatusSchema,
-  priority: TaskPrioritySchema,
-  phase_id: z.string().optional(),
-  assignee_id: z.string().optional(),
-  start_date: ApiDateSchema.optional(),
-  due_date: ApiDateSchema.optional(),
-  estimated_hours: z.number().optional(),
-  actual_hours: z.number().optional(),
-  created_at: ApiDateSchema,
-  updated_at: ApiDateSchema,
-})
-
-export const CreateTaskSchema = TaskSchema.omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-})
-
-export const UpdateTaskSchema = CreateTaskSchema.partial()
-
-export type TTask = z.infer<typeof TaskSchema> & {
-  tags?: TTag[]
-  phase?: TPhase
-  assignee?: TProjectMember
-}
-
-export type TTag = z.infer<typeof TagSchema>
 export type TPhase = z.infer<typeof PhaseSchema>
 
+/**
+ * Schema chính cho Task trong Project
+ */
 export const ProjectTaskSchema = z.object({
   id: z.string(),
   created_at: ApiDateSchema,
@@ -95,9 +58,27 @@ export const ProjectTaskSchema = z.object({
   order: z.number(),
   is_archived: z.boolean(),
   is_deleted: z.boolean(),
+  // Các trường ảo hỗ trợ mapping UI, không nhất thiết có trong API response gốc hoặc được Join
+  type: z.string().optional(),
+  status: z.string().optional(),
+  priority: z.string().optional(),
+  estimated_hours: z.number().optional(),
+  actual_hours: z.number().optional(),
 })
 
-export const ProjectTaskCreateSchema = z.object({
+/**
+ * Type đầy đủ của một Task bao gồm các thông tin liên quan (Join)
+ */
+export type TTask = z.infer<typeof ProjectTaskSchema> & {
+  tags?: TTag[]
+  phase?: TPhase
+  assignee?: TProjectMember
+}
+
+/**
+ * Schema cho việc tạo Task mới
+ */
+export const CreateTaskSchema = z.object({
   project_id: z.string().optional(),
   parent_id: z.string().nullable().optional(),
   title: z.string().min(1, "Tiêu đề không được để trống"),
@@ -113,7 +94,12 @@ export const ProjectTaskCreateSchema = z.object({
   order: z.number().int(),
 })
 
-export const ProjectTaskUpdateSchema = ProjectTaskCreateSchema.omit({
+export type TCreateTaskInput = z.infer<typeof CreateTaskSchema>
+
+/**
+ * Schema cho việc cập nhật Task
+ */
+export const UpdateTaskSchema = CreateTaskSchema.omit({
   project_id: true,
 })
   .partial()
@@ -121,7 +107,12 @@ export const ProjectTaskUpdateSchema = ProjectTaskCreateSchema.omit({
     is_archived: z.boolean().optional(),
   })
 
-export const ProjectTaskFindSchema = z
+export type TUpdateTaskInput = z.infer<typeof UpdateTaskSchema>
+
+/**
+ * Schema cho việc tìm kiếm/lọc danh sách Task
+ */
+export const FindTasksSchema = z
   .object({
     id__eq: z.string().optional(),
     title__ilike: z.string().optional(),
@@ -135,21 +126,12 @@ export const ProjectTaskFindSchema = z
   })
   .optional()
 
-export const ProjectTaskSearchOptionsSchema = z.object({
-  page: z.number(),
-  page_size: z.union([z.number(), z.literal("all")]),
-  ordering: z.string(),
-  total_count: z.number(),
-})
+export type TFindTasksInput = z.infer<typeof FindTasksSchema>
 
-export type TProjectTaskSearchOptions = TBaseSearchOptions<number | "all", string>
-
-export type TProjectTasksResponse = TBaseFindResponse<
-  TProjectTask,
-  TProjectTaskSearchOptions
+/**
+ * Phản hồi từ API cho danh sách Task
+ */
+export type TTasksResponse = TBaseFindResponse<
+  TTask,
+  TBaseSearchOptions<number | "all", string>
 >
-
-export type TProjectTask = z.infer<typeof ProjectTaskSchema>
-export type TProjectTaskCreateInput = z.infer<typeof ProjectTaskCreateSchema>
-export type TProjectTaskUpdateInput = z.infer<typeof ProjectTaskUpdateSchema>
-export type TProjectTaskFindInput = z.infer<typeof ProjectTaskFindSchema>

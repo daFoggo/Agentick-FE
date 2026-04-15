@@ -3,5 +3,5 @@ export * from "./constants"
 export * from "./functions"
 export * from "./server"
 export * from "./queries"
-export * from "./sample-data"
+
 export * from "./components/task-table"

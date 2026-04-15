@@ -23,7 +23,6 @@ import {
   ChevronsUpDown,
   GripVertical,
   Plus,
-  Shapes,
 } from "lucide-react"
 import { useState } from "react"
 import { Area, AreaChart } from "recharts"
@@ -78,8 +77,18 @@ export const TeamSwitcher = () => {
       <Popover>
         <PopoverTrigger asChild>
           <SidebarMenuButton>
-            <div className="rounded-md bg-muted p-1">
-              <Shapes />
+            <div className="relative flex size-6 items-center justify-center overflow-hidden rounded-md border bg-muted/50">
+              {teamDetail?.avatar_url && teamDetail.avatar_url !== "" ? (
+                <img
+                  src={teamDetail.avatar_url}
+                  alt={teamDetail.name ?? "Team avatar"}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="text-xs font-medium text-muted-foreground uppercase">
+                  {(teamDetail?.name ?? "TM").slice(0, 2)}
+                </div>
+              )}
             </div>
             {isLoadingDetail ? (
               <Skeleton className="h-6 w-24" />
@@ -177,7 +186,7 @@ const TeamTile = ({ team, index }: { team: TTeam; index: number }) => {
         className="flex h-auto w-full flex-col items-start justify-start rounded-none p-2.5 text-left font-normal"
       >
         <div className="mb-2 flex w-full items-center gap-2">
-          <div className="relative flex size-5 items-center justify-center overflow-hidden rounded-sm border bg-muted/50">
+          <div className="relative flex size-6 items-center justify-center overflow-hidden rounded-sm border bg-muted/50">
             {team.avatar_url && team.avatar_url !== "" ? (
               <img
                 src={team.avatar_url}

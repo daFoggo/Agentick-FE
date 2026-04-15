@@ -187,7 +187,7 @@ const buildDefaultModeStates = (
     value: item.value,
     label: item.label,
     isDefault: item.isDefault ?? index === 0,
-    isVisible: item.isVisibleByDefault ?? (item.isDynamic ? false : true),
+    isVisible: item.isVisibleByDefault ?? true,
   }))
 
 export const resolveViewModes = (
@@ -210,13 +210,12 @@ export const resolveViewModes = (
         value: savedMode.value,
         label: savedMode.label ?? definition.label,
         isDefault: savedMode.isDefault,
-        isVisible: definition.isDynamic ? false : savedMode.isVisible,
+        isVisible: savedMode.isVisible,
         metadata: savedMode.metadata,
         icon: definition.icon,
         render: definition.render,
         badge: definition.badge,
         badgeVariant: definition.badgeVariant,
-        isDynamic: definition.isDynamic,
       } as IResolvedViewMode
     })
     .filter((mode): mode is IResolvedViewMode => mode !== null)
@@ -231,11 +230,9 @@ export const resolveViewModes = (
       render: definition.render,
       isDefault:
         definition.isDefault ?? (mergedModes.length === 0 && index === 0),
-      isVisible:
-        definition.isVisibleByDefault ?? (definition.isDynamic ? false : true),
+      isVisible: definition.isVisibleByDefault ?? true,
       badge: definition.badge,
       badgeVariant: definition.badgeVariant,
-      isDynamic: definition.isDynamic,
     }))
 
   const modes = [...mergedModes, ...missingModes]

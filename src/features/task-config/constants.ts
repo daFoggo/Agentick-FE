@@ -1,28 +1,30 @@
+import { TAILWIND_500_COLORS } from "@/constants/color-options"
+
 export const TASK_CONFIG_SECTIONS = ["statuses", "types", "priorities", "tags"] as const
 
 export const TASK_CONFIG_ROUTE = "projects/{project_id}/task-config"
 
 export const DEFAULT_TASK_STATUS_COLORS = [
-  "#94a3b8",
-  "#64748b",
-  "#0ea5e9",
-  "#f59e0b",
-  "#ef4444",
-  "#22c55e",
+  TAILWIND_500_COLORS.gray,
+  TAILWIND_500_COLORS.sky,
+  TAILWIND_500_COLORS.amber,
+  TAILWIND_500_COLORS.green,
+  TAILWIND_500_COLORS.red,
+  TAILWIND_500_COLORS.purple,
 ] as const
 
 export const DEFAULT_TASK_TYPE_COLORS = [
-  "#64748b",
-  "#3b82f6",
-  "#ef4444",
-  "#8b5cf6",
-  "#10b981",
+  TAILWIND_500_COLORS.slate,
+  TAILWIND_500_COLORS.blue,
+  TAILWIND_500_COLORS.red,
+  TAILWIND_500_COLORS.violet,
+  TAILWIND_500_COLORS.emerald,
 ] as const
 
 export const DEFAULT_TASK_PRIORITY_COLORS = [
-  "#cbd5e1",
-  "#94a3b8",
-  "#3b82f6",
-  "#f97316",
-  "#ef4444",
+  TAILWIND_500_COLORS.stone,
+  TAILWIND_500_COLORS.gray,
+  TAILWIND_500_COLORS.blue,
+  TAILWIND_500_COLORS.orange,
+  TAILWIND_500_COLORS.red,
 ] as const

@@ -42,8 +42,13 @@ function mapTaskData(
   return {
     id: task.id,
     project_id: task.project_id,
+    parent_id: undefined,
     title: task.title,
     description: task.description ?? undefined,
+    status_id: task.status_id,
+    type_id: task.type_id,
+    priority_id: task.priority_id,
+    assigner_id: undefined,
     type: display(task.type_id, options.types),
     status: display(task.status_id, options.statuses),
     priority: display(task.priority_id, options.priorities),
@@ -54,6 +59,9 @@ function mapTaskData(
     due_date: task.due_date ? new Date(task.due_date) : undefined,
     created_at: new Date(task.created_at ?? Date.now()),
     updated_at: new Date(task.updated_at ?? Date.now()),
+    order: task.order,
+    is_archived: task.is_archived,
+    is_deleted: task.is_deleted,
     estimated_hours: undefined,
     actual_hours: undefined,
   }
@@ -107,5 +115,15 @@ function ProjectListView() {
     mapTaskData(task, project?.members ?? [], taskOptions)
   )
 
-  return <TaskTable data={tasks} groupBy="status" />
+  return (
+    <TaskTable
+      projectId={projectId}
+      data={tasks}
+      members={project?.members ?? []}
+      statuses={taskOptions.statuses}
+      types={taskOptions.types}
+      priorities={taskOptions.priorities}
+      groupBy="status"
+    />
+  )
 }

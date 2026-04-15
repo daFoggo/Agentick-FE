@@ -25,9 +25,7 @@ function RouteComponent() {
   const { teamId, projectId } = Route.useParams()
   const { pathname } = useLocation()
   const normalizedPathname = pathname.replace(/\/+$/, "")
-  const hideViewModeList = /\/(settings(?:\/.*)?|members(?:\/.*)?)$/.test(
-    normalizedPathname
-  )
+  const hideViewModeList = /\/settings(?:\/.*)?$/.test(normalizedPathname)
 
   return (
     <div className="flex flex-col gap-4">

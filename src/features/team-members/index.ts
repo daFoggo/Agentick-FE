@@ -1,6 +1,6 @@
 export * from "./schemas"
 export * from "./functions"
 export * from "./queries"
-export * from "./sample-data"
+
 export * from "./components/team-member-list"
 export * from "./components/invite-team-member-dialog"

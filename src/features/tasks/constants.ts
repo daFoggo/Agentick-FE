@@ -1,3 +1,6 @@
+/**
+ * Catalog mặc định cho loại Task (áp dụng khi chưa load được config từ server)
+ */
 export const TASK_TYPE_CATALOG = [
   {
     value: "task",
@@ -39,6 +42,9 @@ export const TASK_TYPE_CATALOG = [
 export type TTaskTypeOption = (typeof TASK_TYPE_CATALOG)[number]
 export type TTaskType = TTaskTypeOption["value"]
 
+/**
+ * Catalog mặc định cho trạng thái Task
+ */
 export const TASK_STATUS_CATALOG = [
   {
     value: "backlog",
@@ -93,6 +99,9 @@ export const TASK_STATUS_CATALOG = [
 export type TTaskStatusOption = (typeof TASK_STATUS_CATALOG)[number]
 export type TTaskStatus = TTaskStatusOption["value"]
 
+/**
+ * Catalog mặc định cho độ ưu tiên Task
+ */
 export const TASK_PRIORITY_CATALOG = [
   {
     value: "lowest",
@@ -134,9 +143,15 @@ export const TASK_PRIORITY_CATALOG = [
 export type TTaskPriorityOption = (typeof TASK_PRIORITY_CATALOG)[number]
 export type TTaskPriority = TTaskPriorityOption["value"]
 
+/**
+ * Các hằng số về API Route liên quan đến Task
+ */
 export const PROJECT_TASKS_ROUTE = "projects/{project_id}/tasks"
 export const PROJECT_TASK_CONFIG_ROUTE = "projects/{project_id}/task-config"
 export const PROJECT_PHASES_ROUTE = "projects/{project_id}/phases"
 
+/**
+ * Các giá trị mặc định cho phân trang và sắp xếp
+ */
 export const DEFAULT_TASK_PAGE_SIZE = 20
 export const DEFAULT_TASK_ORDERING = "-id"

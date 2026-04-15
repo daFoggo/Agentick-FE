@@ -5,7 +5,7 @@ export const UserSchema = z.object({
   name: z.string(),
   email: z.email(),
   avatar_url: z.url().optional().or(z.literal("")),
-  created_at: z.iso.datetime(),
+  created_at: z.string().datetime(),
 })
 
 export type TUser = z.infer<typeof UserSchema>

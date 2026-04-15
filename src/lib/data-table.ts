@@ -4,8 +4,6 @@ import type { IDataTableColumnDef } from "@/types/data-table"
 
 /**
  * Chuyển đổi các định nghĩa cột thô (IDataTableColumnDef) thành cấu hình cột chuẩn của TanStack Table.
- * Hàm này giúp giảm thiểu code lặp lại khi định nghĩa id, header và meta, đồng thời hỗ trợ các tính năng
- * tùy chỉnh như ghim cột (pinning), sắp xếp lại (reorder) và render thủ công (custom cell).
  */
 export function generateColumns<TData>(
   definitions: IDataTableColumnDef<TData>[]
@@ -41,11 +39,14 @@ export function getPinnedCellStyle(
   after: number
 ): CSSProperties {
   if (!isPinned) return {}
+  
   return {
     position: "sticky",
     left: isPinned === "left" ? `${start}px` : undefined,
     right: isPinned === "right" ? `${after}px` : undefined,
     zIndex: 2,
+    // Đảm bảo không bị trong suốt
+    backgroundColor: "hsl(var(--background))",
   }
 }
 

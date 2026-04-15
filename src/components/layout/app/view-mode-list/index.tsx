@@ -66,15 +66,13 @@ export const ViewModeList = ({
   const { modes } = resolveViewModes(navDefinitions, scopeState)
 
   const visibleModes = modes.filter((mode) => mode.isVisible)
-  const displayModes = modes.filter(
-    (mode) => mode.isVisible || (mode.isDynamic && mode.value === activeMode)
-  )
+  const displayModes = visibleModes
 
   useEffect(() => {
     if (!activeMode) return
 
     const active = modes.find((mode) => mode.value === activeMode)
-    if (active && !active.isVisible && !active.isDynamic) {
+    if (active && !active.isVisible) {
       updateMode(viewModeScope, activeMode, { isVisible: true }, navDefinitions)
     }
   }, [activeMode, modes, navDefinitions, updateMode, viewModeScope])
@@ -132,9 +130,7 @@ export const ViewModeList = ({
           <DropdownMenuContent align="end" className="w-64">
             <DropdownMenuGroup>
               <DropdownMenuLabel>View Modes</DropdownMenuLabel>
-              {modes
-                .filter((mode) => !mode.isDynamic)
-                .map((mode) => {
+              {modes.map((mode) => {
                 const disabled = mode.isVisible && visibleModes.length === 1
 
                 return (
