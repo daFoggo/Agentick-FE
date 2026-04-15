@@ -1,9 +1,8 @@
 import type { LucideIcon } from "lucide-react"
-import type { LinkProps } from "@tanstack/react-router"
 
 export interface ISidebarNavigationItem {
   title: string
-  to: LinkProps["to"]
+  to: string
   icon?: LucideIcon
   children?: ISidebarNavigationItem[]
   isActive?: boolean
@@ -15,3 +14,10 @@ export interface ISidebarGroup {
 }
 
 export type TSidebarNavigation = ISidebarGroup[]
+
+export type TSidebarContextId = "default" | "project-settings"
+
+export interface ISidebarContextMatch {
+  contextId: TSidebarContextId
+  params?: Record<string, string>
+}

@@ -133,3 +133,10 @@ export const TASK_PRIORITY_CATALOG = [
 
 export type TTaskPriorityOption = (typeof TASK_PRIORITY_CATALOG)[number]
 export type TTaskPriority = TTaskPriorityOption["value"]
+
+export const PROJECT_TASKS_ROUTE = "projects/{project_id}/tasks"
+export const PROJECT_TASK_CONFIG_ROUTE = "projects/{project_id}/task-config"
+export const PROJECT_PHASES_ROUTE = "projects/{project_id}/phases"
+
+export const DEFAULT_TASK_PAGE_SIZE = 20
+export const DEFAULT_TASK_ORDERING = "-id"

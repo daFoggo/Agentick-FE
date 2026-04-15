@@ -26,15 +26,30 @@ function formatDate(date?: Date) {
 }
 
 function getStatusOption(value: string) {
-  return TASK_STATUS_CATALOG.find((s) => s.value === value)
+  const normalizedValue = value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+  return TASK_STATUS_CATALOG.find((s) => {
+    const normalizedCatalogValue = s.value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+    const normalizedLabel = s.label.toLowerCase().replace(/[^a-z0-9]+/g, "")
+    return normalizedCatalogValue === normalizedValue || normalizedLabel === normalizedValue
+  })
 }
 
 function getPriorityOption(value: string) {
-  return TASK_PRIORITY_CATALOG.find((p) => p.value === value)
+  const normalizedValue = value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+  return TASK_PRIORITY_CATALOG.find((p) => {
+    const normalizedCatalogValue = p.value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+    const normalizedLabel = p.label.toLowerCase().replace(/[^a-z0-9]+/g, "")
+    return normalizedCatalogValue === normalizedValue || normalizedLabel === normalizedValue
+  })
 }
 
 function getTypeOption(value: string) {
-  return TASK_TYPE_CATALOG.find((t) => t.value === value)
+  const normalizedValue = value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+  return TASK_TYPE_CATALOG.find((t) => {
+    const normalizedCatalogValue = t.value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+    const normalizedLabel = t.label.toLowerCase().replace(/[^a-z0-9]+/g, "")
+    return normalizedCatalogValue === normalizedValue || normalizedLabel === normalizedValue
+  })
 }
 
 

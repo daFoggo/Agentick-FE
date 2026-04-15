@@ -10,8 +10,25 @@ import {
 import { cn } from "@/lib/utils"
 import type { ISidebarGroup } from "@/types/sidebar"
 
-export const SidebarGroupSection = ({ group }: { group: ISidebarGroup }) => {
+interface ISidebarGroupSectionProps {
+  group: ISidebarGroup
+  params?: Record<string, string>
+}
+
+const sanitizeParams = (params: Record<string, string | undefined>) =>
+  Object.fromEntries(
+    Object.entries(params).filter(([, value]) => Boolean(value))
+  ) as Record<string, string>
+
+export const SidebarGroupSection = ({
+  group,
+  params,
+}: ISidebarGroupSectionProps) => {
   const { teamId } = useParams({ strict: false })
+  const linkParams = sanitizeParams({
+    teamId,
+    ...params,
+  })
 
   return (
     <SidebarGroup key={group.label || "default"}>
@@ -22,7 +39,7 @@ export const SidebarGroupSection = ({ group }: { group: ISidebarGroup }) => {
             <SidebarMenuItem key={item.to}>
               <Link
               to={item.to as any}
-              params={{ teamId } as any}
+              params={linkParams as any}
             >
                 {({ isActive }) => (
                   <SidebarMenuButton tooltip={item.title} isActive={isActive}>
