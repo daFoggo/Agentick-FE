@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { InviteTeamMemberDialog } from "@/features/team-members"
 import type { TTeam } from "@/features/teams"
 import type { TTeamMember } from "@/features/team-members"
+import { teamMembersQueryOptions } from "@/features/team-members/queries"
+import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { UserPlus, Users } from "lucide-react"
 
@@ -18,6 +20,10 @@ export interface ITeamDetailsHeaderProps {
 
 export function TeamDetailsHeader({ team }: ITeamDetailsHeaderProps) {
   const [inviteOpen, setInviteOpen] = useState(false)
+  const { data: membersData } = useQuery({
+    ...teamMembersQueryOptions(team?.id ?? ""),
+    enabled: !!team?.id,
+  })
 
   if (!team) {
     return (
@@ -26,6 +32,8 @@ export function TeamDetailsHeader({ team }: ITeamDetailsHeaderProps) {
       </div>
     )
   }
+
+  const members = membersData?.founds ?? []
 
   return (
     <div className="flex w-full items-center justify-between gap-4">
@@ -41,14 +49,16 @@ export function TeamDetailsHeader({ team }: ITeamDetailsHeaderProps) {
 
       <div className="flex items-center gap-2">
         <AvatarGroup>
-          {team.members?.slice(0, 2).map((member: TTeamMember) => (
+          {members.slice(0, 2).map((member: TTeamMember) => (
             <Avatar key={member.id}>
               <AvatarImage src={member?.user?.avatar_url} />
-              <AvatarFallback>{member.user?.name?.charAt(0)}</AvatarFallback>
+              <AvatarFallback>
+                {member.user?.name?.charAt(0)?.toUpperCase() || "U"}
+              </AvatarFallback>
             </Avatar>
           ))}
-          {team.members && team.members.length > 2 && (
-            <AvatarGroupCount>+{team.members.length - 2}</AvatarGroupCount>
+          {members.length > 2 && (
+            <AvatarGroupCount>+{members.length - 2}</AvatarGroupCount>
           )}
         </AvatarGroup>
 

@@ -9,6 +9,7 @@ import {
   LayoutTemplate,
   Tags,
   Users,
+  Form,
 } from "lucide-react"
 import type { ISidebarContextMatch } from "@/types/sidebar"
 
@@ -56,38 +57,44 @@ export const SIDEBAR_PROJECT_SETTINGS: ISidebarGroup = {
     {
       title: "General",
       to: "/dashboard/$teamId/projects/$projectId/settings",
-      icon: LayoutTemplate,
+      icon: Form,
+      exactActive: true,
     },
     {
       title: "Members",
-      to: "/dashboard/$teamId/projects/$projectId/members",
+      to: "/dashboard/$teamId/projects/$projectId/settings/members",
       icon: Users,
+      exactActive: true,
     },
     {
       title: "Task Status",
       to: "/dashboard/$teamId/projects/$projectId/settings/task-statuses",
       icon: CircleDashed,
+      exactActive: true,
     },
     {
       title: "Task Type",
       to: "/dashboard/$teamId/projects/$projectId/settings/task-types",
       icon: ListChecks,
+      exactActive: true,
     },
     {
       title: "Task Priority",
       to: "/dashboard/$teamId/projects/$projectId/settings/task-priorities",
       icon: Flag,
+      exactActive: true,
     },
     {
       title: "Task Tag",
       to: "/dashboard/$teamId/projects/$projectId/settings/task-tags",
       icon: Tags,
+      exactActive: true,
     },
   ],
 }
 
 const PROJECT_SETTINGS_PATH_REGEX =
-  /^\/dashboard\/([^/]+)\/projects\/([^/]+)\/(?:settings(?:\/.*)?|members(?:\/.*)?)\/?$/
+  /^\/dashboard\/([^/]+)\/projects\/([^/]+)\/settings(?:\/.*)?\/?$/
 
 export const resolveSidebarContextFromPathname = (
   pathname: string

@@ -1,14 +1,13 @@
-import { ProjectMemberList } from "@/features/project-members"
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute(
   "/dashboard/$teamId/projects/$projectId/members"
 )({
-  component: ProjectMembersPage,
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: "/dashboard/$teamId/projects/$projectId/settings/members",
+      params: { teamId: params.teamId, projectId: params.projectId },
+      replace: true,
+    })
+  },
 })
-
-function ProjectMembersPage() {
-  const { projectId } = Route.useParams()
-
-  return <ProjectMemberList projectId={projectId} />
-}

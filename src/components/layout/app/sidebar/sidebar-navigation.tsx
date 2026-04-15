@@ -40,6 +40,7 @@ export const SidebarGroupSection = ({
               <Link
               to={item.to as any}
               params={linkParams as any}
+              activeOptions={item.exactActive ? { exact: true } : undefined}
             >
                 {({ isActive }) => (
                   <SidebarMenuButton tooltip={item.title} isActive={isActive}>

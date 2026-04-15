@@ -83,7 +83,7 @@ export const SidebarProjectList = () => {
 
         {!isLoading && projects.length === 0 && (
           <div className="px-2 py-1 text-xs text-muted-foreground">
-            No projects found
+            You have no projects yet.
           </div>
         )}
 

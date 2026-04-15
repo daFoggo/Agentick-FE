@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const ApiDateSchema = z.iso.datetime().or(z.date())
+export const ApiDateSchema = z.string().datetime().or(z.date())
 
 export const FindPageSchema = z.number().int().positive().optional()
 

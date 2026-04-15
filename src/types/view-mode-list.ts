@@ -8,7 +8,6 @@ export interface IViewModeCatalogItem {
   to?: string
   isDefault?: boolean
   isVisibleByDefault?: boolean
-  isDynamic?: boolean
   badge?: string | number | ReactNode
   badgeVariant?:
     | "default"
@@ -34,7 +33,6 @@ export interface IViewModeDefinition {
     | "outline"
     | "ghost"
     | "link"
-  isDynamic?: boolean
 }
 
 export interface IViewModeState {
@@ -56,7 +54,6 @@ export interface IResolvedViewMode extends IViewModeState {
     | "outline"
     | "ghost"
     | "link"
-  isDynamic?: boolean
 }
 
 export interface IViewModeListStore {

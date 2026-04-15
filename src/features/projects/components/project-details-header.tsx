@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/tooltip"
 import {
   InviteProjectMemberDialog,
+  projectMembersQueryOptions,
   type TProjectMember,
 } from "@/features/project-members"
 import type { TProject } from "@/features/projects"
+import { useQuery } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { FolderOpen, Settings, Share2 } from "lucide-react"
 import { useState } from "react"
@@ -31,6 +33,10 @@ export function ProjectDetailsHeader({
 }: IProjectDetailsHeaderProps) {
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   const navigate = useNavigate()
+  const { data: membersData } = useQuery({
+    ...projectMembersQueryOptions(project?.id ?? ""),
+    enabled: !!project?.id,
+  })
 
   if (!project) {
     return (
@@ -39,6 +45,8 @@ export function ProjectDetailsHeader({
       </div>
     )
   }
+
+  const members = membersData?.founds ?? []
 
   return (
     <div className="flex w-full items-center justify-between gap-4">
@@ -73,33 +81,28 @@ export function ProjectDetailsHeader({
       </div>
 
       <div className="flex items-center gap-4">
-        {project.members && project.members.length > 0 && (
+        {members.length > 0 && (
           <Tooltip>
             <TooltipTrigger asChild>
               <AvatarGroup
-                className="cursor-pointer transition-all hover:opacity-80 active:scale-95"
+                className="cursor-pointer transition-all"
                 onClick={() =>
                   navigate({
-                    to: "/dashboard/$teamId/projects/$projectId/members",
+                    to: "/dashboard/$teamId/projects/$projectId/settings/members",
                     params: { teamId, projectId: project.id },
                   })
                 }
               >
-                {project.members.slice(0, 4).map((member: TProjectMember) => (
-                  <Avatar
-                    key={member.id}
-                    className="border-2 border-background"
-                  >
+                {members.slice(0, 4).map((member: TProjectMember) => (
+                  <Avatar key={member.id}>
                     <AvatarImage src={member.user?.avatar_url ?? undefined} />
-                    <AvatarFallback className="bg-primary/10 text-[10px] font-medium text-primary">
+                    <AvatarFallback>
                       {member.user?.name?.charAt(0).toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
                 ))}
-                {project.members.length > 4 && (
-                  <AvatarGroupCount className="border-2 border-background bg-muted text-[10px]">
-                    +{project.members.length - 4}
-                  </AvatarGroupCount>
+                {members.length > 4 && (
+                  <AvatarGroupCount>+{members.length - 4}</AvatarGroupCount>
                 )}
               </AvatarGroup>
             </TooltipTrigger>

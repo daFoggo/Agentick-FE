@@ -6,6 +6,7 @@ export interface ISidebarNavigationItem {
   icon?: LucideIcon
   children?: ISidebarNavigationItem[]
   isActive?: boolean
+  exactActive?: boolean
 }
 
 export interface ISidebarGroup {
