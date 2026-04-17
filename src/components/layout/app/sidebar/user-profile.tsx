@@ -89,7 +89,15 @@ export const UserProfile = () => {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() =>
+                navigate({
+                  to: "/dashboard/$teamId/profile",
+                  params: { teamId: useDashboardStore.getState().last_team_id || "personal" },
+                })
+              }
+            >
               <SquareUserRound />
               My Profile
             </DropdownMenuItem>
