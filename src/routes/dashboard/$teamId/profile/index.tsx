@@ -1,19 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { ProfilePage, userQueries } from "@/features/users"
-import { myProjectsQueryOptions } from "@/features/projects/queries"
-import { teamQueries } from "@/features/teams"
+
+import { ProfileCard, userQueries } from "@/features/users"
+import { MyTasksList } from "@/features/tasks"
+import { MyProjectsList, myProjectsQueryOptions } from "@/features/projects"
+import { MyTeamsList, teamQueries } from "@/features/teams"
 
 export const Route = createFileRoute("/dashboard/$teamId/profile/")({
   loader: async ({ context }) => {
-    // Đảm bảo server có đủ dữ liệu trước khi render HTML
     await Promise.all([
       context.queryClient.ensureQueryData(userQueries.me()),
       context.queryClient.ensureQueryData(myProjectsQueryOptions()),
       context.queryClient.ensureQueryData(teamQueries.myTeams()),
     ])
   },
-  component: ProfilePage,
+  component: ProfileDashboardComponent,
   staticData: {
     getTitle: () => "My Profile",
-  },    
+  },
 })
+
+function ProfileDashboardComponent() {
+  return (
+    <div className="flex w-full flex-col gap-6">
+      <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-12">
+        <div className="flex flex-col gap-6 md:col-span-4 lg:col-span-3">
+          <ProfileCard />
+          <MyTeamsList />
+        </div>
+
+        <div className="flex flex-col gap-6 md:col-span-8 lg:col-span-9">
+          <MyTasksList />
+          <MyProjectsList />
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -4,3 +4,4 @@ export * from "./queries"
 
 export * from "./components/sidebar-project-list"
 export * from "./components/project-settings"
+export * from "./components/my-projects-list"
