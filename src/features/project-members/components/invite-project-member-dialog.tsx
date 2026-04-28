@@ -1,12 +1,9 @@
-import { useQuery } from "@tanstack/react-query"
-import { Loader2, Plus } from "lucide-react"
-import { useDeferredValue, useState } from "react"
+import { useState, useMemo } from "react"
+import { Loader2, Plus, Mail } from "lucide-react"
 import { toast } from "sonner"
 import { useProjectMemberMutations } from "../queries"
 import type { TProjectRole } from "../schemas"
-import { userQueries, type TUserSearchResult } from "@/features/users"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   Combobox,
@@ -54,44 +51,46 @@ export const InviteProjectMemberDialog = ({
   onOpenChange,
 }: IInviteProjectMemberDialogProps) => {
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedUsers, setSelectedUsers] = useState<TUserSearchResult[]>([])
+  const [selectedEmails, setSelectedEmails] = useState<string[]>([])
   const [selectedRole, setSelectedRole] = useState<TProjectRole>("member")
-  const deferredQuery = useDeferredValue(searchQuery)
 
   const anchor = useComboboxAnchor()
+  const { generateInvite } = useProjectMemberMutations()
 
-  // Use global user search with smart exclusion
-  const { data: users = [], isLoading } = useQuery(
-    userQueries.search(deferredQuery, { excludeProjectId: projectId })
-  )
+  const isEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const isValidEmail = isEmail(searchQuery)
 
-  const { addMember } = useProjectMemberMutations()
+  const items = useMemo(() => {
+    if (isValidEmail) {
+      return [searchQuery]
+    }
+    return []
+  }, [searchQuery, isValidEmail])
 
   const handleAdd = async () => {
-    if (selectedUsers.length === 0) return
+    if (selectedEmails.length === 0) return
 
     try {
       await Promise.all(
-        selectedUsers.map((user) =>
-          addMember.mutateAsync({
-            projectId: projectId,
-            payload: { user_id: user.id, role: selectedRole },
+        selectedEmails.map((email) =>
+          generateInvite.mutateAsync({
+            projectId,
+            payload: { email, role: selectedRole },
           })
         )
       )
-      toast.success(
-        `${selectedUsers.length} members have been added to the project`
-      )
+
+      toast.success(`Sent ${selectedEmails.length} invitations.`)
       handleReset()
       onOpenChange(false)
     } catch (error) {
-      toast.error("Failed to add some members")
+      toast.error("Failed to send invitations")
     }
   }
 
   const handleReset = () => {
     setSearchQuery("")
-    setSelectedUsers([])
+    setSelectedEmails([])
     setSelectedRole("member")
   }
 
@@ -114,28 +113,28 @@ export const InviteProjectMemberDialog = ({
 
         <div className="flex flex-col gap-4">
           <Field>
-            <FieldLabel>Users</FieldLabel>
+            <FieldLabel>Invite by email</FieldLabel>
             <Combobox
               multiple
               autoHighlight
-              items={users}
-              itemToStringValue={(user) => user.name}
-              value={selectedUsers}
+              items={items}
+              itemToStringValue={(item) => item}
+              value={selectedEmails}
               onValueChange={(vals) => {
-                setSelectedUsers(vals as TUserSearchResult[])
+                setSelectedEmails(vals as string[])
               }}
               onInputValueChange={setSearchQuery}
             >
               <ComboboxChips ref={anchor} className="w-full">
                 <ComboboxValue>
-                  {(values: TUserSearchResult[]) => (
+                  {(values: string[]) => (
                     <>
-                      {values.map((user) => (
-                        <ComboboxChip key={user.id}>{user.name}</ComboboxChip>
+                      {values.map((email) => (
+                        <ComboboxChip key={email}>{email}</ComboboxChip>
                       ))}
                       <ComboboxChipsInput
-                        placeholder="Search by name or email..."
-                        autoComplete="one-time-code"
+                        placeholder="Type email and press enter..."
+                        autoComplete="off"
                       />
                     </>
                   )}
@@ -143,30 +142,18 @@ export const InviteProjectMemberDialog = ({
               </ComboboxChips>
               <ComboboxContent anchor={anchor}>
                 <ComboboxEmpty>
-                  {isLoading ? (
-                    <div className="flex items-center justify-center gap-2 py-2">
-                      <Loader2 className="size-4 animate-spin text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
-                        Searching...
-                      </span>
-                    </div>
-                  ) : (
-                    "No users found."
-                  )}
+                  {searchQuery && !isValidEmail ? "User not found or invalid email" : "Type an email to invite"}
                 </ComboboxEmpty>
                 <ComboboxList>
-                  {(user: TUserSearchResult) => (
-                    <ComboboxItem key={user.id} value={user}>
-                      <Avatar className="size-6">
-                        <AvatarImage src={user.avatar_url ?? undefined} />
-                        <AvatarFallback>
-                          {user.name.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                  {(item: string) => (
+                    <ComboboxItem key={item} value={item}>
+                      <Mail className="mr-2 size-4 text-muted-foreground" />
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium">{user.name}</span>
+                        <span className="text-sm font-medium">
+                          Invite {item}
+                        </span>
                         <span className="text-xs text-muted-foreground">
-                          {user.email}
+                          From email
                         </span>
                       </div>
                     </ComboboxItem>
@@ -204,19 +191,19 @@ export const InviteProjectMemberDialog = ({
             type="button"
             variant="ghost"
             onClick={() => handleOpenChange(false)}
-            disabled={addMember.isPending}
+            disabled={generateInvite.isPending}
           >
             Cancel
           </Button>
           <Button
             type="button"
             onClick={handleAdd}
-            disabled={selectedUsers.length === 0 || addMember.isPending}
+            disabled={selectedEmails.length === 0 || generateInvite.isPending}
           >
-            {addMember.isPending ? (
+            {generateInvite.isPending ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                <span>Adding...</span>
+                <span>Processing...</span>
               </>
             ) : (
               <>

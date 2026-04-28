@@ -1,5 +1,6 @@
 import { AppPageHeader } from "@/components/layout/app/page-header"
 import { AppSidebar } from "@/components/layout/app/sidebar"
+import { NotificationBell } from "@/components/layout/app/notification-bell"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { userQueries } from "@/features/users"
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
@@ -32,7 +33,10 @@ function DashboardLayout() {
       <AppSidebar />
       <SidebarInset>
         <main className="flex flex-1 flex-col gap-4 p-4">
-          <AppPageHeader />
+          <div className="flex w-full items-center justify-between">
+            <AppPageHeader />
+            <NotificationBell />
+          </div>
           <Outlet />
         </main>
       </SidebarInset>
